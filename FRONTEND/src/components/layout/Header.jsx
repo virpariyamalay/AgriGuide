@@ -20,9 +20,9 @@ const Header = () => {
             <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex items-center">
                 <img 
-                  src="/logo.svg" 
+                  src="/logo.png" 
                   alt="AgriGuide Logo" 
-                  className="h-10" 
+                  className="h-[15rem]" 
                 />
               </Link>
             </div>
