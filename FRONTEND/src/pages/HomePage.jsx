@@ -4,13 +4,14 @@ import { motion } from 'framer-motion'
 import CropSearch from '../components/crops/CropSearch'
 import PopularCrops from '../components/crops/PopularCrops'
 import FeatureCard from '../components/ui/FeatureCard'
+import { TypeAnimation } from 'react-type-animation';
 
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState('')
   
   return (
     <div className="max-w-7xl mx-auto">
-      <section className="py-12 md:py-20">
+      {/* <section className="py-12 md:py-20">
         <div className="text-center mb-12">
           <motion.h1 
             className="mb-4 text-4xl md:text-5xl font-bold leading-tight"
@@ -42,7 +43,60 @@ const HomePage = () => {
         >
           <PopularCrops />
         </motion.div>
-      </section>
+      </section> */}
+      
+<section className="py-12 md:py-20">
+  <div className="text-center mb-12">
+    <motion.h1 
+      className="mb-4 text-4xl md:text-5xl font-bold leading-tight"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      Grow Better with <span className="text-primary-600">AgriGuide</span>
+    </motion.h1>
+
+    <div className="text-xl md:text-2xl font-semibold text-primary-700 h-[50px] mb-4">
+      <TypeAnimation
+        sequence={[
+          "Plan Smarter.",
+          2000,
+          "Grow Faster.",
+          2000,
+          "Harvest Better.",
+          2000,
+        ]}
+        wrapper="span"
+        speed={50}
+        repeat={Infinity}
+        className="text-secondary"
+      />
+    </div>
+
+    <motion.p 
+      className="mx-auto max-w-2xl text-lg text-gray-600"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      Your complete companion for successful farming - from seed to harvest.
+      Get step-by-step instructions, track your progress, and shop for supplies.
+    </motion.p>
+  </div>
+  
+  <div className="mb-16">
+    <CropSearch setSearchQuery={setSearchQuery} />
+  </div>
+  
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: 0.4 }}
+  >
+    <PopularCrops />
+  </motion.div>
+</section>
+
       
       <section className="py-16 bg-white rounded-xl shadow-soft px-4 md:px-8 mb-16">
         <div className="text-center mb-12">
