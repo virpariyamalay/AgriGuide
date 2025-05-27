@@ -510,114 +510,225 @@ const CartPage = () => {
     )
   }
 
+  // if (showBillPreview) {
+  //   return (
+  //     <div className="max-w-4xl mx-auto px-4 py-8">
+  //       <div className="bg-white rounded-lg shadow-lg p-8">
+  //         <div className="flex justify-between items-start mb-8">
+  //           <div>
+  //             <h2 className="text-2xl font-bold text-gray-800">Invoice Preview</h2>
+  //             <p className="text-gray-600">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
+  //             <p className="text-gray-600">Invoice #: INV-{Date.now()}</p>
+  //           </div>
+  //           <img src="/logo.png" alt="Company Logo" className="h-[17rem]" />
+  //         </div>
+
+  //         <div className="grid grid-cols-2 gap-8 mb-8">
+  //           <div>
+  //             <h3 className="font-semibold mb-2">Bill From:</h3>
+  //             <p className="text-gray-600">AgriGuide Solutions</p>
+  //             <p className="text-gray-600">123 Farm Street</p>
+  //             <p className="text-gray-600">Agritown, AG 12345</p>
+  //             <p className="text-gray-600">GSTIN: 12ABCDE3456F7ZG</p>
+  //           </div>
+  //           <div>
+  //             <h3 className="font-semibold mb-2">Bill To:</h3>
+  //             <p className="text-gray-600">{deliveryDetails.fullName}</p>
+  //             <p className="text-gray-600">{deliveryDetails.address}</p>
+  //             <p className="text-gray-600">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
+  //             {deliveryDetails.gstin && <p className="text-gray-600">GSTIN: {deliveryDetails.gstin}</p>}
+  //             {deliveryDetails.pan && <p className="text-gray-600">PAN: {deliveryDetails.pan}</p>}
+  //           </div>
+  //         </div>
+
+  //         <table className="w-full mb-8">
+  //           <thead>
+  //             <tr className="bg-gray-50">
+  //               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+  //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+  //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate</th>
+  //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody className="bg-white divide-y divide-gray-200">
+  //             {cartItems.map((item) => (
+  //               <tr key={item.id}>
+  //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
+  //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{item.quantity}</td>
+  //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${item.price.toFixed(2)}</td>
+  //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${(item.price * item.quantity).toFixed(2)}</td>
+  //               </tr>
+  //             ))}
+  //           </tbody>
+  //         </table>
+
+  //         <div className="border-t border-gray-200 pt-4">
+  //           <div className="flex justify-end">
+  //             <div className="w-64">
+  //               <div className="flex justify-between mb-2">
+  //                 <span className="text-gray-600">Subtotal</span>
+  //                 <span className="font-medium">${subtotal.toFixed(2)}</span>
+  //               </div>
+  //               <div className="flex justify-between mb-2">
+  //                 <span className="text-gray-600">GST (18%)</span>
+  //                 <span className="font-medium">${gst.toFixed(2)}</span>
+  //               </div>
+  //               <div className="flex justify-between mb-2">
+  //                 <span className="text-gray-600">Shipping</span>
+  //                 <span className="font-medium">${shipping.toFixed(2)}</span>
+  //               </div>
+  //               {discount > 0 && (
+  //                 <div className="flex justify-between mb-2 text-green-600">
+  //                   <span>Discount</span>
+  //                   <span>-${discount.toFixed(2)}</span>
+  //                 </div>
+  //               )}
+  //               <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
+  //                 <span className="font-semibold">Total</span>
+  //                 <span className="font-bold">${total.toFixed(2)}</span>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         <div className="mt-8 border-t border-gray-200 pt-8">
+  //           <h3 className="font-semibold mb-4">Terms & Conditions:</h3>
+  //           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-2">
+  //             <li>Payment is due within 30 days</li>
+  //             <li>Please include invoice number on your payment</li>
+  //             <li>Make all checks payable to AgriGuide Solutions</li>
+  //           </ul>
+  //         </div>
+
+  //         <div className="mt-8 flex justify-end space-x-4">
+  //           <button
+  //             onClick={() => setShowBillPreview(false)}
+  //             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+  //           >
+  //             Back
+  //           </button>
+  //           <button
+  //             onClick={handlePlaceOrder}
+  //             className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+  //           >
+  //             Confirm & Place Order
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   )
+  // }
   if (showBillPreview) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">Invoice Preview</h2>
-              <p className="text-gray-600">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
-              <p className="text-gray-600">Invoice #: INV-{Date.now()}</p>
-            </div>
-            <img src="/logo.png" alt="Company Logo" className="h-[17rem]" />
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8  text-[#2E2E2E]">
+      <div className="rounded-lg shadow-lg p-0 bg-[#6a994e]">
+        <div className="flex justify-between items-start mb-8 bg-[#14400f]">
+          <div className="p-20">
+            <h2 className="text-5xl font-bold text-[#86d17d]">Invoice Preview</h2>
+            <p className=" text-3xl text-[#86d17d]">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
+            <p className="text-3xl text-[#86d17d]">Invoice #: INV-{Date.now()}</p>
           </div>
+          <div className='p-5'>
+                      <img src="/logo.png" alt="Company Logo" className="h-[17rem] " />
 
-          <div className="grid grid-cols-2 gap-8 mb-8">
-            <div>
-              <h3 className="font-semibold mb-2">Bill From:</h3>
-              <p className="text-gray-600">AgriGuide Solutions</p>
-              <p className="text-gray-600">123 Farm Street</p>
-              <p className="text-gray-600">Agritown, AG 12345</p>
-              <p className="text-gray-600">GSTIN: 12ABCDE3456F7ZG</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Bill To:</h3>
-              <p className="text-gray-600">{deliveryDetails.fullName}</p>
-              <p className="text-gray-600">{deliveryDetails.address}</p>
-              <p className="text-gray-600">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
-              {deliveryDetails.gstin && <p className="text-gray-600">GSTIN: {deliveryDetails.gstin}</p>}
-              {deliveryDetails.pan && <p className="text-gray-600">PAN: {deliveryDetails.pan}</p>}
-            </div>
           </div>
+        </div>
 
-          <table className="w-full mb-8">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+        <div className="grid grid-cols-2 gap-8 mb-8 ">
+          <div className='pl-10'>
+            <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill From:</h3>
+            <p className="text-[#2E2E2E]">AgriGuide Solutions</p>
+            <p className="text-[#2E2E2E]">123 Farm Street</p>
+            <p className="text-[#2E2E2E]">Agritown, AG 12345</p>
+            <p className="text-[#2E2E2E]">GSTIN: 12ABCDE3456F7ZG</p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill To:</h3>
+            <p className="text-[#2E2E2E]">{deliveryDetails.fullName}</p>
+            <p className="text-[#2E2E2E]">{deliveryDetails.address}</p>
+            <p className="text-[#2E2E2E]">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
+            {deliveryDetails.gstin && <p className="text-[#2E2E2E]">GSTIN: {deliveryDetails.gstin}</p>}
+            {deliveryDetails.pan && <p className="text-[#2E2E2E]">PAN: {deliveryDetails.pan}</p>}
+          </div>
+        </div>
+
+        <table className="w-full mb-8 pl-10">
+          <thead>
+            <tr className="bg-[#1b263b]">
+              <th className="px-6 py-3 text-left text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Item</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Qty</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Rate</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Amount</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-300 bg-[#e5e5e5]">
+            {cartItems.map((item) => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E]">{item.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">{item.quantity}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">${item.price.toFixed(2)}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">${(item.price * item.quantity).toFixed(2)}</td>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {cartItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{item.quantity}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${item.price.toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${(item.price * item.quantity).toFixed(2)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
 
-          <div className="border-t border-gray-200 pt-4">
-            <div className="flex justify-end">
-              <div className="w-64">
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+        <div className="border-t border-gray-300 pt-4">
+          <div className="flex justify-end">
+            <div className="w-64 bg-[#e5e5e5]">
+              <div className="flex justify-between mb-2 pr-5">
+                <span className="text-[#2E2E2E]">Subtotal</span>
+                <span className="font-medium text-[#2E2E2E]">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between mb-2 pr-5">
+                <span className="text-[#2E2E2E]">GST (18%)</span>
+                <span className="font-medium text-[#2E2E2E]">${gst.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between mb-2 pr-5">
+                <span className="text-[#2E2E2E]">Shipping</span>
+                <span className="font-medium text-[#2E2E2E]">${shipping.toFixed(2)}</span>
+              </div>
+              {discount > 0 && (
+                <div className="flex justify-between mb-2 text-green-600">
+                  <span>Discount</span>
+                  <span>-${discount.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">GST (18%)</span>
-                  <span className="font-medium">${gst.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium">${shipping.toFixed(2)}</span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between mb-2 text-green-600">
-                    <span>Discount</span>
-                    <span>-${discount.toFixed(2)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
-                  <span className="font-semibold">Total</span>
-                  <span className="font-bold">${total.toFixed(2)}</span>
-                </div>
+              )}
+              <div className="flex justify-between border-t border-gray-300 pt-2 mt-2 pr-5">
+                <span className="font-semibold text-[#2E2E2E]">Total</span>
+                <span className="font-bold text-[#2E2E2E]">${total.toFixed(2)}</span>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-8 border-t border-gray-200 pt-8">
-            <h3 className="font-semibold mb-4">Terms & Conditions:</h3>
-            <ul className="text-sm text-gray-600 list-disc pl-5 space-y-2">
-              <li>Payment is due within 30 days</li>
-              <li>Please include invoice number on your payment</li>
-              <li>Make all checks payable to AgriGuide Solutions</li>
-            </ul>
-          </div>
+        <div className="mt-8 border-t border-gray-300 pt-8 pl-10 bg-[#abf768]">
+          <h3 className="font-semibold mb-4 text-[#2E2E2E]">Terms & Conditions:</h3>
+          <ul className="text-sm list-disc pl-5 space-y-2 text-[#2E2E2E]">
+            <li>Payment is due within 30 days</li>
+            <li>Please include invoice number on your payment</li>
+            <li>Make all checks payable to AgriGuide Solutions</li>
+          </ul>
+        </div>
 
-          <div className="mt-8 flex justify-end space-x-4">
-            <button
-              onClick={() => setShowBillPreview(false)}
-              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            >
-              Back
-            </button>
-            <button
-              onClick={handlePlaceOrder}
-              className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-            >
-              Confirm & Place Order
-            </button>
-          </div>
+        <div className="mt-8 flex justify-end space-x-4 p-10">
+          <button
+            onClick={() => setShowBillPreview(false)}
+            className="px-6 py-2 border border-gray-300 rounded-md text-[#2E2E2E] hover:bg-gray-200"
+          >
+            Back
+          </button>
+          <button
+            onClick={handlePlaceOrder}
+            className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+          >
+            Confirm & Place Order
+          </button>
         </div>
       </div>
-    )
-  }
+    </div>
+  );
+}
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
