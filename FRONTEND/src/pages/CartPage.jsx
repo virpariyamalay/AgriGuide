@@ -520,7 +520,7 @@ const CartPage = () => {
               <p className="text-gray-600">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
               <p className="text-gray-600">Invoice #: INV-{Date.now()}</p>
             </div>
-            <img src="/logo.svg" alt="Company Logo" className="h-12" />
+            <img src="/logo.png" alt="Company Logo" className="h-[17rem]" />
           </div>
 
           <div className="grid grid-cols-2 gap-8 mb-8">
