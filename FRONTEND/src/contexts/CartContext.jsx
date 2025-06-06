@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const CartContext = createContext()
 
@@ -6,6 +7,7 @@ export const useCart = () => useContext(CartContext)
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
+  const [isCartUpdated, setIsCartUpdated] = useState(false)
   
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -23,6 +25,10 @@ export const CartProvider = ({ children }) => {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('agriguide-cart', JSON.stringify(cartItems))
+    if (cartItems.length > 0) {
+      setIsCartUpdated(true)
+      setTimeout(() => setIsCartUpdated(false), 2000)
+    }
   }, [cartItems])
   
   const addToCart = (product, quantity = 1) => {
@@ -57,6 +63,7 @@ export const CartProvider = ({ children }) => {
   
   const clearCart = () => {
     setCartItems([])
+    localStorage.removeItem('agriguide-cart')
   }
   
   const value = {
@@ -64,7 +71,8 @@ export const CartProvider = ({ children }) => {
     addToCart,
     updateQuantity,
     removeFromCart,
-    clearCart
+    clearCart,
+    isCartUpdated
   }
   
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

@@ -11,15 +11,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  @apply text-3xl md:text-4xl font-bold leading-tight;
+  @apply text-2xl sm:text-3xl md:text-4xl font-bold leading-tight;
 }
 
 h2 {
-  @apply text-2xl md:text-3xl font-semibold leading-tight;
+  @apply text-xl sm:text-2xl md:text-3xl font-semibold leading-tight;
 }
 
 h3 {
-  @apply text-xl md:text-2xl font-semibold leading-snug;
+  @apply text-lg sm:text-xl md:text-2xl font-semibold leading-snug;
 }
 
 p {
@@ -109,4 +109,90 @@ p {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .container {
+    @apply px-6;
+  }
+}
+
+@media (min-width: 769px) {
+  .container {
+    @apply px-8;
+  }
+}
+
+/* Mobile-first responsive text */
+.responsive-text-sm {
+  @apply text-sm sm:text-base;
+}
+
+.responsive-text-base {
+  @apply text-base sm:text-lg;
+}
+
+.responsive-text-lg {
+  @apply text-lg sm:text-xl;
+}
+
+.responsive-text-xl {
+  @apply text-xl sm:text-2xl;
+}
+
+.responsive-text-2xl {
+  @apply text-2xl sm:text-3xl;
+}
+
+.responsive-text-3xl {
+  @apply text-3xl sm:text-4xl;
+}
+
+/* Responsive spacing */
+.responsive-p-sm {
+  @apply p-2 sm:p-4;
+}
+
+.responsive-p-md {
+  @apply p-4 sm:p-6;
+}
+
+.responsive-p-lg {
+  @apply p-6 sm:p-8;
+}
+
+.responsive-m-sm {
+  @apply m-2 sm:m-4;
+}
+
+.responsive-m-md {
+  @apply m-4 sm:m-6;
+}
+
+.responsive-m-lg {
+  @apply m-6 sm:m-8;
+}
+
+/* Grid responsive utilities */
+.responsive-grid-2 {
+  @apply grid-cols-1 sm:grid-cols-2;
+}
+
+.responsive-grid-3 {
+  @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.responsive-grid-4 {
+  @apply grid-cols-2 sm:grid-cols-3 lg:grid-cols-4;
+}
+
+.responsive-grid-6 {
+  @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6;
 }

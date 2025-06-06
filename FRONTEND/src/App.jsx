@@ -1,21 +1,32 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import AdminRoute from './components/admin/AdminRoute'
+import PrivateRoute from './components/auth/PrivateRoute'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import HomePage from './pages/HomePage'
 import CropDetailPage from './pages/CropDetailPage'
 import MarketplacePage from './pages/MarketplacePage'
 import CartPage from './pages/CartPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
+import ConfirmOrderPage from './pages/ConfirmOrderPage'
 import ProgressPage from './pages/ProgressPage'
 import MarketRatesPage from './pages/MarketRatesPage'
-import OrdersPage from './pages/OrdersPage'
+import WeatherPage from './pages/WeatherPage'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import Login from './pages/auth/Login'
+import Signup from './pages/auth/Signup'
+import ProfilePage from './pages/ProfilePage'
+import ContactPage from './pages/ContactPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { useWeather } from './contexts/WeatherContext'
 import WeatherAlert from './components/weather/WeatherAlert'
+import { useAuth } from './contexts/AuthContext'
 
 function App() {
   const [showNotification, setShowNotification] = useState(false)
   const { weatherData } = useWeather()
+  const { user } = useAuth()
 
   useEffect(() => {
     const askForPermission = () => {
@@ -44,12 +55,68 @@ function App() {
         )}
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/crop/:cropId" element={<CropDetailPage />} />
-          <Route path="/marketplace" element={<MarketplacePage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/progress" element={<ProgressPage />} />
-          <Route path="/market-rates" element={<MarketRatesPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/contact" element={
+            <PrivateRoute>
+              <ContactPage />
+            </PrivateRoute>
+          } />
+          
+          {/* Protected Routes */}
+          <Route path="/crop/:cropId" element={
+            <PrivateRoute>
+              <CropDetailPage />
+            </PrivateRoute>
+          } />
+          <Route path="/marketplace" element={
+            <PrivateRoute>
+              <MarketplacePage />
+            </PrivateRoute>
+          } />
+          <Route path="/cart" element={
+            <PrivateRoute>
+              <CartPage />
+            </PrivateRoute>
+          } />
+          <Route path="/order-success" element={
+            <PrivateRoute>
+              <OrderSuccessPage />
+            </PrivateRoute>
+          } />
+          <Route path="/confirm-order" element={
+            <PrivateRoute>
+              <ConfirmOrderPage />
+            </PrivateRoute>
+          } />
+          <Route path="/progress" element={
+            <PrivateRoute>
+              <ProgressPage />
+            </PrivateRoute>
+          } />
+          <Route path="/market-rates" element={
+            <PrivateRoute>
+              <MarketRatesPage />
+            </PrivateRoute>
+          } />
+          <Route path="/weather" element={
+            <PrivateRoute>
+              <WeatherPage />
+            </PrivateRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          } />
+          <Route
+            path="/admin/*"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
@@ -59,8 +126,8 @@ function App() {
         <div className="fixed bottom-4 right-4 bg-primary-600 dark:bg-primary-700 text-white p-4 rounded-lg shadow-md animate-slide-up max-w-xs z-50">
           <div className="flex items-start">
             <div className="flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1" />
+              <svg xmlns="http://www.w3.org/2000/svg\" className="h-6 w-6\" fill="none\" viewBox="0 0 24 24\" stroke="currentColor">
+                <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1" />
               </svg>
             </div>
             <div className="ml-3 w-0 flex-1">

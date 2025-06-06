@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { products } from '../data/productData'
+import { useProducts } from '../contexts/ProductContext'
 import { useCart } from '../contexts/CartContext'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router-dom';
 
 const MarketplacePage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [filteredProducts, setFilteredProducts] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [priceRange, setPriceRange] = useState([0, 100])
+  const [priceRange, setPriceRange] = useState([0, 1000])
+  const { products } = useProducts()
   const { addToCart } = useCart()
+  const [loading, setLoading] = useState(true)
   
   const categories = [
     { id: 'all', name: 'All Products' },
@@ -19,19 +22,30 @@ const MarketplacePage = () => {
     { id: 'soils', name: 'Soils & Substrates' },
   ]
   
+  // Reset priceRange filter when products change to include all product prices
   useEffect(() => {
-    filterProducts()
-  }, [selectedCategory, searchQuery, priceRange])
+    if (products.length > 0) {
+      const maxPrice = Math.max(...products.map(p => p.price));
+      setPriceRange([0, maxPrice]);
+    }
+  }, [products]);
+  
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => {
+      filterProducts()
+      setLoading(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [selectedCategory, searchQuery, priceRange, products])
   
   const filterProducts = () => {
     let result = [...products]
     
-    // Filter by category
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory)
     }
     
-    // Filter by search query
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase()
       result = result.filter(
@@ -41,7 +55,6 @@ const MarketplacePage = () => {
       )
     }
     
-    // Filter by price range
     result = result.filter(
       product => product.price >= priceRange[0] && product.price <= priceRange[1]
     )
@@ -53,7 +66,50 @@ const MarketplacePage = () => {
     addToCart(product)
     toast.success(`Added ${product.name} to cart!`)
   }
-  
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div className="animate-pulse bg-gray-200 h-8 w-48 rounded"></div>
+          <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
+        </div>
+        
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-1/4">
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+              <div className="animate-pulse space-y-4">
+                <div className="h-6 bg-gray-200 rounded w-24"></div>
+                <div className="space-y-2">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="h-10 bg-gray-200 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="lg:w-3/4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="bg-white rounded-xl shadow-md overflow-hidden">
+                  <div className="animate-pulse">
+                    <div className="h-48 bg-gray-200"></div>
+                    <div className="p-4 space-y-4">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -130,9 +186,9 @@ const MarketplacePage = () => {
             <p className="text-gray-600 mb-4">
               Need help with choosing the right products for your farm? Our experts are here to help!
             </p>
-            <button className="btn btn-primary w-full">
+            <Link to="/contact" className="btn btn-primary w-full text-center">
               Contact Support
-            </button>
+            </Link>
           </div>
         </div>
         

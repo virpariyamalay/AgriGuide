@@ -321,20 +321,20 @@ const AdminDashboard = () => {
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-gray-900 mb-3">Buyer Details</h4>
                       <div className="space-y-2">
-                        <p><span className="font-medium">Name:</span> {order.deliveryDetails.fullName}</p>
-                        <p><span className="font-medium">Email:</span> {order.deliveryDetails.email}</p>
-                        <p><span className="font-medium">Phone:</span> {order.deliveryDetails.phone}</p>
-                        <p><span className="font-medium">Address:</span> {order.deliveryDetails.address}</p>
-                        <p><span className="font-medium">City:</span> {order.deliveryDetails.city}</p>
-                        <p><span className="font-medium">State:</span> {order.deliveryDetails.state}</p>
-                        <p><span className="font-medium">Pincode:</span> {order.deliveryDetails.pincode}</p>
-                        {order.deliveryDetails.gstin && (
+                        <p><span className="font-medium">Name:</span> {order.deliveryDetails?.fullName}</p>
+                        <p><span className="font-medium">Email:</span> {order.deliveryDetails?.email}</p>
+                        <p><span className="font-medium">Phone:</span> {order.deliveryDetails?.phone}</p>
+                        <p><span className="font-medium">Address:</span> {order.deliveryDetails?.address}</p>
+                        <p><span className="font-medium">City:</span> {order.deliveryDetails?.city}</p>
+                        <p><span className="font-medium">State:</span> {order.deliveryDetails?.state}</p>
+                        <p><span className="font-medium">Pincode:</span> {order.deliveryDetails?.pincode}</p>
+                        {order.deliveryDetails?.gstin && (
                           <p><span className="font-medium">GSTIN:</span> {order.deliveryDetails.gstin}</p>
                         )}
-                        {order.deliveryDetails.pan && (
+                        {order.deliveryDetails?.pan && (
                           <p><span className="font-medium">PAN:</span> {order.deliveryDetails.pan}</p>
                         )}
-                        {order.deliveryDetails.notes && (
+                        {order.deliveryDetails?.notes && (
                           <p><span className="font-medium">Notes:</span> {order.deliveryDetails.notes}</p>
                         )}
                       </div>

@@ -9,20 +9,26 @@ import { CartProvider } from './contexts/CartContext.jsx'
 import { WeatherProvider } from './contexts/WeatherContext.jsx'
 import { ProgressProvider } from './contexts/ProgressContext.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
+import { ProductProvider } from './contexts/ProductContext.jsx'
+import { AuthProvider } from './contexts/AuthContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <WeatherProvider>
-          <ProgressProvider>
-            <CartProvider>
-              <App />
-              <ToastContainer position="top-right" autoClose={3000} />
-            </CartProvider>
-          </ProgressProvider>
-        </WeatherProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <WeatherProvider>
+            <ProgressProvider>
+              <ProductProvider>
+                <CartProvider>
+                  <App />
+                  <ToastContainer position="top-right" autoClose={3000} />
+                </CartProvider>
+              </ProductProvider>
+            </ProgressProvider>
+          </WeatherProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 )

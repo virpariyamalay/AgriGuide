@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext'
 
 const ProgressContext = createContext()
 
@@ -6,26 +7,35 @@ export const useProgress = () => useContext(ProgressContext)
 
 export const ProgressProvider = ({ children }) => {
   const [userProgress, setUserProgress] = useState({})
+  const { user } = useAuth()
   
   // Load progress from localStorage on initial render
   useEffect(() => {
-    const savedProgress = localStorage.getItem('agriguide-progress')
-    if (savedProgress) {
-      try {
-        setUserProgress(JSON.parse(savedProgress))
-      } catch (error) {
-        console.error('Error parsing progress data from localStorage:', error)
-        setUserProgress({})
+    if (user) {
+      const savedProgress = localStorage.getItem(`agriguide-progress-${user.id}`)
+      if (savedProgress) {
+        try {
+          setUserProgress(JSON.parse(savedProgress))
+        } catch (error) {
+          console.error('Error parsing progress data from localStorage:', error)
+          setUserProgress({})
+        }
       }
+    } else {
+      setUserProgress({})
     }
-  }, [])
+  }, [user])
   
   // Save progress to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('agriguide-progress', JSON.stringify(userProgress))
-  }, [userProgress])
+    if (user) {
+      localStorage.setItem(`agriguide-progress-${user.id}`, JSON.stringify(userProgress))
+    }
+  }, [userProgress, user])
   
   const startProgress = (cropId) => {
+    if (!user) return
+    
     setUserProgress(prevProgress => ({
       ...prevProgress,
       [cropId]: {
@@ -38,6 +48,8 @@ export const ProgressProvider = ({ children }) => {
   }
   
   const updateStage = (cropId) => {
+    if (!user) return
+    
     setUserProgress(prevProgress => {
       const cropProgress = prevProgress[cropId]
       
@@ -55,6 +67,8 @@ export const ProgressProvider = ({ children }) => {
   }
   
   const completeTask = (cropId, taskIndex) => {
+    if (!user) return
+    
     setUserProgress(prevProgress => {
       const cropProgress = prevProgress[cropId]
       
@@ -74,6 +88,8 @@ export const ProgressProvider = ({ children }) => {
   }
   
   const removeProgress = (cropId) => {
+    if (!user) return
+    
     setUserProgress(prevProgress => {
       const newProgress = { ...prevProgress }
       delete newProgress[cropId]
@@ -82,6 +98,7 @@ export const ProgressProvider = ({ children }) => {
   }
   
   const getProgress = (cropId) => {
+    if (!user) return null
     return userProgress[cropId] || null
   }
   

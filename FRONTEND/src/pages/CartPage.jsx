@@ -1,1053 +1,13 @@
-// // import { useState } from 'react'
-// // import { Link, useNavigate } from 'react-router-dom'
-// // import { motion } from 'framer-motion'
-// // import { useCart } from '../contexts/CartContext'
-// // import { toast } from 'react-toastify'
-// // import { format } from 'date-fns'
-
-// // const CartPage = () => {
-// //   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart()
-// //   const [promoCode, setPromoCode] = useState('')
-// //   const [isPromoApplied, setIsPromoApplied] = useState(false)
-// //   const [discount, setDiscount] = useState(0)
-// //   const [showDeliveryForm, setShowDeliveryForm] = useState(false)
-// //   const [deliveryDetails, setDeliveryDetails] = useState({
-// //     fullName: '',
-// //     email: '',
-// //     phone: '',
-// //     address: '',
-// //     city: '',
-// //     state: '',
-// //     pincode: '',
-// //     notes: ''
-// //   })
-// //   const navigate = useNavigate()
-  
-// //   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-// //   const shipping = subtotal > 50 ? 0 : 5.99
-// //   const total = subtotal + shipping - discount
-
-// //   const handleQuantityChange = (id, newQuantity) => {
-// //     if (newQuantity < 1) return
-// //     updateQuantity(id, newQuantity)
-// //   }
-  
-// //   const handleRemoveItem = (id) => {
-// //     removeFromCart(id)
-// //     toast.info('Item removed from cart')
-// //   }
-  
-// //   const handleApplyPromo = () => {
-// //     if (promoCode.toLowerCase() === 'first10') {
-// //       setDiscount(subtotal * 0.1)
-// //       setIsPromoApplied(true)
-// //       toast.success('Promo code applied successfully!')
-// //     } else {
-// //       toast.error('Invalid promo code')
-// //     }
-// //   }
-
-// //   const handleDeliveryDetailsChange = (e) => {
-// //     const { name, value } = e.target
-// //     setDeliveryDetails(prev => ({
-// //       ...prev,
-// //       [name]: value
-// //     }))
-// //   }
-
-// //   const validateDeliveryDetails = () => {
-// //     const required = ['fullName', 'email', 'phone', 'address', 'city', 'state', 'pincode']
-// //     for (const field of required) {
-// //       if (!deliveryDetails[field]) {
-// //         toast.error(`Please enter your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`)
-// //         return false
-// //       }
-// //     }
-// //     return true
-// //   }
-
-// //   const handleCheckout = () => {
-// //     if (!validateDeliveryDetails()) return
-
-// //     const orderId = `ORD${Date.now()}`
-// //     const orderDate = new Date().toISOString()
-    
-// //     const order = {
-// //       id: orderId,
-// //       date: orderDate,
-// //       items: cartItems,
-// //       subtotal,
-// //       shipping,
-// //       discount,
-// //       total,
-// //       status: 'Processing',
-// //       deliveryDetails
-// //     }
-    
-// //     const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-// //     localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]))
-    
-// //     toast.success('Order placed successfully!')
-// //     clearCart()
-// //     navigate('/orders')
-// //   }
-
-// //   if (cartItems.length === 0) {
-// //     return (
-// //       <div className="max-w-6xl mx-auto px-4 py-8">
-// //         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center">
-// //           <div className="flex justify-center mb-4">
-// //             <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-// //               <svg className="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-// //                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-// //               </svg>
-// //             </div>
-// //           </div>
-// //           <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
-// //           <p className="text-gray-600 dark:text-gray-400 mb-6">Add some delicious items to your cart!</p>
-// //           <Link to="/" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
-// //             Continue Shopping
-// //           </Link>
-// //         </div>
-// //       </div>
-// //     )
-// //   }
-
-// //   return (
-// //     <div className="max-w-6xl mx-auto px-4 py-8">
-// //       <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Cart</h1>
-
-// //       <div className="flex flex-col lg:flex-row gap-8">
-// //         <div className="lg:w-2/3">
-// //           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
-// //             <div className="p-4 md:p-6">
-// //               <div className="space-y-4">
-// //                 {cartItems.map((item) => (
-// //                   <div key={item.id} className="flex flex-col sm:flex-row items-start gap-4 py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-// //                     <div className="w-full sm:w-24 h-24 relative rounded-lg overflow-hidden">
-// //                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-// //                     </div>
-// //                     <div className="flex-1">
-// //                       <div className="flex flex-col sm:flex-row sm:justify-between">
-// //                         <h3 className="text-lg font-medium">{item.name}</h3>
-// //                         <p className="text-lg font-medium mt-1 sm:mt-0">${(item.price * item.quantity).toFixed(2)}</p>
-// //                       </div>
-// //                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
-// //                       <div className="flex items-center justify-between mt-4">
-// //                         <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
-// //                           <button
-// //                             onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-// //                             className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-// //                           >
-// //                             -
-// //                           </button>
-// //                           <span className="px-3 py-1 border-x border-gray-300 dark:border-gray-600">{item.quantity}</span>
-// //                           <button
-// //                             onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-// //                             className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-// //                           >
-// //                             +
-// //                           </button>
-// //                         </div>
-// //                         <button
-// //                           onClick={() => handleRemoveItem(item.id)}
-// //                           className="text-sm font-medium text-red-600 hover:text-red-700"
-// //                         >
-// //                           Remove
-// //                         </button>
-// //                       </div>
-// //                     </div>
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </div>
-
-// //         <div className="lg:w-1/3">
-// //           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-20">
-// //             <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
-            
-// //             <div className="space-y-4 mb-6">
-// //               <div className="flex justify-between">
-// //                 <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-// //                 <span className="font-medium">${subtotal.toFixed(2)}</span>
-// //               </div>
-              
-// //               <div className="flex justify-between">
-// //                 <span className="text-gray-600 dark:text-gray-400">Shipping</span>
-// //                 <span className="font-medium">
-// //                   {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
-// //                 </span>
-// //               </div>
-              
-// //               {isPromoApplied && (
-// //                 <div className="flex justify-between text-green-600">
-// //                   <span>Discount</span>
-// //                   <span>-${discount.toFixed(2)}</span>
-// //                 </div>
-// //               )}
-              
-// //               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-// //                 <div className="flex justify-between">
-// //                   <span className="font-semibold">Total</span>
-// //                   <span className="font-bold text-lg">${total.toFixed(2)}</span>
-// //                 </div>
-// //                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-// //                   including VAT
-// //                 </p>
-// //               </div>
-// //             </div>
-            
-// //             {!isPromoApplied && (
-// //               <div className="mb-6">
-// //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-// //                   Promo Code
-// //                 </label>
-// //                 <div className="flex">
-// //                   <input
-// //                     type="text"
-// //                     value={promoCode}
-// //                     onChange={(e) => setPromoCode(e.target.value)}
-// //                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     placeholder="Enter code"
-// //                   />
-// //                   <button
-// //                     onClick={handleApplyPromo}
-// //                     className="px-4 py-2 bg-primary-600 text-white font-medium rounded-r-lg hover:bg-primary-700"
-// //                   >
-// //                     Apply
-// //                   </button>
-// //                 </div>
-// //                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-// //                   Try "FIRST10" for 10% off
-// //                 </p>
-// //               </div>
-// //             )}
-            
-// //             <button
-// //               onClick={() => setShowDeliveryForm(true)}
-// //               className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm"
-// //             >
-// //               Proceed to Checkout
-// //             </button>
-// //           </div>
-// //         </div>
-// //       </div>
-
-// //       {showDeliveryForm && (
-// //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-// //           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-// //             <div className="p-6">
-// //               <div className="flex justify-between items-center mb-6">
-// //                 <h2 className="text-xl font-semibold">Delivery Details</h2>
-// //                 <button onClick={() => setShowDeliveryForm(false)} className="text-gray-400 hover:text-gray-500">
-// //                   <span className="sr-only">Close</span>
-// //                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-// //                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-// //                   </svg>
-// //                 </button>
-// //               </div>
-
-// //               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-// //                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-// //                   <div>
-// //                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       Full Name
-// //                     </label>
-// //                     <input
-// //                       type="text"
-// //                       id="fullName"
-// //                       name="fullName"
-// //                       value={deliveryDetails.fullName}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       Email
-// //                     </label>
-// //                     <input
-// //                       type="email"
-// //                       id="email"
-// //                       name="email"
-// //                       value={deliveryDetails.email}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       Phone
-// //                     </label>
-// //                     <input
-// //                       type="tel"
-// //                       id="phone"
-// //                       name="phone"
-// //                       value={deliveryDetails.phone}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       Address
-// //                     </label>
-// //                     <input
-// //                       type="text"
-// //                       id="address"
-// //                       name="address"
-// //                       value={deliveryDetails.address}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       City
-// //                     </label>
-// //                     <input
-// //                       type="text"
-// //                       id="city"
-// //                       name="city"
-// //                       value={deliveryDetails.city}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       State
-// //                     </label>
-// //                     <input
-// //                       type="text"
-// //                       id="state"
-// //                       name="state"
-// //                       value={deliveryDetails.state}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                   <div>
-// //                     <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                       Pincode
-// //                     </label>
-// //                     <input
-// //                       type="text"
-// //                       id="pincode"
-// //                       name="pincode"
-// //                       value={deliveryDetails.pincode}
-// //                       onChange={handleDeliveryDetailsChange}
-// //                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     />
-// //                   </div>
-// //                 </div>
-
-// //                 <div>
-// //                   <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-// //                     Delivery Notes (Optional)
-// //                   </label>
-// //                   <textarea
-// //                     id="notes"
-// //                     name="notes"
-// //                     rows="3"
-// //                     value={deliveryDetails.notes}
-// //                     onChange={handleDeliveryDetailsChange}
-// //                     className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-// //                     placeholder="Any special instructions for delivery"
-// //                   ></textarea>
-// //                 </div>
-
-// //                 <div className="flex justify-end space-x-4">
-// //                   <button
-// //                     type="button"
-// //                     onClick={() => setShowDeliveryForm(false)}
-// //                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-// //                   >
-// //                     Cancel
-// //                   </button>
-// //                   <button
-// //                     type="button"
-// //                     onClick={handleCheckout}
-// //                     className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-// //                   >
-// //                     Place Order
-// //                   </button>
-// //                 </div>
-// //               </form>
-// //             </div>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   )
-// // }
-
-// // export default CartPage
-
-// import { useState } from 'react'
-// import { Link, useNavigate } from 'react-router-dom'
-// import { motion } from 'framer-motion'
-// import { useCart } from '../contexts/CartContext'
-// import { toast } from 'react-toastify'
-// import { format } from 'date-fns'
-
-// const CartPage = () => {
-//   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart()
-//   const [promoCode, setPromoCode] = useState('')
-//   const [isPromoApplied, setIsPromoApplied] = useState(false)
-//   const [discount, setDiscount] = useState(0)
-//   const [showDeliveryForm, setShowDeliveryForm] = useState(false)
-//   const [showBillPreview, setShowBillPreview] = useState(false)
-//   const [deliveryDetails, setDeliveryDetails] = useState({
-//     fullName: '',
-//     email: '',
-//     phone: '',
-//     address: '',
-//     city: '',
-//     state: '',
-//     pincode: '',
-//     notes: '',
-//     gstin: '',
-//     pan: ''
-//   })
-//   const navigate = useNavigate()
-  
-//   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-//   const shipping = subtotal > 50 ? 0 : 5.99
-//   const gst = subtotal * 0.18 // 18% GST
-//   const total = subtotal + shipping + gst - discount
-
-//   const handleQuantityChange = (id, newQuantity) => {
-//     if (newQuantity < 1) return
-//     updateQuantity(id, newQuantity)
-//   }
-  
-//   const handleRemoveItem = (id) => {
-//     removeFromCart(id)
-//     toast.info('Item removed from cart')
-//   }
-  
-//   const handleApplyPromo = () => {
-//     if (promoCode.toLowerCase() === 'first10') {
-//       setDiscount(subtotal * 0.1)
-//       setIsPromoApplied(true)
-//       toast.success('Promo code applied successfully!')
-//     } else {
-//       toast.error('Invalid promo code')
-//     }
-//   }
-
-//   const handleDeliveryDetailsChange = (e) => {
-//     const { name, value } = e.target
-//     setDeliveryDetails(prev => ({
-//       ...prev,
-//       [name]: value
-//     }))
-//   }
-
-//   const validateDeliveryDetails = () => {
-//     const required = ['fullName', 'email', 'phone', 'address', 'city', 'state', 'pincode']
-//     for (const field of required) {
-//       if (!deliveryDetails[field]) {
-//         toast.error(`Please enter your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`)
-//         return false
-//       }
-//     }
-//     return true
-//   }
-
-//   const handleProceedToPreview = () => {
-//     if (!validateDeliveryDetails()) return
-//     setShowDeliveryForm(false)
-//     setShowBillPreview(true)
-//   }
-
-//   const handlePlaceOrder = () => {
-//     const orderId = `ORD${Date.now()}`
-//     const orderDate = new Date().toISOString()
-    
-//     const order = {
-//       id: orderId,
-//       date: orderDate,
-//       items: cartItems,
-//       subtotal,
-//       shipping,
-//       gst,
-//       discount,
-//       total,
-//       status: 'Processing',
-//       deliveryDetails
-//     }
-    
-//     const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-//     localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]))
-    
-//     toast.success('Order placed successfully!')
-//     clearCart()
-//     navigate('/orders')
-//   }
-
-//   if (cartItems.length === 0) {
-//     return (
-//       <div className="max-w-6xl mx-auto px-4 py-8">
-//         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center">
-//           <div className="flex justify-center mb-4">
-//             <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-//               <svg className="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-//               </svg>
-//             </div>
-//           </div>
-//           <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
-//           <p className="text-gray-600 dark:text-gray-400 mb-6">Add some delicious items to your cart!</p>
-//           <Link to="/" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
-//             Continue Shopping
-//           </Link>
-//         </div>
-//       </div>
-//     )
-//   }
-
-//   // if (showBillPreview) {
-//   //   return (
-//   //     <div className="max-w-4xl mx-auto px-4 py-8">
-//   //       <div className="bg-white rounded-lg shadow-lg p-8">
-//   //         <div className="flex justify-between items-start mb-8">
-//   //           <div>
-//   //             <h2 className="text-2xl font-bold text-gray-800">Invoice Preview</h2>
-//   //             <p className="text-gray-600">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
-//   //             <p className="text-gray-600">Invoice #: INV-{Date.now()}</p>
-//   //           </div>
-//   //           <img src="/logo.png" alt="Company Logo" className="h-[17rem]" />
-//   //         </div>
-
-//   //         <div className="grid grid-cols-2 gap-8 mb-8">
-//   //           <div>
-//   //             <h3 className="font-semibold mb-2">Bill From:</h3>
-//   //             <p className="text-gray-600">AgriGuide Solutions</p>
-//   //             <p className="text-gray-600">123 Farm Street</p>
-//   //             <p className="text-gray-600">Agritown, AG 12345</p>
-//   //             <p className="text-gray-600">GSTIN: 12ABCDE3456F7ZG</p>
-//   //           </div>
-//   //           <div>
-//   //             <h3 className="font-semibold mb-2">Bill To:</h3>
-//   //             <p className="text-gray-600">{deliveryDetails.fullName}</p>
-//   //             <p className="text-gray-600">{deliveryDetails.address}</p>
-//   //             <p className="text-gray-600">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
-//   //             {deliveryDetails.gstin && <p className="text-gray-600">GSTIN: {deliveryDetails.gstin}</p>}
-//   //             {deliveryDetails.pan && <p className="text-gray-600">PAN: {deliveryDetails.pan}</p>}
-//   //           </div>
-//   //         </div>
-
-//   //         <table className="w-full mb-8">
-//   //           <thead>
-//   //             <tr className="bg-gray-50">
-//   //               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-//   //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-//   //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate</th>
-//   //               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-//   //             </tr>
-//   //           </thead>
-//   //           <tbody className="bg-white divide-y divide-gray-200">
-//   //             {cartItems.map((item) => (
-//   //               <tr key={item.id}>
-//   //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.name}</td>
-//   //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">{item.quantity}</td>
-//   //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${item.price.toFixed(2)}</td>
-//   //                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">${(item.price * item.quantity).toFixed(2)}</td>
-//   //               </tr>
-//   //             ))}
-//   //           </tbody>
-//   //         </table>
-
-//   //         <div className="border-t border-gray-200 pt-4">
-//   //           <div className="flex justify-end">
-//   //             <div className="w-64">
-//   //               <div className="flex justify-between mb-2">
-//   //                 <span className="text-gray-600">Subtotal</span>
-//   //                 <span className="font-medium">${subtotal.toFixed(2)}</span>
-//   //               </div>
-//   //               <div className="flex justify-between mb-2">
-//   //                 <span className="text-gray-600">GST (18%)</span>
-//   //                 <span className="font-medium">${gst.toFixed(2)}</span>
-//   //               </div>
-//   //               <div className="flex justify-between mb-2">
-//   //                 <span className="text-gray-600">Shipping</span>
-//   //                 <span className="font-medium">${shipping.toFixed(2)}</span>
-//   //               </div>
-//   //               {discount > 0 && (
-//   //                 <div className="flex justify-between mb-2 text-green-600">
-//   //                   <span>Discount</span>
-//   //                   <span>-${discount.toFixed(2)}</span>
-//   //                 </div>
-//   //               )}
-//   //               <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
-//   //                 <span className="font-semibold">Total</span>
-//   //                 <span className="font-bold">${total.toFixed(2)}</span>
-//   //               </div>
-//   //             </div>
-//   //           </div>
-//   //         </div>
-
-//   //         <div className="mt-8 border-t border-gray-200 pt-8">
-//   //           <h3 className="font-semibold mb-4">Terms & Conditions:</h3>
-//   //           <ul className="text-sm text-gray-600 list-disc pl-5 space-y-2">
-//   //             <li>Payment is due within 30 days</li>
-//   //             <li>Please include invoice number on your payment</li>
-//   //             <li>Make all checks payable to AgriGuide Solutions</li>
-//   //           </ul>
-//   //         </div>
-
-//   //         <div className="mt-8 flex justify-end space-x-4">
-//   //           <button
-//   //             onClick={() => setShowBillPreview(false)}
-//   //             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-//   //           >
-//   //             Back
-//   //           </button>
-//   //           <button
-//   //             onClick={handlePlaceOrder}
-//   //             className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-//   //           >
-//   //             Confirm & Place Order
-//   //           </button>
-//   //         </div>
-//   //       </div>
-//   //     </div>
-//   //   )
-//   // }
-//   if (showBillPreview) {
-//   return (
-//     <div className="max-w-4xl mx-auto px-4 py-8  text-[#2E2E2E]">
-//       <div className="rounded-lg shadow-lg p-0 bg-[#6a994e]">
-//         <div className="flex justify-between items-start mb-8 bg-[#14400f]">
-//           <div className="p-20">
-//             <h2 className="text-5xl font-bold text-[#86d17d]">Invoice Preview</h2>
-//             <p className=" text-3xl text-[#86d17d]">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
-//             <p className="text-3xl text-[#86d17d]">Invoice #: INV-{Date.now()}</p>
-//           </div>
-//           <div className='p-5'>
-//                       <img src="/logo.png" alt="Company Logo" className="h-[17rem] " />
-
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-2 gap-8 mb-8 ">
-//           <div className='pl-10'>
-//             <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill From:</h3>
-//             <p className="text-[#2E2E2E]">AgriGuide Solutions</p>
-//             <p className="text-[#2E2E2E]">123 Farm Street</p>
-//             <p className="text-[#2E2E2E]">Agritown, AG 12345</p>
-//             <p className="text-[#2E2E2E]">GSTIN: 12ABCDE3456F7ZG</p>
-//           </div>
-//           <div>
-//             <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill To:</h3>
-//             <p className="text-[#2E2E2E]">{deliveryDetails.fullName}</p>
-//             <p className="text-[#2E2E2E]">{deliveryDetails.address}</p>
-//             <p className="text-[#2E2E2E]">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
-//             {deliveryDetails.gstin && <p className="text-[#2E2E2E]">GSTIN: {deliveryDetails.gstin}</p>}
-//             {deliveryDetails.pan && <p className="text-[#2E2E2E]">PAN: {deliveryDetails.pan}</p>}
-//           </div>
-//         </div>
-
-//         <table className="w-full mb-8 pl-10">
-//           <thead>
-//             <tr className="bg-[#1b263b]">
-//               <th className="px-6 py-3 text-left text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Item</th>
-//               <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Qty</th>
-//               <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Rate</th>
-//               <th className="px-6 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase tracking-wider">Amount</th>
-//             </tr>
-//           </thead>
-//           <tbody className="divide-y divide-gray-300 bg-[#e5e5e5]">
-//             {cartItems.map((item) => (
-//               <tr key={item.id}>
-//                 <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E]">{item.name}</td>
-//                 <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">{item.quantity}</td>
-//                 <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">${item.price.toFixed(2)}</td>
-//                 <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E2E2E] text-right">${(item.price * item.quantity).toFixed(2)}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-
-//         <div className="border-t border-gray-300 pt-4">
-//           <div className="flex justify-end">
-//             <div className="w-64 bg-[#e5e5e5]">
-//               <div className="flex justify-between mb-2 pr-5">
-//                 <span className="text-[#2E2E2E]">Subtotal</span>
-//                 <span className="font-medium text-[#2E2E2E]">${subtotal.toFixed(2)}</span>
-//               </div>
-//               <div className="flex justify-between mb-2 pr-5">
-//                 <span className="text-[#2E2E2E]">GST (18%)</span>
-//                 <span className="font-medium text-[#2E2E2E]">${gst.toFixed(2)}</span>
-//               </div>
-//               <div className="flex justify-between mb-2 pr-5">
-//                 <span className="text-[#2E2E2E]">Shipping</span>
-//                 <span className="font-medium text-[#2E2E2E]">${shipping.toFixed(2)}</span>
-//               </div>
-//               {discount > 0 && (
-//                 <div className="flex justify-between mb-2 text-green-600">
-//                   <span>Discount</span>
-//                   <span>-${discount.toFixed(2)}</span>
-//                 </div>
-//               )}
-//               <div className="flex justify-between border-t border-gray-300 pt-2 mt-2 pr-5">
-//                 <span className="font-semibold text-[#2E2E2E]">Total</span>
-//                 <span className="font-bold text-[#2E2E2E]">${total.toFixed(2)}</span>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="mt-8 border-t border-gray-300 pt-8 pl-10 bg-[#abf768]">
-//           <h3 className="font-semibold mb-4 text-[#2E2E2E]">Terms & Conditions:</h3>
-//           <ul className="text-sm list-disc pl-5 space-y-2 text-[#2E2E2E]">
-//             <li>Payment is due within 30 days</li>
-//             <li>Please include invoice number on your payment</li>
-//             <li>Make all checks payable to AgriGuide Solutions</li>
-//           </ul>
-//         </div>
-
-//         <div className="mt-8 flex justify-end space-x-4 p-10">
-//           <button
-//             onClick={() => setShowBillPreview(false)}
-//             className="px-6 py-2 border border-gray-300 rounded-md text-[#2E2E2E] hover:bg-gray-200"
-//           >
-//             Back
-//           </button>
-//           <button
-//             onClick={handlePlaceOrder}
-//             className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-//           >
-//             Confirm & Place Order
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-//   return (
-//     <div className="max-w-6xl mx-auto px-4 py-8">
-//       <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Cart</h1>
-
-//       <div className="flex flex-col lg:flex-row gap-8">
-//         <div className="lg:w-2/3">
-//           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
-//             <div className="p-4 md:p-6">
-//               <div className="space-y-4">
-//                 {cartItems.map((item) => (
-//                   <div key={item.id} className="flex flex-col sm:flex-row items-start gap-4 py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-//                     <div className="w-full sm:w-24 h-24 relative rounded-lg overflow-hidden">
-//                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-//                     </div>
-//                     <div className="flex-1">
-//                       <div className="flex flex-col sm:flex-row sm:justify-between">
-//                         <h3 className="text-lg font-medium">{item.name}</h3>
-//                         <p className="text-lg font-medium mt-1 sm:mt-0">${(item.price * item.quantity).toFixed(2)}</p>
-//                       </div>
-//                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
-//                       <div className="flex items-center justify-between mt-4">
-//                         <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
-//                           <button
-//                             onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-//                             className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-//                           >
-//                             -
-//                           </button>
-//                           <span className="px-3 py-1 border-x border-gray-300 dark:border-gray-600">{item.quantity}</span>
-//                           <button
-//                             onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-//                             className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-//                           >
-//                             +
-//                           </button>
-//                         </div>
-//                         <button
-//                           onClick={() => handleRemoveItem(item.id)}
-//                           className="text-sm font-medium text-red-600 hover:text-red-700"
-//                         >
-//                           Remove
-//                         </button>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 ))}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="lg:w-1/3">
-//           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-20">
-//             <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
-            
-//             <div className="space-y-4 mb-6">
-//               <div className="flex justify-between">
-//                 <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-//                 <span className="font-medium">${subtotal.toFixed(2)}</span>
-//               </div>
-              
-//               <div className="flex justify-between">
-//                 <span className="text-gray-600 dark:text-gray-400">Shipping</span>
-//                 <span className="font-medium">
-//                   {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
-//                 </span>
-//               </div>
-
-//               <div className="flex justify-between">
-//                 <span className="text-gray-600 dark:text-gray-400">GST (18%)</span>
-//                 <span className="font-medium">${gst.toFixed(2)}</span>
-//               </div>
-              
-//               {isPromoApplied && (
-//                 <div className="flex justify-between text-green-600">
-//                   <span>Discount</span>
-//                   <span>-${discount.toFixed(2)}</span>
-//                 </div>
-//               )}
-              
-//               <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-//                 <div className="flex justify-between">
-//                   <span className="font-semibold">Total</span>
-//                   <span className="font-bold text-lg">${total.toFixed(2)}</span>
-//                 </div>
-//                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-//                   including GST
-//                 </p>
-//               </div>
-//             </div>
-            
-//             {!isPromoApplied && (
-//               <div className="mb-6">
-//                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-//                   Promo Code
-//                 </label>
-//                 <div className="flex">
-//                   <input
-//                     type="text"
-//                     value={promoCode}
-//                     onChange={(e) => setPromoCode(e.target.value)}
-//                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-//                     placeholder="Enter code"
-//                   />
-//                   <button
-//                     onClick={handleApplyPromo}
-//                     className="px-4 py-2 bg-primary-600 text-white font-medium rounded-r-lg hover:bg-primary-700"
-//                   >
-//                     Apply
-//                   </button>
-//                 </div>
-//                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-//                   Try "FIRST10" for 10% off
-//                 </p>
-//               </div>
-//             )}
-            
-//             <button
-//               onClick={() => setShowDeliveryForm(true)}
-//               className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm"
-//             >
-//               Proceed to Checkout
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       {showDeliveryForm && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-//           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-//             <div className="p-6">
-//               <div className="flex justify-between items-center mb-6">
-//                 <h2 className="text-xl font-semibold">Delivery Details</h2>
-//                 <button onClick={() => setShowDeliveryForm(false)} className="text-gray-400 hover:text-gray-500">
-//                   <span className="sr-only">Close</span>
-//                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-//                   </svg>
-//                 </button>
-//               </div>
-
-//               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                   <div>
-//                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       Full Name
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="fullName"
-//                       name="fullName"
-//                       value={deliveryDetails.fullName}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       Email
-//                     </label>
-//                     <input
-//                       type="email"
-//                       id="email"
-//                       name="email"
-//                       value={deliveryDetails.email}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       Phone
-//                     </label>
-//                     <input
-//                       type="tel"
-//                       id="phone"
-//                       name="phone"
-//                       value={deliveryDetails.phone}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       Address
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="address"
-//                       name="address"
-//                       value={deliveryDetails.address}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       City
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="city"
-//                       name="city"
-//                       value={deliveryDetails.city}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       State
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="state"
-//                       name="state"
-//                       value={deliveryDetails.state}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       Pincode
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="pincode"
-//                       name="pincode"
-//                       value={deliveryDetails.pincode}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="gstin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       GSTIN (Optional)
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="gstin"
-//                       name="gstin"
-//                       value={deliveryDetails.gstin}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                   <div>
-//                     <label htmlFor="pan" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                       PAN (Optional)
-//                     </label>
-//                     <input
-//                       type="text"
-//                       id="pan"
-//                       name="pan"
-//                       value={deliveryDetails.pan}
-//                       onChange={handleDeliveryDetailsChange}
-//                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     />
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-//                     Delivery Notes (Optional)
-//                   </label>
-//                   <textarea
-//                     id="notes"
-//                     name="notes"
-//                     rows="3"
-//                     value={deliveryDetails.notes}
-//                     onChange={handleDeliveryDetailsChange}
-//                     className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-//                     placeholder="Any special instructions for delivery"
-//                   ></textarea>
-//                 </div>
-
-//                 <div className="flex justify-end space-x-4">
-//                   <button
-//                     type="button"
-//                     onClick={() => setShowDeliveryForm(false)}
-//                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-//                   >
-//                     Cancel
-//                   </button>
-//                   <button
-//                     type="button"
-//                     onClick={handleProceedToPreview}
-//                     className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-//                   >
-//                     Preview Bill
-//                   </button>
-//                 </div>
-//               </form>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// export default CartPage
-
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useCart } from '../contexts/CartContext'
-import { toast } from 'react-toastify'
-import { format } from 'date-fns'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const CartPage = () => {
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart()
-  const [promoCode, setPromoCode] = useState('')
-  const [isPromoApplied, setIsPromoApplied] = useState(false)
-  const [discount, setDiscount] = useState(0)
-  const [showDeliveryForm, setShowDeliveryForm] = useState(false)
-  const [showBillPreview, setShowBillPreview] = useState(false)
+  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const navigate = useNavigate();
+  const [step, setStep] = useState('cart'); // cart, delivery, confirm
   const [deliveryDetails, setDeliveryDetails] = useState({
     fullName: '',
     email: '',
@@ -1056,521 +16,488 @@ const CartPage = () => {
     city: '',
     state: '',
     pincode: '',
-    notes: '',
     gstin: '',
-    pan: ''
-  })
-  const navigate = useNavigate()
-  
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-  const shipping = subtotal > 50 ? 0 : 5.99
-  const gst = subtotal * 0.18 // 18% GST
-  const total = subtotal + shipping + gst - discount
+    pan: '',
+    notes: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleQuantityChange = (id, newQuantity) => {
-    if (newQuantity < 1) return
-    updateQuantity(id, newQuantity)
-  }
-  
-  const handleRemoveItem = (id) => {
-    removeFromCart(id)
-    toast.info('Item removed from cart')
-  }
-  
-  const handleApplyPromo = () => {
-    if (promoCode.toLowerCase() === 'first10') {
-      setDiscount(subtotal * 0.1)
-      setIsPromoApplied(true)
-      toast.success('Promo code applied successfully!')
-    } else {
-      toast.error('Invalid promo code')
+  const progressSteps = [
+    {
+      icon: "📋",
+      label: "Cart",
+      status: step === 'cart' ? 'current' : step === 'delivery' || step === 'confirm' ? 'complete' : 'upcoming'
+    },
+    {
+      icon: "🚚",
+      label: "Delivery",
+      status: step === 'delivery' ? 'current' : step === 'confirm' ? 'complete' : 'upcoming'
+    },
+    {
+      icon: "✅",
+      label: "Confirm",
+      status: step === 'confirm' ? 'current' : 'upcoming'
     }
-  }
+  ];
 
-  const handleDeliveryDetailsChange = (e) => {
-    const { name, value } = e.target
+  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const shipping = subtotal > 100 ? 0 : 10;
+  const gst = subtotal * 0.18;
+  const discount = subtotal > 200 ? 20 : 0;
+  const total = subtotal + shipping + gst - discount;
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    updateQuantity(productId, newQuantity);
+  };
+
+  const handleRemoveItem = (productId) => {
+    removeFromCart(productId);
+    toast.info('Item removed from cart');
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setDeliveryDetails(prev => ({
       ...prev,
       [name]: value
-    }))
-  }
+    }));
+  };
 
-  const validateDeliveryDetails = () => {
-    const required = ['fullName', 'email', 'phone', 'address', 'city', 'state', 'pincode']
-    for (const field of required) {
-      if (!deliveryDetails[field]) {
-        toast.error(`Please enter your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`)
-        return false
-      }
+  const handleProceedToDelivery = () => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      return;
     }
-    return true
-  }
+    setIsLoading(true);
+    setTimeout(() => {
+      setStep('delivery');
+      setIsLoading(false);
+    }, 1000);
+  };
 
-  const handleProceedToPreview = () => {
-    if (!validateDeliveryDetails()) return
-    setShowDeliveryForm(false)
-    setShowBillPreview(true)
-  }
+  const handleBackToCart = () => {
+    setStep('cart');
+  };
+
+  const handleProceedToConfirm = () => {
+    if (!deliveryDetails.fullName || !deliveryDetails.email || !deliveryDetails.phone || 
+        !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.state || 
+        !deliveryDetails.pincode) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setStep('confirm');
+      setIsLoading(false);
+    }, 1000);
+  };
 
   const handlePlaceOrder = () => {
-    const orderId = `ORD${Date.now()}`
-    const orderDate = new Date().toISOString()
-    
-    const order = {
-      id: orderId,
-      date: orderDate,
-      items: cartItems,
-      subtotal,
-      shipping,
-      gst,
-      discount,
-      total,
-      status: 'Processing',
-      deliveryDetails
-    }
-    
-    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-    localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]))
-    
-    toast.success('Order placed successfully!')
-    clearCart()
-    navigate('/orders')
-  }
+    setIsLoading(true);
+    setTimeout(() => {
+      const orderId = `ORD${Date.now()}`;
+      const orderDate = new Date().toISOString();
 
-  if (cartItems.length === 0) {
+      const order = {
+        id: orderId,
+        date: orderDate,
+        items: cartItems,
+        subtotal,
+        shipping,
+        gst,
+        discount,
+        total,
+        status: 'Processing',
+        deliveryDetails
+      };
+
+      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]));
+
+      clearCart();
+      navigate('/order-success');
+    }, 2000);
+  };
+
+  if (cartItems.length === 0 && step === 'cart') {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-              <svg className="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-            </div>
-          </div>
-          <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Add some delicious items to your cart!</p>
-          <Link to="/" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center py-12">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </motion.div>
+          <h2 className="text-2xl font-bold mb-4">Your Cart is Empty</h2>
+          <p className="text-gray-600 mb-8">Add some products to your cart and they will show up here</p>
+          <button
+            onClick={() => navigate('/marketplace')}
+            className="btn btn-primary"
+          >
             Continue Shopping
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (showBillPreview) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8 text-[#2E2E2E]">
-        <div className="rounded-lg shadow-lg p-0 bg-[#6a994e]">
-          <div className="flex flex-col md:flex-row justify-between items-center bg-[#14400f] p-6 md:p-10">
-            <div className="text-center md:text-left mb-6 md:mb-0">
-              <h2 className="text-3xl md:text-5xl font-bold text-[#86d17d] mb-2">Invoice Preview</h2>
-              <p className="text-xl md:text-3xl text-[#86d17d]">Date: {format(new Date(), 'MMM dd, yyyy')}</p>
-              <p className="text-xl md:text-3xl text-[#86d17d]">Invoice #: INV-{Date.now()}</p>
-            </div>
-            <div className="w-32 md:w-auto">
-              <img src="/logo.png" alt="Company Logo" className="h-24 md:h-[17rem] w-auto" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-10">
-            <div>
-              <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill From:</h3>
-              <p className="text-[#2E2E2E]">AgriGuide Solutions</p>
-              <p className="text-[#2E2E2E]">123 Farm Street</p>
-              <p className="text-[#2E2E2E]">Agritown, AG 12345</p>
-              <p className="text-[#2E2E2E]">GSTIN: 12ABCDE3456F7ZG</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2 text-[#2E2E2E]">Bill To:</h3>
-              <p className="text-[#2E2E2E]">{deliveryDetails.fullName}</p>
-              <p className="text-[#2E2E2E]">{deliveryDetails.address}</p>
-              <p className="text-[#2E2E2E]">{deliveryDetails.city}, {deliveryDetails.state} {deliveryDetails.pincode}</p>
-              {deliveryDetails.gstin && <p className="text-[#2E2E2E]">GSTIN: {deliveryDetails.gstin}</p>}
-              {deliveryDetails.pan && <p className="text-[#2E2E2E]">PAN: {deliveryDetails.pan}</p>}
-            </div>
-          </div>
-
-          <div className="overflow-x-auto p-6 md:p-10">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-[#1b263b]">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-[#e0e1dd] uppercase">Item</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase">Qty</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase">Rate</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-[#e0e1dd] uppercase">Amount</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-300 bg-[#e5e5e5]">
-                {cartItems.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-4 py-3 text-sm text-[#2E2E2E]">{item.name}</td>
-                    <td className="px-4 py-3 text-sm text-[#2E2E2E] text-right">{item.quantity}</td>
-                    <td className="px-4 py-3 text-sm text-[#2E2E2E] text-right">${item.price.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-sm text-[#2E2E2E] text-right">${(item.price * item.quantity).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="border-t border-gray-300 p-6 md:p-10">
-            <div className="flex justify-end">
-              <div className="w-full md:w-64 bg-[#e5e5e5] p-4">
-                <div className="flex justify-between mb-2">
-                  <span className="text-[#2E2E2E]">Subtotal</span>
-                  <span className="font-medium text-[#2E2E2E]">${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-[#2E2E2E]">GST (18%)</span>
-                  <span className="font-medium text-[#2E2E2E]">${gst.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-[#2E2E2E]">Shipping</span>
-                  <span className="font-medium text-[#2E2E2E]">${shipping.toFixed(2)}</span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between mb-2 text-green-600">
-                    <span>Discount</span>
-                    <span>-${discount.toFixed(2)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between border-t border-gray-300 pt-2 mt-2">
-                  <span className="font-semibold text-[#2E2E2E]">Total</span>
-                  <span className="font-bold text-[#2E2E2E]">${total.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t border-gray-300 bg-[#abf768] p-6 md:p-10">
-            <h3 className="font-semibold mb-4 text-[#2E2E2E]">Terms & Conditions:</h3>
-            <ul className="text-sm list-disc pl-5 space-y-2 text-[#2E2E2E]">
-              <li>Payment is due within 30 days</li>
-              <li>Please include invoice number on your payment</li>
-              <li>Make all checks payable to AgriGuide Solutions</li>
-            </ul>
-          </div>
-
-          <div className="flex justify-end space-x-4 p-6 md:p-10">
-            <button
-              onClick={() => setShowBillPreview(false)}
-              className="px-6 py-2 border border-gray-300 rounded-md text-[#2E2E2E] hover:bg-gray-200"
-            >
-              Back
-            </button>
-            <button
-              onClick={handlePlaceOrder}
-              className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-            >
-              Confirm & Place Order
-            </button>
-          </div>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Cart</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Progress Steps */}
+      <div className="mb-8">
+        <div className="flex items-center justify-center">
+          {progressSteps.map((stepItem, index) => (
+            <div key={index} className="flex items-center">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl ${
+                stepItem.status === 'current' ? 'bg-primary-600 text-white' :
+                stepItem.status === 'complete' ? 'bg-green-500 text-white' :
+                'bg-gray-200 text-gray-500'
+              } transition-all duration-300`}>
+                {stepItem.status === 'complete' ? '✓' : stepItem.icon}
+              </div>
+              {index < progressSteps.length - 1 && (
+                <div className={`h-1 w-24 ${
+                  stepItem.status === 'complete' ? 'bg-green-500' : 'bg-gray-200'
+                } transition-all duration-300`}></div>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-center mt-2">
+          {progressSteps.map((stepItem, index) => (
+            <div key={index} className="text-sm text-gray-600 w-40 text-center">
+              {stepItem.label}
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
-            <div className="p-4 md:p-6">
-              <div className="space-y-4">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-lg font-medium">Processing...</p>
+          </div>
+        </div>
+      )}
+
+      {step === 'cart' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="p-6">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex flex-col sm:flex-row items-start gap-4 py-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                    <div className="w-full sm:w-24 h-24 relative rounded-lg overflow-hidden">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex flex-col sm:flex-row sm:justify-between">
-                        <h3 className="text-lg font-medium">{item.name}</h3>
-                        <p className="text-lg font-medium mt-1 sm:mt-0">${(item.price * item.quantity).toFixed(2)}</p>
-                      </div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                            className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          >
-                            -
-                          </button>
-                          <span className="px-3 py-1 border-x border-gray-300 dark:border-gray-600">{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                            className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          >
-                            +
-                          </button>
-                        </div>
+                  <div key={item.id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                    <div className="flex-1 ml-6">
+                      <h3 className="text-lg font-semibold">{item.name}</h3>
+                      <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+                      <div className="flex items-center">
                         <button
-                          onClick={() => handleRemoveItem(item.id)}
-                          className="text-sm font-medium text-red-600 hover:text-red-700"
+                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          className="text-gray-500 hover:text-gray-700"
                         >
-                          Remove
+                          -
+                        </button>
+                        <span className="mx-4">{item.quantity}</span>
+                        <button
+                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          +
                         </button>
                       </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="text-red-600 hover:text-red-700 text-sm"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="lg:w-1/3">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-20">
-            <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
-            
-            <div className="space-y-4 mb-6">
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">Shipping</span>
-                <span className="font-medium">
-                  {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">GST (18%)</span>
-                <span className="font-medium">${gst.toFixed(2)}</span>
-              </div>
-              
-              {isPromoApplied && (
-                <div className="flex justify-between text-green-600">
-                  <span>Discount</span>
-                  <span>-${discount.toFixed(2)}</span>
-                </div>
-              )}
-              
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+              <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="font-semibold">Total</span>
-                  <span className="font-bold text-lg">${total.toFixed(2)}</span>
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  including GST
-                </p>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>${shipping.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>GST (18%)</span>
+                  <span>${gst.toFixed(2)}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount</span>
+                    <span>-${discount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="border-t pt-3 mt-3">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
+              <button
+                onClick={handleProceedToDelivery}
+                className="w-full btn btn-primary mt-6"
+              >
+                Proceed to Delivery
+              </button>
             </div>
-            
-            {!isPromoApplied && (
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Promo Code
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="Enter code"
-                  />
-                  <button
-                    onClick={handleApplyPromo}
-                    className="px-4 py-2 bg-primary-600 text-white font-medium rounded-r-lg hover:bg-primary-700"
-                  >
-                    Apply
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Try "FIRST10" for 10% off
-                </p>
-              </div>
-            )}
-            
-            <button
-              onClick={() => setShowDeliveryForm(true)}
-              className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm"
-            >
-              Proceed to Checkout
-            </button>
           </div>
         </div>
-      </div>
+      )}
 
-      {showDeliveryForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Delivery Details</h2>
-                <button onClick={() => setShowDeliveryForm(false)} className="text-gray-400 hover:text-gray-500">
-                  <span className="sr-only">Close</span>
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+      {step === 'delivery' && (
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Delivery Details</h2>
+              <button
+                onClick={handleBackToCart}
+                className="text-primary-600 hover:text-primary-700"
+              >
+                Back to Cart
+              </button>
+            </div>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Full Name *</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={deliveryDetails.fullName}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={deliveryDetails.email}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Phone *</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={deliveryDetails.phone}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Address *</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={deliveryDetails.address}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">City *</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={deliveryDetails.city}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">State *</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={deliveryDetails.state}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Pincode *</label>
+                <input
+                  type="text"
+                  name="pincode"
+                  value={deliveryDetails.pincode}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">GSTIN (Optional)</label>
+                <input
+                  type="text"
+                  name="gstin"
+                  value={deliveryDetails.gstin}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">PAN (Optional)</label>
+                <input
+                  type="text"
+                  name="pan"
+                  value={deliveryDetails.pan}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                <textarea
+                  name="notes"
+                  value={deliveryDetails.notes}
+                  onChange={handleInputChange}
+                  rows="3"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                ></textarea>
+              </div>
+              <button
+                type="button"
+                onClick={handleProceedToConfirm}
+                className="w-full btn btn-primary py-3"
+              >
+                Proceed to Confirm
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {step === 'confirm' && (
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-6">Confirm Order</h2>
+            
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">Delivery Details</h3>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p><span className="font-medium">Name:</span> {deliveryDetails.fullName}</p>
+                  <p><span className="font-medium">Email:</span> {deliveryDetails.email}</p>
+                  <p><span className="font-medium">Phone:</span> {deliveryDetails.phone}</p>
+                  <p><span className="font-medium">Address:</span> {deliveryDetails.address}</p>
+                  <p><span className="font-medium">City:</span> {deliveryDetails.city}</p>
+                  <p><span className="font-medium">State:</span> {deliveryDetails.state}</p>
+                  <p><span className="font-medium">Pincode:</span> {deliveryDetails.pincode}</p>
+                </div>
               </div>
 
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      value={deliveryDetails.fullName}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={deliveryDetails.email}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={deliveryDetails.phone}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={deliveryDetails.address}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      name="city"
-                      value={deliveryDetails.city}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      State
-                    </label>
-                    <input
-                      type="text"
-                      id="state"
-                      name="state"
-                      value={deliveryDetails.state}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Pincode
-                    </label>
-                    <input
-                      type="text"
-                      id="pincode"
-                      name="pincode"
-                      value={deliveryDetails.pincode}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="gstin" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      GSTIN (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      id="gstin"
-                      name="gstin"
-                      value={deliveryDetails.gstin}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="pan" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      PAN (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      id="pan"
-                      name="pan"
-                      value={deliveryDetails.pan}
-                      onChange={handleDeliveryDetailsChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    />
-                  </div>
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">Order Items</h3>
+                <div className="space-y-4">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                        <div className="ml-4">
+                          <h4 className="font-medium">{item.name}</h4>
+                          <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                        </div>
+                      </div>
+                      <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                <div>
-                  <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Delivery Notes (Optional)
-                  </label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    rows="3"
-                    value={deliveryDetails.notes}
-                    onChange={handleDeliveryDetailsChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="Any special instructions for delivery"
-                  ></textarea>
+              <div className="border-t pt-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>${shipping.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>GST (18%)</span>
+                    <span>${gst.toFixed(2)}</span>
+                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount</span>
+                      <span>-${discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="border-t pt-2 mt-2">
+                    <div className="flex justify-between font-semibold">
+                      <span>Total</span>
+                      <span>${total.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
 
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowDeliveryForm(false)}
-                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleProceedToPreview}
-                    className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-                  >
-                    Preview Bill
-                  </button>
-                </div>
-              </form>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setStep('delivery')}
+                  className="flex-1 btn btn-outline"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handlePlaceOrder}
+                  className="flex-1 btn btn-primary"
+                >
+                  Place Order
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;
