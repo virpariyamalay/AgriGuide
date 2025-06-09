@@ -37,11 +37,21 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      await signup(formData);
+      await signup({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        bio: formData.bio,
+      });
       navigate('/');
       toast.success('Account created successfully!');
     } catch (error) {
-      toast.error('Failed to create an account.');
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

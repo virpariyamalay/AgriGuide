@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
-  const { user, updateProfile, logout } = useAuth();
+  const { user, updateProfile, logout, fetchUserProfile } = useAuth();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,15 +23,23 @@ const ProfilePage = () => {
       return;
     }
 
-    setFormData({
-      fullName: user.fullName || '',
-      phone: user.phone || '',
-      address: user.address || '',
-      city: user.city || '',
-      state: user.state || '',
-      pincode: user.pincode || '',
-      bio: user.bio || ''
-    });
+    const loadUserProfile = async () => {
+      const profile = await fetchUserProfile();
+      console.log('ProfilePage loadUserProfile fetched profile:', profile);
+      if (profile) {
+        setFormData({
+          fullName: profile.name || '',
+          phone: profile.phone || '',
+          address: profile.address || '',
+          city: profile.city || '',
+          state: profile.state || '',
+          pincode: profile.pincode || '',
+          bio: profile.bio || ''
+        });
+      }
+    };
+
+    loadUserProfile();
   }, [user, navigate]);
 
   const handleChange = (e) => {
@@ -45,7 +53,18 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateProfile(formData);
+      const updatedProfile = await updateProfile(formData);
+      if (updatedProfile) {
+        setFormData({
+          fullName: updatedProfile.name || '',
+          phone: updatedProfile.phone || '',
+          address: updatedProfile.address || '',
+          city: updatedProfile.city || '',
+          state: updatedProfile.state || '',
+          pincode: updatedProfile.pincode || '',
+          bio: updatedProfile.bio || ''
+        });
+      }
       setIsEditing(false);
       toast.success('Profile updated successfully!');
     } catch (error) {

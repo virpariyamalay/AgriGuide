@@ -1,118 +1,3 @@
-// import { createContext, useContext, useState, useEffect } from 'react';
-
-// const AuthContext = createContext();
-
-// export const useAuth = () => useContext(AuthContext);
-
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const savedUser = localStorage.getItem('user');
-//     if (savedUser) {
-//       setUser(JSON.parse(savedUser));
-//     }
-//     setLoading(false);
-//   }, []);
-
-//   const signup = async (userData) => {
-//     const users = JSON.parse(localStorage.getItem('users') || '[]');
-//     const existingUser = users.find(u => u.email === userData.email);
-    
-//     if (existingUser) {
-//       throw new Error('User already exists');
-//     }
-
-//     if (userData.email === 'admin@agriguide.com') {
-//       throw new Error('Cannot create admin account');
-//     }
-
-//     const { confirmPassword, ...userDataWithoutConfirm } = userData;
-//     const newUser = { 
-//       id: Date.now(), 
-//       ...userDataWithoutConfirm,
-//       role: 'user'
-//     };
-//     users.push(newUser);
-//     localStorage.setItem('users', JSON.stringify(users));
-    
-//     const userWithoutPassword = { ...newUser };
-//     delete userWithoutPassword.password;
-    
-//     setUser(userWithoutPassword);
-//     localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-//   };
-
-//   const login = async (email, password) => {
-//     if (email === 'admin@agriguide.com' && password === 'admin123') {
-//       const adminUser = {
-//         id: 'admin',
-//         email: 'admin@agriguide.com',
-//         role: 'admin',
-//         fullName: 'Admin User'
-//       };
-//       setUser(adminUser);
-//       localStorage.setItem('user', JSON.stringify(adminUser));
-//       return;
-//     }
-
-//     const users = JSON.parse(localStorage.getItem('users') || '[]');
-//     const user = users.find(u => u.email === email && u.password === password);
-    
-//     if (!user) {
-//       throw new Error('Invalid credentials');
-//     }
-
-//     const userWithoutPassword = { ...user };
-//     delete userWithoutPassword.password;
-    
-//     setUser(userWithoutPassword);
-//     localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-//   };
-
-//   const logout = async () => {
-//     setUser(null);
-//     localStorage.removeItem('user');
-//   };
-
-//   const isAdmin = () => {
-//     return user?.role === 'admin';
-//   };
-
-//   const updateProfile = async (updatedData) => {
-//     if (!user) return;
-
-//     const users = JSON.parse(localStorage.getItem('users') || '[]');
-//     const updatedUsers = users.map(u => 
-//       u.id === user.id ? { ...u, ...updatedData } : u
-//     );
-//     localStorage.setItem('users', JSON.stringify(updatedUsers));
-    
-//     const updatedUser = { ...user, ...updatedData };
-//     setUser(updatedUser);
-//     localStorage.setItem('user', JSON.stringify(updatedUser));
-//   };
-
-//   const value = {
-//     user,
-//     loading,
-//     signup,
-//     login,
-//     logout,
-//     isAdmin,
-//     updateProfile
-//   };
-
-//   return (
-//     <AuthContext.Provider value={value}>
-//       {!loading && children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export default AuthContext;
-
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -120,93 +5,143 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
-  }, []);
+  const [user, setUser] = useState(() => {
+    const userInfo = localStorage.getItem('userInfo');
+    return userInfo ? JSON.parse(userInfo) : null;
+  });
+  const [loading, setLoading] = useState(false);
 
   const signup = async (userData) => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const existingUser = users.find(u => u.email === userData.email);
+    setLoading(true);
+    try {
+      console.log('Signup request body:', {
+        name: userData.fullName,
+        email: userData.email,
+        password: userData.password,
+        phone: userData.phone || '',
+        address: userData.address || '',
+        city: userData.city || '',
+        state: userData.state || '',
+        pincode: userData.pincode || '',
+        bio: userData.bio || '',
+      });
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userData.fullName,
+          email: userData.email,
+          password: userData.password,
+          phone: userData.phone || '',
+          address: userData.address || '',
+          city: userData.city || '',
+          state: userData.state || '',
+          pincode: userData.pincode || '',
+          bio: userData.bio || '',
+        }),
+      });
 
-    if (existingUser) {
-      throw new Error('User already exists');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create an account.');
+      }
+
+      const data = await response.json();
+      await fetchUserProfile(); // Fetch full profile after signup
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
     }
-
-    if (userData.email === 'admin@agriguide.com') {
-      throw new Error('Cannot create admin account');
-    }
-
-    const { confirmPassword, ...userDataWithoutConfirm } = userData;
-    const newUser = { 
-      id: Date.now(), 
-      ...userDataWithoutConfirm,
-      role: 'user'
-    };
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-
-    const userWithoutPassword = { ...newUser };
-    delete userWithoutPassword.password;
-
-    setUser(userWithoutPassword);
-    localStorage.setItem('user', JSON.stringify(userWithoutPassword));
   };
 
   const login = async (email, password) => {
-    if (email === 'admin@agriguide.com' && password === 'admin123') {
-      const adminUser = {
-        id: 'admin',
-        email: 'admin@agriguide.com',
-        role: 'admin',
-        fullName: 'Admin User'
-      };
-      setUser(adminUser);
-      localStorage.setItem('user', JSON.stringify(adminUser));
-      return;
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Invalid email or password');
+      }
+
+      const data = await response.json();
+      setUser(data);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      await fetchUserProfile(); // Fetch full profile after login
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
     }
-
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-
-    const userWithoutPassword = { ...user };
-    delete userWithoutPassword.password;
-
-    setUser(userWithoutPassword);
-    localStorage.setItem('user', JSON.stringify(userWithoutPassword));
   };
 
-  const logout = async () => {
+  const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('userInfo');
   };
 
   const isAdmin = () => {
-    return user?.role === 'admin';
+    return user?.isAdmin;
+  };
+
+  const fetchUserProfile = async () => {
+    console.log('fetchUserProfile user:', user);
+    console.log('fetchUserProfile user.token:', user?.token);
+    if (!user?.token) return null;
+    try {
+      const response = await fetch('http://localhost:5000/api/users/profile', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+      const data = await response.json();
+      setUser(data);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 
   const updateProfile = async (updatedData) => {
-    if (!user) return;
-
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const updatedUsers = users.map(u => 
-      u.id === user.id ? { ...u, ...updatedData } : u
-    );
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-
-    const updatedUser = { ...user, ...updatedData };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    if (!user?.token) return null;
+    try {
+      const response = await fetch('http://localhost:5000/api/users/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+      const data = await response.json();
+      setUser(data);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      return data;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const value = {
@@ -216,7 +151,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     isAdmin,
-    updateProfile
+    updateProfile,
+    fetchUserProfile,
   };
 
   return (
