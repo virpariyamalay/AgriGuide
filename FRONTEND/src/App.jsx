@@ -49,7 +49,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen bg-primary-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
       <Header />
-      <main className="flex-grow py-6 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow py-0 px-0 sm:px-6 lg:px-8">
         {weatherData?.alerts && weatherData.alerts.length > 0 && (
           <WeatherAlert alert={weatherData.alerts[0]} />
         )}

@@ -213,7 +213,9 @@ const HomePage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Image Slider - Responsive */}
-      <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden mb-6 sm:mb-8 rounded-xl shadow-lg">
+      {/* <div className="relative w-screen left-1/2 -translate-x-1/2 h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden mb-6 sm:mb-8 rounded-xl shadow-lg"> */}
+      <div className=" relative w-screen left-1/2 -translate-x-1/2 h-64 sm:h-80 md:h-[28rem] lg:h-[32rem] overflow-hidden mb-6">
+
         {sliderImages.map((img, index) => (
           <motion.img
             key={index}
@@ -269,7 +271,7 @@ const HomePage = () => {
         </div>
 
         {/* How to Get Started - Responsive */}
-        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8 mb-8 sm:mb-12">
+        {/* <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8 mb-8 sm:mb-12">
           <motion.h2 
             className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8 text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -313,7 +315,53 @@ const HomePage = () => {
               </motion.div>
             ))}
           </div>
-        </div>
+        </div> */}
+        <div className="bg-[#f7faf5] rounded-2xl shadow-lg px-4 py-10 sm:px-8 md:px-12 mb-10">
+      <motion.h2
+        className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 text-center mb-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        🌱 How to Get Started with AgriGuide
+      </motion.h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {steps.map((step, index) => (
+          <motion.div
+            key={step.id}
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+            whileHover={step.animation.hover}
+            whileTap={step.animation.tap}
+            onHoverStart={() => setActiveStep(step.id)}
+            onHoverEnd={() => setActiveStep(null)}
+          >
+            <div className="flex flex-col items-center text-center text-green-900">
+              <motion.div
+                className="text-4xl sm:text-5xl mb-4"
+                animate={activeStep === step.id ? { scale: 1.3, rotate: 360 } : {}}
+                transition={{ duration: 0.5 }}
+              >
+                {step.icon}
+              </motion.div>
+
+              <motion.div
+                className="absolute top-3 left-3 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-800 font-semibold text-sm"
+                animate={activeStep === step.id ? { scale: 1.2 } : {}}
+              >
+                {step.id}
+              </motion.div>
+
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">{step.title}</h3>
+              <p className="text-sm sm:text-base text-gray-700">{step.description}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
 
         {/* Popular Crops - Responsive */}
         <motion.div
@@ -495,18 +543,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Show More Button - Responsive */}
-      <div className="text-center mt-6 sm:mt-8">
-        <button
-          onClick={() => setShowMoreCrops(!showMoreCrops)}
-          className="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 w-full sm:w-auto"
-        >
-          {showMoreCrops ? 'Show Less Crops' : 'Explore More Crops'}
-          <svg className={`ml-2 h-4 w-4 sm:h-5 sm:w-5 transform transition-transform ${showMoreCrops ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </button>
-      </div>
+     
     </div>
   );
 };
