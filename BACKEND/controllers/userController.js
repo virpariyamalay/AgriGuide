@@ -6,7 +6,19 @@ exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
     if (user) {
-      res.json(user);
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        pincode: user.pincode,
+        bio: user.bio,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      });
     } else {
       res.status(404).json({ message: 'User not found' });
     }

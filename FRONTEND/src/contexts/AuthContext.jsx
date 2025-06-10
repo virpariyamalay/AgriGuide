@@ -75,11 +75,18 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      setUser(data);
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      console.log('login response data:', data);
+      // Ensure token is included in user state and localStorage
+      if (!data.token) {
+        throw new Error('Login response missing token');
+      }
+      // Merge token with existing user data if any
+      const userData = { ...data, token: data.token };
+      setUser(userData);
+      localStorage.setItem('userInfo', JSON.stringify(userData));
       await fetchUserProfile(); // Fetch full profile after login
       setLoading(false);
-      return data;
+      return userData;
     } catch (error) {
       setLoading(false);
       throw error;
