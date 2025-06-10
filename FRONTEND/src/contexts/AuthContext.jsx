@@ -14,17 +14,6 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     setLoading(true);
     try {
-      console.log('Signup request body:', {
-        name: userData.fullName,
-        email: userData.email,
-        password: userData.password,
-        phone: userData.phone || '',
-        address: userData.address || '',
-        city: userData.city || '',
-        state: userData.state || '',
-        pincode: userData.pincode || '',
-        bio: userData.bio || '',
-      });
       const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: {
@@ -75,7 +64,6 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log('login response data:', data);
       // Ensure token is included in user state and localStorage
       if (!data.token) {
         throw new Error('Login response missing token');
@@ -103,8 +91,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchUserProfile = async () => {
-    console.log('fetchUserProfile user:', user);
-    console.log('fetchUserProfile user.token:', user?.token);
     if (!user?.token) return null;
     try {
       const response = await fetch('http://localhost:5000/api/users/profile', {

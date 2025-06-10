@@ -17,7 +17,7 @@ const ProfilePage = () => {
     bio: ''
   });
 
-  useEffect(() => {
+    useEffect(() => {
     if (!user) {
       navigate('/login');
       return;
@@ -25,7 +25,6 @@ const ProfilePage = () => {
 
     const loadUserProfile = async () => {
       const profile = await fetchUserProfile();
-      console.log('ProfilePage loadUserProfile fetched profile:', profile);
       if (profile) {
         setFormData({
           fullName: profile.name || '',
