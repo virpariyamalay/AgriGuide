@@ -42,63 +42,26 @@ const MarketRatesPage = () => {
   const fetchMarketData = async () => {
     setLoading(true)
     try {
-      const mockData = [
-        {
-          id: 1,
-          crop: 'Cotton',
-          cropId: 'cotton',
-          variety: 'Shankar-6',
-          marketName: 'Ahmedabad APMC',
-          minPrice: 6200,
-          maxPrice: 6800,
-          modalPrice: 6500,
-          city: 'ahmedabad',
-          trend: 'up',
-          change: '+200',
-          lastUpdated: new Date().toISOString()
-        },
-        {
-          id: 2,
-          crop: 'Groundnut',
-          cropId: 'groundnut',
-          variety: 'Bold',
-          marketName: 'Rajkot APMC',
-          minPrice: 5500,
-          maxPrice: 6000,
-          modalPrice: 5800,
-          city: 'rajkot',
-          trend: 'down',
-          change: '-100',
-          lastUpdated: new Date().toISOString()
-        },
-        // Add more mock data for other cities and crops
-      ]
-
-      let filteredData = mockData
+      const response = await fetch('http://localhost:5000/api/crop-market')
+      if (!response.ok) {
+        throw new Error('Failed to fetch market data')
+      }
+      let data = await response.json()
 
       if (selectedCity !== 'all') {
-        filteredData = filteredData.filter(item => item.city === selectedCity)
+        data = data.filter(item => item.city === selectedCity)
       }
 
       if (selectedCrop !== 'all') {
-        filteredData = filteredData.filter(item => item.cropId === selectedCrop)
+        data = data.filter(item => item.cropId === selectedCrop)
       }
 
-      setMarketData(filteredData)
+      setMarketData(data)
       setLastUpdated(new Date())
-      
-      localStorage.setItem('marketRates', JSON.stringify({
-        data: filteredData,
-        lastUpdated: new Date().toISOString()
-      }))
     } catch (error) {
       console.error('Error fetching market data:', error)
-      const savedData = localStorage.getItem('marketRates')
-      if (savedData) {
-        const { data, lastUpdated } = JSON.parse(savedData)
-        setMarketData(data)
-        setLastUpdated(new Date(lastUpdated))
-      }
+      setMarketData([])
+      setLastUpdated(null)
     } finally {
       setLoading(false)
     }

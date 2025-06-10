@@ -16,10 +16,12 @@ app.use(cors());
 app.use(express.json());
 
 const userRoutes = require('./routes/user');
+const cropMarketRoutes = require('./routes/cropMarketRoutes');
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', userRoutes);
+app.use('/api/crop-market', cropMarketRoutes);
 
 const PORT = process.env.PORT || 5000;
 
