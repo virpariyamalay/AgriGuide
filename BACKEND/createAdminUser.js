@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const connectDB = require('./config/db');
 
-dotenv.config();
+dotenv.config(); // Ensure environment variables are loaded
 
 const createAdminUser = async () => {
   try {
