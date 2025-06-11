@@ -1,13 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { crops } from '../../data/cropData'
+// Removed import of crops from cropData.js
 
 const CropSearch = ({ setSearchQuery }) => {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [isFocused, setIsFocused] = useState(false)
+  const [crops, setCrops] = useState([]) // state to hold fetched crops
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // Fetch crops from backend API
+    const fetchCrops = async () => {
+      try {
+        const response = await fetch('/api/crops')
+        if (!response.ok) {
+          throw new Error('Failed to fetch crops')
+        }
+        const data = await response.json()
+        setCrops(data)
+      } catch (error) {
+        console.error('Error fetching crops:', error)
+      }
+    }
+    fetchCrops()
+  }, [])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -19,7 +37,7 @@ const CropSearch = ({ setSearchQuery }) => {
     )
     
     if (foundCrop) {
-      navigate(`/crop/${foundCrop.id}`)
+      navigate(`/crop/${foundCrop._id || foundCrop.id}`)
     } else {
       setSearchQuery(query)
     }
@@ -86,8 +104,8 @@ const CropSearch = ({ setSearchQuery }) => {
               <ul className="py-1">
                 {suggestions.map(crop => (
                   <li 
-                    key={crop.id}
-                    onClick={() => handleSuggestionClick(crop.id)}
+                    key={crop._id || crop.id}
+                    onClick={() => handleSuggestionClick(crop._id || crop.id)}
                     className="px-4 py-2 hover:bg-primary-50 cursor-pointer flex items-center"
                   >
                     <img 

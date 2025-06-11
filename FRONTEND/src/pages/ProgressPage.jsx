@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useProgress } from '../contexts/ProgressContext'
-import { crops } from '../data/cropData'
 import { toast } from 'react-toastify'
 
 const ProgressPage = () => {
@@ -12,17 +11,28 @@ const ProgressPage = () => {
   const [cropToRemove, setCropToRemove] = useState(null)
   
   useEffect(() => {
-    const getCropDetails = () => {
-      return Object.entries(userProgress).map(([cropId, progress]) => {
-        const cropInfo = crops.find(crop => crop.id === cropId)
-        return {
-          ...cropInfo,
-          progress
+    const fetchCrops = async () => {
+      try {
+        const response = await fetch('/api/crops')
+        if (!response.ok) {
+          throw new Error('Failed to fetch crops')
         }
-      })
+        const crops = await response.json()
+        const getCropDetails = () => {
+          return Object.entries(userProgress).map(([cropId, progress]) => {
+            const cropInfo = crops.find(crop => crop._id === cropId || crop.id === cropId)
+            return {
+              ...cropInfo,
+              progress
+            }
+          })
+        }
+        setCropData(getCropDetails())
+      } catch (error) {
+        console.error('Error fetching crops:', error)
+      }
     }
-    
-    setCropData(getCropDetails())
+    fetchCrops()
   }, [userProgress])
   
   const handleAdvanceStage = (cropId) => {
@@ -88,7 +98,7 @@ const ProgressPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {cropData.map((crop) => (
               <motion.div
-                key={crop.id}
+                key={crop._id || crop.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
@@ -130,14 +140,14 @@ const ProgressPage = () => {
                     
                     <div className="flex justify-between items-center">
                       <button
-                        onClick={() => confirmRemove(crop.id)}
+                        onClick={() => confirmRemove(crop._id || crop.id)}
                         className="text-red-600 hover:text-red-700 text-sm font-medium"
                       >
                         Remove
                       </button>
                       
                       <button
-                        onClick={() => handleAdvanceStage(crop.id)}
+                        onClick={() => handleAdvanceStage(crop._id || crop.id)}
                         className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm font-medium"
                         disabled={crop.progress.currentStage >= crop.growthStages.length}
                       >
