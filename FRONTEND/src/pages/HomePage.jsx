@@ -270,52 +270,7 @@ const HomePage = () => {
           <CropSearch setSearchQuery={() => {}} />
         </div>
 
-        {/* How to Get Started - Responsive */}
-        {/* <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8 mb-8 sm:mb-12">
-          <motion.h2 
-            className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            How to Get Started
-          </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.id}
-                className={`relative rounded-xl overflow-hidden cursor-pointer`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                whileHover={step.animation.hover}
-                whileTap={step.animation.tap}
-                onHoverStart={() => setActiveStep(step.id)}
-                onHoverEnd={() => setActiveStep(null)}
-              >
-                <div className={`bg-gradient-to-br ${step.color} p-4 sm:p-6 h-full transform transition-transform duration-300`}>
-                  <div className="flex flex-col items-center text-white">
-                    <motion.div
-                      className="text-3xl sm:text-4xl mb-3 sm:mb-4"
-                      animate={activeStep === step.id ? { scale: 1.2, rotate: 360 } : {}}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {step.icon}
-                    </motion.div>
-                    <motion.div
-                      className="absolute top-2 left-2 w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base"
-                      animate={activeStep === step.id ? { scale: 1.2 } : {}}
-                    >
-                      {step.id}
-                    </motion.div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-2 text-center">{step.title}</h3>
-                    <p className="text-center text-white/90 text-sm sm:text-base">{step.description}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div> */}
+       
         <div className="bg-[#f7faf5] rounded-2xl shadow-lg px-4 py-10 sm:px-8 md:px-12 mb-10">
       <motion.h2
         className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 text-center mb-10"
