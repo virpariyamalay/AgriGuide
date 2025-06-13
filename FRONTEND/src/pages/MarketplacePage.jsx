@@ -38,6 +38,11 @@ const MarketplacePage = () => {
     }, 1000)
     return () => clearTimeout(timer)
   }, [selectedCategory, searchQuery, priceRange, products])
+
+  useEffect(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}, []);
+
   
   const filterProducts = () => {
     let result = [...products]

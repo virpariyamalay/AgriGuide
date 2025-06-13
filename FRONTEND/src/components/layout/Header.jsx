@@ -27,7 +27,7 @@ const Header = () => {
     { to: '/', label: 'Home' },
     { to: '/marketplace', label: 'Marketplace' },
     { to: '/market-rates', label: 'Market Rates' },
-    { to: '/progress', label: 'My Progress' },
+    // { to: '/progress', label: 'My Progress' },
     { to: '/weather', label: 'Weather' },
     { to: '/contact', label: 'Contact' },
   ];

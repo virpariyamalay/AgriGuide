@@ -192,6 +192,8 @@ const features = [
 ];
 
 const HomePage = () => {
+
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showMoreCrops, setShowMoreCrops] = useState(false);
   const [showLearnMore, setShowLearnMore] = useState(false);
@@ -205,7 +207,7 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, []);
-  
+
   useEffect(() => {
     if (showMoreCrops) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -234,16 +236,15 @@ const HomePage = () => {
           />
         ))}
         <div className="absolute inset-0 bg-black/20"></div>
-        
+
         {/* Slider indicators */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {sliderImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                currentSlide === index ? 'bg-white' : 'bg-white/50'
-              }`}
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${currentSlide === index ? 'bg-white' : 'bg-white/50'
+                }`}
             />
           ))}
         </div>
@@ -273,56 +274,56 @@ const HomePage = () => {
 
         {/* Search Section - Responsive */}
         <div className="mb-8 sm:mb-12 md:mb-16">
-          <CropSearch setSearchQuery={() => {}} />
+          <CropSearch setSearchQuery={() => { }} />
         </div>
 
-       
+
         <div className="bg-[#f7faf5] rounded-2xl shadow-lg px-4 py-10 sm:px-8 md:px-12 mb-10">
-      <motion.h2
-        className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 text-center mb-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        🌱 How to Get Started with AgriGuide
-      </motion.h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.id}
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
+          <motion.h2
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-green-800 text-center mb-10"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
-            whileHover={step.animation.hover}
-            whileTap={step.animation.tap}
-            onHoverStart={() => setActiveStep(step.id)}
-            onHoverEnd={() => setActiveStep(null)}
+            transition={{ duration: 0.6 }}
           >
-            <div className="flex flex-col items-center text-center text-green-900">
-              <motion.div
-                className="text-4xl sm:text-5xl mb-4"
-                animate={activeStep === step.id ? { scale: 1.3, rotate: 360 } : {}}
-                transition={{ duration: 0.5 }}
-              >
-                {step.icon}
-              </motion.div>
+            🌱 How to Get Started with AgriGuide
+          </motion.h2>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {steps.map((step, index) => (
               <motion.div
-                className="absolute top-3 left-3 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-800 font-semibold text-sm"
-                animate={activeStep === step.id ? { scale: 1.2 } : {}}
+                key={step.id}
+                className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                whileHover={step.animation.hover}
+                whileTap={step.animation.tap}
+                onHoverStart={() => setActiveStep(step.id)}
+                onHoverEnd={() => setActiveStep(null)}
               >
-                {step.id}
-              </motion.div>
+                <div className="flex flex-col items-center text-center text-green-900">
+                  <motion.div
+                    className="text-4xl sm:text-5xl mb-4"
+                    animate={activeStep === step.id ? { scale: 1.3, rotate: 360 } : {}}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {step.icon}
+                  </motion.div>
 
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-sm sm:text-base text-gray-700">{step.description}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
+                  <motion.div
+                    className="absolute top-3 left-3 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-800 font-semibold text-sm"
+                    animate={activeStep === step.id ? { scale: 1.2 } : {}}
+                  >
+                    {step.id}
+                  </motion.div>
+
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2">{step.title}</h3>
+                  <p className="text-sm sm:text-base text-gray-700">{step.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
 
         {/* Popular Crops - Responsive */}
         <motion.div
@@ -339,13 +340,13 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6"
-             
+
           >
             {additionalCrops.map((crop, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative">
-                  <img 
-                    src={crop.image} 
+                  <img
+                    src={crop.image}
                     alt={crop.name}
                     className="w-full h-32 sm:h-40 md:h-48 object-cover"
                   />
@@ -361,8 +362,8 @@ const HomePage = () => {
                   <div className="flex items-center">
                     <div className="flex-1">
                       <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full">
-                        <div 
-                          className="h-1.5 sm:h-2 bg-primary-500 rounded-full animate-pulse" 
+                        <div
+                          className="h-1.5 sm:h-2 bg-primary-500 rounded-full animate-pulse"
                           style={{ width: `${crop.successRate}%` }}
                         ></div>
                       </div>
@@ -469,7 +470,31 @@ const HomePage = () => {
         )}
       </AnimatePresence>
 
-      {/* CTA Section - Responsive */}
+      {/* Cta */}
+      {/* <div class="flex flex-col md:flex-row items-center justify-center text-sm border border-gray-200 rounded-2xl m-2 max-w-5xl w-full bg-primary-600 m-20" >
+
+        <div class="flex flex-col text-center md:text-left items-center  md:items-start pt-14 md:p-10">
+          <h2 class="md:text-4xl text-2xl font-bold text-gray-800">Simplify your farm management.<br />Start using our app today.</h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-sm:w-full">
+            <button type="button" class="group flex items-center justify-center gap-2 px-6 py-2 border border-[#f4a300] rounded-full text-[#f4a300] hover:bg-[#f4a300] hover:text-white transition-all">
+              Explore More
+              <svg class="mt-0.5 group-hover:translate-x-1 transition-all" width="15" height="11" viewBox="0 0 15 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5.5h13.092M8.949 1l5.143 4.5L8.949 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+
+            <button type="button" class="bg-[#f4a300] hover:bg-[#db9200] transition-all px-4 py-2 text-white font-medium rounded-full">
+              Get Started
+            </button>
+
+          </div>
+        </div>
+
+        <img class="max-w-[375px] pt-10 md:p-0" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/appDownload/excitedWomenImage.png" alt="excitedWomenImage" />
+      </div> */}
+
+      {/* CTA Section - Responsive  */}
       <section className="mb-8 sm:mb-12 md:mb-16">
         <div className="bg-primary-600 rounded-xl shadow-lg overflow-hidden">
           <div className="px-4 py-6 sm:p-8 md:p-12 md:flex items-center justify-between">
@@ -484,14 +509,17 @@ const HomePage = () => {
                   to="/marketplace"
                   className="w-full sm:w-auto inline-block bg-white text-primary-700 font-semibold px-4 sm:px-6 py-2 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform duration-300 ease-in-out text-center text-sm sm:text-base"
                 >
-                  Shop Supplies
+                  Explore More
                 </Link>
-                <button 
-                  onClick={() => setShowLearnMore(true)}
-                  className="w-full sm:w-auto inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-4 sm:px-6 py-2 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ease-in-out text-sm sm:text-base"
-                >
-                  Learn More
-                </button>
+                <Link to="/weather">
+                  <button
+                    onClick={() => setShowLearnMore(true)}
+                    className="w-full sm:w-auto inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-4 sm:px-6 py-2 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ease-in-out text-sm sm:text-base"
+                  >
+                    Get Weather data
+                  </button>
+                </Link>
+
               </div>
             </div>
             <div className="md:w-1/3 hidden md:block">
@@ -505,7 +533,7 @@ const HomePage = () => {
         </div>
       </section>
 
-     
+
     </div>
   );
 };
