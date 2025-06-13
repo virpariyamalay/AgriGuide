@@ -12,6 +12,10 @@ const CropDetailPage = () => {
   const [activeTab, setActiveTab] = useState('instructions')
   const { startProgress, getProgress } = useProgress()
   const [cropProgress, setCropProgress] = useState(null)
+
+    useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   
   useEffect(() => {
     const fetchCrop = async () => {
@@ -65,7 +69,7 @@ const CropDetailPage = () => {
   }
   
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto mt-10">
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

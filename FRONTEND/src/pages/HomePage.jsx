@@ -205,6 +205,12 @@ const HomePage = () => {
 
     return () => clearInterval(interval);
   }, []);
+  
+  useEffect(() => {
+    if (showMoreCrops) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showMoreCrops]);
 
   const handleFeatureClick = (feature) => {
     setSelectedFeature(feature);
@@ -333,6 +339,7 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6"
+             
           >
             {additionalCrops.map((crop, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
