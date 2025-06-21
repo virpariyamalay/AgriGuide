@@ -13,7 +13,7 @@ const MarketplacePage = () => {
   const { products } = useProducts()
   const { addToCart } = useCart()
   const [loading, setLoading] = useState(true)
-  
+
   const categories = [
     { id: 'all', name: 'All Products' },
     { id: 'seeds', name: 'Seeds' },
@@ -21,7 +21,7 @@ const MarketplacePage = () => {
     { id: 'tools', name: 'Tools & Equipment' },
     { id: 'soils', name: 'Soils & Substrates' },
   ]
-  
+
   // Reset priceRange filter when products change to include all product prices
   useEffect(() => {
     if (products.length > 0) {
@@ -29,7 +29,7 @@ const MarketplacePage = () => {
       setPriceRange([0, maxPrice]);
     }
   }, [products]);
-  
+
   useEffect(() => {
     setLoading(true)
     const timer = setTimeout(() => {
@@ -40,33 +40,33 @@ const MarketplacePage = () => {
   }, [selectedCategory, searchQuery, priceRange, products])
 
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}, []);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
-  
+
   const filterProducts = () => {
     let result = [...products]
-    
+
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory)
     }
-    
+
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase()
       result = result.filter(
-        product => 
-          product.name.toLowerCase().includes(query) || 
+        product =>
+          product.name.toLowerCase().includes(query) ||
           product.description.toLowerCase().includes(query)
       )
     }
-    
+
     result = result.filter(
       product => product.price >= priceRange[0] && product.price <= priceRange[1]
     )
-    
+
     setFilteredProducts(result)
   }
-  
+
   const handleAddToCart = (product) => {
     addToCart(product)
     toast.success(`Added ${product.name} to cart!`)
@@ -79,7 +79,7 @@ const MarketplacePage = () => {
           <div className="animate-pulse bg-gray-200 h-8 w-48 rounded"></div>
           <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
         </div>
-        
+
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/4">
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -93,7 +93,7 @@ const MarketplacePage = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="lg:w-3/4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map(i => (
@@ -123,7 +123,7 @@ const MarketplacePage = () => {
           Shop for all your farming needs - from quality seeds and fertilizers to essential tools and equipment.
         </p>
       </div>
-      
+
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-1/4">
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -133,18 +133,17 @@ const MarketplacePage = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                    selectedCategory === category.id
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === category.id
                       ? 'bg-primary-100 text-primary-700 font-medium'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   {category.name}
                 </button>
               ))}
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
             <h3 className="font-semibold text-lg mb-4">Filters</h3>
             <div className="mb-4">
@@ -160,7 +159,7 @@ const MarketplacePage = () => {
                 placeholder="Search products..."
               />
             </div>
-            
+
             <div>
               <label htmlFor="price-range" className="block text-sm font-medium text-gray-700 mb-1">
                 Price Range: ${priceRange[0]} - ${priceRange[1]}
@@ -185,7 +184,7 @@ const MarketplacePage = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl shadow-md p-6">
             <h3 className="font-semibold text-lg mb-4">Customer Support</h3>
             <p className="text-gray-600 mb-4">
@@ -196,7 +195,7 @@ const MarketplacePage = () => {
             </Link>
           </div>
         </div>
-        
+
         <div className="lg:w-3/4">
           <div className="bg-white rounded-xl shadow-md p-6 mb-6">
             <div className="flex justify-between items-center">
@@ -208,7 +207,7 @@ const MarketplacePage = () => {
               </h2>
               <div className="flex items-center">
                 <label htmlFor="sort" className="mr-2 text-sm text-gray-600">Sort by:</label>
-                <select 
+                <select
                   id="sort"
                   className="border border-gray-300 rounded-lg text-sm py-1 px-2 focus:ring-primary-500 focus:border-primary-500"
                 >
@@ -220,20 +219,20 @@ const MarketplacePage = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product, index) => (
                 <motion.div
-                  key={product.id}
+                  key={product._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   className="bg-white rounded-xl shadow-md overflow-hidden"
                 >
                   <div className="relative">
-                    <img 
-                      src={product.image} 
+                    <img
+                      src={product.image}
                       alt={product.name}
                       className="w-full h-48 object-cover"
                     />
@@ -262,7 +261,7 @@ const MarketplacePage = () => {
                           <span className="font-bold text-gray-800">${product.price.toFixed(2)}</span>
                         )}
                       </div>
-                      <button 
+                      <button
                         onClick={() => handleAddToCart(product)}
                         className="flex items-center justify-center btn-primary px-3 py-1.5 rounded-lg text-sm font-medium"
                       >

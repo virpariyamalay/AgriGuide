@@ -13,10 +13,10 @@ const CropDetailPage = () => {
   const { startProgress, getProgress } = useProgress()
   const [cropProgress, setCropProgress] = useState(null)
 
-    useEffect(() => {
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
-  
+
   useEffect(() => {
     const fetchCrop = async () => {
       setLoading(true)
@@ -28,7 +28,7 @@ const CropDetailPage = () => {
         const data = await response.json()
         setCrop(data)
         setLoading(false)
-        
+
         // Check if this crop has progress
         const progress = getProgress(cropId)
         setCropProgress(progress)
@@ -38,16 +38,16 @@ const CropDetailPage = () => {
         setLoading(false)
       }
     }
-    
+
     fetchCrop()
   }, [cropId, getProgress])
-  
+
   const handleStartGrowing = () => {
     startProgress(cropId)
     setCropProgress(getProgress(cropId))
     toast.success(`Started growing ${crop.name}!`)
   }
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -55,7 +55,7 @@ const CropDetailPage = () => {
       </div>
     )
   }
-  
+
   if (!crop) {
     return (
       <div className="text-center py-12">
@@ -67,10 +67,10 @@ const CropDetailPage = () => {
       </div>
     )
   }
-  
+
   return (
     <div className="max-w-6xl mx-auto mt-10">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -78,10 +78,10 @@ const CropDetailPage = () => {
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
           <div className="md:flex">
             <div className="md:flex-shrink-0">
-              <img 
-                className="h-64 w-full object-cover md:w-96" 
-                src={crop.image} 
-                alt={crop.name} 
+              <img
+                className="h-64 w-full object-cover md:w-96"
+                src={crop.image}
+                alt={crop.name}
               />
             </div>
             <div className="p-8">
@@ -97,7 +97,7 @@ const CropDetailPage = () => {
                   {crop.difficulty}
                 </span>
               </div>
-              
+
               <div className="mt-4 grid grid-cols-3 gap-4">
                 <div className="bg-primary-50 p-3 rounded-lg text-center">
                   <span className="block text-sm text-gray-600">Growing Time</span>
@@ -112,7 +112,7 @@ const CropDetailPage = () => {
                   <span className="block font-bold text-primary-700">{crop.sunlight}</span>
                 </div>
               </div>
-              
+
               {/* <div className="mt-6">
                 {cropProgress ? (
                   <div className="flex flex-col sm:flex-row gap-4">
@@ -150,43 +150,40 @@ const CropDetailPage = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
           <div className="border-b border-gray-200">
             <nav className="flex" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab('instructions')}
-                className={`${
-                  activeTab === 'instructions'
+                className={`${activeTab === 'instructions'
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Growing Instructions
               </button>
               <button
                 onClick={() => setActiveTab('stages')}
-                className={`${
-                  activeTab === 'stages'
+                className={`${activeTab === 'stages'
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Growth Stages
               </button>
               <button
                 onClick={() => setActiveTab('tips')}
-                className={`${
-                  activeTab === 'tips'
+                className={`${activeTab === 'tips'
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Tips & Troubleshooting
               </button>
             </nav>
           </div>
-          
+
           <div className="p-6">
             {activeTab === 'instructions' && (
               <div className="space-y-6">
@@ -198,7 +195,7 @@ const CropDetailPage = () => {
                     ))}
                   </ol>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Planting</h3>
                   <ol className="list-decimal pl-5 space-y-3">
@@ -207,7 +204,7 @@ const CropDetailPage = () => {
                     ))}
                   </ol>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Care</h3>
                   <ol className="list-decimal pl-5 space-y-3">
@@ -216,7 +213,7 @@ const CropDetailPage = () => {
                     ))}
                   </ol>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Harvesting</h3>
                   <ol className="list-decimal pl-5 space-y-3">
@@ -227,11 +224,11 @@ const CropDetailPage = () => {
                 </div>
               </div>
             )}
-            
+
             {activeTab === 'stages' && (
               <GrowthStages stages={crop.growthStages} />
             )}
-            
+
             {activeTab === 'tips' && (
               <div className="space-y-6">
                 <div>
@@ -245,7 +242,7 @@ const CropDetailPage = () => {
                     ))}
                   </ul>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Expert Tips</h3>
                   <ul className="space-y-2">
@@ -261,35 +258,6 @@ const CropDetailPage = () => {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-6">Recommended Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {crop.recommendedProducts.map((product, index) => (
-              <Link 
-                key={index}
-                to="/marketplace"
-                className="block bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200"
-              >
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">{product.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-primary-600">${product.price.toFixed(2)}</span>
-                    <button className="btn btn-sm btn-primary py-1 px-3 text-sm">
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              </Link>
-            ))}
           </div>
         </div>
       </motion.div>

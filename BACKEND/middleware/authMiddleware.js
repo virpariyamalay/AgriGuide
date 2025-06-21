@@ -24,4 +24,14 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const adminAuthMiddleware = async (req, res, next) => {
+  await protect(req, res, async () => {
+    if (req.user && req.user.isAdmin === true) {
+      next();
+    } else {
+      res.status(403).json({ message: 'Admin access required' });
+    }
+  });
+};
+
+module.exports = { protect, adminAuthMiddleware };

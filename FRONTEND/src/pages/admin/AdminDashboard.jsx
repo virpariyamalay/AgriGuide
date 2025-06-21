@@ -27,20 +27,19 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleAddProduct = (data) => {
+  const handleAddProduct = async (data) => {
     try {
-      const newProduct = addProduct(data);
+      await addProduct(data);
       toast.success('Product added successfully!');
-      return newProduct;
     } catch (error) {
       toast.error('Failed to add product');
       console.error('Error adding product:', error);
     }
   };
 
-  const handleDeleteProduct = (productId) => {
+  const handleDeleteProduct = async (productId) => {
     try {
-      deleteProduct(productId);
+      await deleteProduct(productId);
       toast.success('Product deleted successfully!');
     } catch (error) {
       toast.error('Failed to delete product');
@@ -55,28 +54,28 @@ const AdminDashboard = () => {
 
   const generatePDF = (order) => {
     const doc = new jsPDF();
-    
+
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, 210, 297, 'F');
-    
+
     doc.setFillColor(22, 38, 38);
     doc.rect(0, 0, 210, 40, 'F');
-    
+
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
     doc.text('AgriGuide', 20, 25);
-    
+
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
     doc.text('INVOICE', 140, 30);
-    
+
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('BILL FROM:', 20, 60);
     doc.text('BILL TO:', 140, 60);
-    
+
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.text([
@@ -84,23 +83,23 @@ const AdminDashboard = () => {
       '1234 Street Name',
       'City, State, Zip'
     ], 20, 70);
-    
+
     doc.text([
       order.deliveryDetails.fullName,
       order.deliveryDetails.address,
       `${order.deliveryDetails.city}, ${order.deliveryDetails.state} ${order.deliveryDetails.pincode}`
     ], 140, 70);
-    
+
     const orderDate = new Date(order.date);
     const formattedDate = isValid(orderDate) ? format(orderDate, 'MMM d, yyyy') : 'N/A';
-    
+
     doc.text([
       `Number: ${order.id}`,
       `Issue Date: ${formattedDate}`,
       `Due Date: ${formattedDate}`,
       `Total Due: $${order.total.toFixed(2)}`
     ], 140, 95);
-    
+
     doc.autoTable({
       startY: 120,
       head: [['DESCRIPTION', 'QTY', 'PRICE', 'TOTAL']],
@@ -127,23 +126,23 @@ const AdminDashboard = () => {
         3: { cellWidth: 30, halign: 'right' }
       }
     });
-    
+
     const finalY = doc.autoTable.previous.finalY + 20;
-    
+
     doc.setFontSize(10);
     doc.text('SUBTOTAL', 140, finalY);
     doc.text(`$${order.subtotal.toFixed(2)}`, 180, finalY, 'right');
-    
+
     doc.text('TAX (8%)', 140, finalY + 10);
     const tax = order.subtotal * 0.08;
     doc.text(`$${tax.toFixed(2)}`, 180, finalY + 10, 'right');
-    
+
     doc.setFillColor(22, 38, 38);
     doc.rect(140, finalY + 15, 40, 10, 'F');
     doc.setTextColor(255, 255, 255);
     doc.text('AMOUNT DUE', 142, finalY + 22);
     doc.text(`$${order.total.toFixed(2)}`, 180, finalY + 22, 'right');
-    
+
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
@@ -155,27 +154,27 @@ const AdminDashboard = () => {
       'Discrepancies: Notify in writing within 7 days.',
       'Returns/Refunds: Not accepted unless otherwise agreed.'
     ], 20, finalY + 50);
-    
+
     doc.text([
       'Bank of America',
       'Account Name: AgriGuide Solutions, Inc.',
       'Account No: 99999999',
       'Routing No: 303030000'
     ], 20, finalY + 80);
-    
+
     doc.setFont('helvetica', 'bold');
     doc.text('Jane Smith', 140, finalY + 80);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.text('Founder & CEO', 140, finalY + 85);
     doc.text('For AgriGuide Solutions Inc.', 140, finalY + 90);
-    
+
     doc.setFontSize(8);
     doc.text([
       'https://www.agriguide.com',
       'Phone +1-240-229-2234 | accounts@agriguide.com'
     ], 105, 280, 'center');
-    
+
     doc.save(`Invoice-${order.id}.pdf`);
   };
 
@@ -194,21 +193,19 @@ const AdminDashboard = () => {
       <div className="flex space-x-4 mb-8">
         <button
           onClick={() => setActiveTab('products')}
-          className={`px-4 py-2 rounded-md ${
-            activeTab === 'products'
-              ? 'bg-primary-600 text-white'
-              : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`px-4 py-2 rounded-md ${activeTab === 'products'
+            ? 'bg-primary-600 text-white'
+            : 'bg-gray-200 text-gray-700'
+            }`}
         >
           Products
         </button>
         <button
           onClick={() => setActiveTab('orders')}
-          className={`px-4 py-2 rounded-md ${
-            activeTab === 'orders'
-              ? 'bg-primary-600 text-white'
-              : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`px-4 py-2 rounded-md ${activeTab === 'orders'
+            ? 'bg-primary-600 text-white'
+            : 'bg-gray-200 text-gray-700'
+            }`}
         >
           Orders
         </button>
@@ -270,7 +267,7 @@ const AdminDashboard = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => handleDeleteProduct(product.id)}
+                          onClick={() => handleDeleteProduct(product._id)}
                           className="text-red-600 hover:text-red-900"
                         >
                           Delete
@@ -308,11 +305,10 @@ const AdminDashboard = () => {
                         Placed on {formatDate(order.date)}
                       </p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      order.status === 'Delivered' 
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-primary-100 text-primary-800'
-                    }`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'Delivered'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-primary-100 text-primary-800'
+                      }`}>
                       {order.status}
                     </span>
                   </div>
@@ -366,7 +362,7 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between items-center">
                       <div>

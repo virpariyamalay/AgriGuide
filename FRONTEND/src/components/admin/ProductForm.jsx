@@ -13,8 +13,9 @@ const schema = yup.object().shape({
 
 const ProductForm = ({ onSubmit, initialData = null }) => {
   const [imagePreview, setImagePreview] = useState(initialData?.image || '');
+  const [imageFile, setImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialData
@@ -24,10 +25,10 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
     const file = e.target.files[0];
     if (file) {
       setIsUploading(true);
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setValue('image', reader.result);
         setIsUploading(false);
       };
       reader.readAsDataURL(file);
@@ -35,12 +36,12 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
   };
 
   const onSubmitForm = (data) => {
-    onSubmit({ ...data, image: imagePreview });
+    onSubmit({ ...data, imageFile });
   };
 
   return (
-    <motion.form 
-      onSubmit={handleSubmit(onSubmitForm)} 
+    <motion.form
+      onSubmit={handleSubmit(onSubmitForm)}
       className="space-y-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -123,7 +124,7 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
                   type="button"
                   onClick={() => {
                     setImagePreview('');
-                    setValue('image', '');
+                    setImageFile(null);
                   }}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
                 >
