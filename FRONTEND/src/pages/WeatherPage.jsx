@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { format } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -24,8 +24,12 @@ ChartJS.register(
   Legend
 );
 
+const OWM_API_KEY = import.meta.env.VITE_OWM_API_KEY;
+
 const WeatherPage = () => {
   const [city, setCity] = useState('');
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
@@ -33,8 +37,43 @@ const WeatherPage = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const cityInputRef = useRef();
+
+  // Fetch city suggestions from OpenWeatherMap Geocoding API
+  const fetchCitySuggestions = async (query) => {
+    if (!query.trim()) {
+      setCitySuggestions([]);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${OWM_API_KEY}`
+      );
+      if (!res.ok) throw new Error('Failed to fetch city suggestions');
+      const data = await res.json();
+      setCitySuggestions(data);
+    } catch (err) {
+      setCitySuggestions([]);
+    }
+  };
+
+  const handleCityInput = (e) => {
+    const value = e.target.value;
+    setError(null);
+    setCity(value);
+    setShowSuggestions(true);
+    fetchCitySuggestions(value);
+  };
+
+  const handleCitySelect = (suggestion) => {
+    setCity(`${suggestion.name}${suggestion.state ? ', ' + suggestion.state : ''}, ${suggestion.country}`);
+    setShowSuggestions(false);
+    setCitySuggestions([]);
+    if (cityInputRef.current) cityInputRef.current.blur();
+  };
 
   const validateInputs = () => {
+    const now = new Date();
     if (!city.trim()) {
       setError('Please enter a city name');
       return false;
@@ -45,6 +84,18 @@ const WeatherPage = () => {
     }
     if (startDate > endDate) {
       setError('Start date cannot be later than end date');
+      return false;
+    }
+    if (endDate < startDate) {
+      setError('End date cannot be earlier than start date');
+      return false;
+    }
+    if (startDate > now) {
+      setError('Start date cannot be in the future');
+      return false;
+    }
+    if (endDate > now) {
+      setError('End date cannot be in the future');
       return false;
     }
     return true;
@@ -89,14 +140,14 @@ const WeatherPage = () => {
   // Filter weather data based on selected date range
   const filteredIndices = weatherData
     ? weatherData.daily.time
-        .map((dateStr, index) => {
-          const date = new Date(dateStr);
-          if (date >= startDate && date <= endDate) {
-            return index;
-          }
-          return null;
-        })
-        .filter((index) => index !== null)
+      .map((dateStr, index) => {
+        const date = new Date(dateStr);
+        if (date >= startDate && date <= endDate) {
+          return index;
+        }
+        return null;
+      })
+      .filter((index) => index !== null)
     : [];
 
   const filteredTime = filteredIndices.map((i) =>
@@ -107,22 +158,22 @@ const WeatherPage = () => {
 
   const chartData = weatherData
     ? {
-        labels: filteredTime,
-        datasets: [
-          {
-            label: 'Max Temperature',
-            data: filteredMaxTemp,
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          },
-          {
-            label: 'Min Temperature',
-            data: filteredMinTemp,
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          },
-        ],
-      }
+      labels: filteredTime,
+      datasets: [
+        {
+          label: 'Max Temperature',
+          data: filteredMaxTemp,
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+        {
+          label: 'Min Temperature',
+          data: filteredMinTemp,
+          borderColor: 'rgb(53, 162, 235)',
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
+      ],
+    }
     : null;
 
   const chartOptions = {
@@ -177,18 +228,31 @@ const WeatherPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               City
             </label>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => {
-                setError(null);
-                setCity(e.target.value);
-              }}
-              className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${
-                error && !city.trim() ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter city name"
-            />
+            <div className="relative">
+              <input
+                ref={cityInputRef}
+                type="text"
+                value={city}
+                onChange={handleCityInput}
+                onFocus={() => city && setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+                className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${error && !city.trim() ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Enter city name"
+              />
+              {showSuggestions && citySuggestions.length > 0 && (
+                <ul className="absolute z-10 left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
+                  {citySuggestions.map((s, idx) => (
+                    <li
+                      key={s.lat + '-' + s.lon + '-' + idx}
+                      className="px-4 py-2 cursor-pointer hover:bg-primary-100"
+                      onMouseDown={() => handleCitySelect(s)}
+                    >
+                      {s.name}{s.state ? `, ${s.state}` : ''}, {s.country}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -201,9 +265,9 @@ const WeatherPage = () => {
                 setStartDate(date);
               }}
               dateFormat="dd-MM-yyyy"
-              className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${
-                error && !startDate ? 'border-red-500' : 'border-gray-300'
-              }`}
+              maxDate={new Date()}
+              className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${error && !startDate ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
           </div>
           <div>
@@ -217,10 +281,10 @@ const WeatherPage = () => {
                 setEndDate(date);
               }}
               minDate={startDate}
+              maxDate={new Date()}
               dateFormat="dd-MM-yyyy"
-              className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${
-                error && !endDate ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 ${error && !endDate ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
           </div>
           <div className="flex items-end">
