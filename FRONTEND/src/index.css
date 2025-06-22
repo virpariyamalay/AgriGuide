@@ -6,7 +6,12 @@ body {
   @apply bg-primary-50 dark:bg-gray-900 text-neutral-900 dark:text-neutral-100 font-body transition-colors duration-200;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   @apply font-display text-primary-600 dark:text-primary-400;
 }
 
@@ -59,9 +64,12 @@ p {
 }
 
 @keyframes grow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -76,6 +84,7 @@ p {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -90,6 +99,7 @@ p {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -105,6 +115,7 @@ p {
     transform: translateX(20px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -118,59 +129,77 @@ p {
 
 /* Mobile-first responsive text */
 .responsive-text-sm {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem;
+  /* text-sm */
 }
+
 @media (min-width: 640px) {
   .responsive-text-sm {
-    font-size: 1rem; /* sm:text-base */
+    font-size: 1rem;
+    /* sm:text-base */
   }
 }
 
 .responsive-text-base {
-  font-size: 1rem; /* text-base */
+  font-size: 1rem;
+  /* text-base */
 }
+
 @media (min-width: 640px) {
   .responsive-text-base {
-    font-size: 1.125rem; /* sm:text-lg */
+    font-size: 1.125rem;
+    /* sm:text-lg */
   }
 }
 
 .responsive-text-lg {
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
+  /* text-lg */
 }
+
 @media (min-width: 640px) {
   .responsive-text-lg {
-    font-size: 1.25rem; /* sm:text-xl */
+    font-size: 1.25rem;
+    /* sm:text-xl */
   }
 }
 
 .responsive-text-xl {
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.25rem;
+  /* text-xl */
 }
+
 @media (min-width: 640px) {
   .responsive-text-xl {
-    font-size: 1.5rem; /* sm:text-2xl */
+    font-size: 1.5rem;
+    /* sm:text-2xl */
   }
 }
 
 .responsive-text-2xl {
-  font-size: 1.5rem; /* text-2xl */
+  font-size: 1.5rem;
+  /* text-2xl */
   line-height: 2rem;
 }
+
 @media (min-width: 640px) {
   .responsive-text-2xl {
-    font-size: 1.875rem; /* sm:text-3xl */
+    font-size: 1.875rem;
+    /* sm:text-3xl */
     line-height: 2.25rem;
   }
 }
 
 .responsive-text-3xl {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 1.875rem;
+  /* text-3xl */
   line-height: 2.25rem;
 }
+
 @media (min-width: 640px) {
   .responsive-text-3xl {
-    font-size: 2.25rem; /* sm:text-4xl */
+    font-size: 2.25rem;
+    /* sm:text-4xl */
     line-height: 2.5rem;
   }
 }
@@ -185,17 +214,19 @@ p {
 }
 
 .responsive-p-lg {
-    padding: 1.5rem;
+  padding: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-p-lg {
+    padding: 2rem;
   }
-  @media (min-width: 640px) {
-    .responsive-p-lg {
-      padding: 2rem;
-    }
 }
 
 .responsive-m-sm {
   margin: 0.5rem;
 }
+
 @media (min-width: 640px) {
   .responsive-m-sm {
     margin: 1rem;
@@ -205,6 +236,7 @@ p {
 .responsive-m-md {
   margin: 1rem;
 }
+
 @media (min-width: 640px) {
   .responsive-m-md {
     margin: 1.5rem;
@@ -230,4 +262,18 @@ p {
 
 .responsive-grid-6 {
   @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
 }

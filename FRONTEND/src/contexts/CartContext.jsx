@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from './AuthContext'
 
 const CartContext = createContext()
 
@@ -8,64 +9,99 @@ export const useCart = () => useContext(CartContext)
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
   const [isCartUpdated, setIsCartUpdated] = useState(false)
-  
-  // Load cart from localStorage on initial render
+  const { user } = useAuth()
+
+  // Fetch cart from backend when user logs in
   useEffect(() => {
-    const savedCart = localStorage.getItem('agriguide-cart')
-    if (savedCart) {
+    const fetchCart = async () => {
+      if (!user?.token) {
+        setCartItems([])
+        return
+      }
       try {
-        setCartItems(JSON.parse(savedCart))
+        const res = await fetch('/api/cart', {
+          headers: { Authorization: `Bearer ${user.token}` },
+          credentials: 'include',
+        })
+        if (!res.ok) throw new Error('Failed to fetch cart')
+        const data = await res.json()
+        setCartItems(data?.items || [])
       } catch (error) {
-        console.error('Error parsing cart data from localStorage:', error)
         setCartItems([])
       }
     }
-  }, [])
-  
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('agriguide-cart', JSON.stringify(cartItems))
-    if (cartItems.length > 0) {
+    fetchCart()
+  }, [user])
+
+  // Add or update item in cart via backend
+  const addToCart = async (product, quantity = 1) => {
+    if (!user?.token) return
+    try {
+      const res = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ productId: product._id || product.id, quantity }),
+      })
+      if (!res.ok) throw new Error('Failed to add to cart')
+      const data = await res.json()
+      setCartItems(data.items)
       setIsCartUpdated(true)
       setTimeout(() => setIsCartUpdated(false), 2000)
+    } catch (error) {
+      // handle error
     }
-  }, [cartItems])
-  
-  const addToCart = (product, quantity = 1) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id)
-      
-      if (existingItem) {
-        return prevItems.map(item => 
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        )
-      } else {
-        return [...prevItems, { ...product, quantity }]
-      }
-    })
   }
-  
-  const updateQuantity = (productId, quantity) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === productId 
-          ? { ...item, quantity }
-          : item
-      )
-    )
+
+  // Update quantity
+  const updateQuantity = async (productId, quantity) => {
+    if (!user?.token) return
+    await addToCart({ _id: productId }, quantity)
   }
-  
-  const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId))
+
+  // Remove item from cart via backend
+  const removeFromCart = async (productId) => {
+    if (!user?.token) return
+    try {
+      const res = await fetch('/api/cart/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ productId }),
+      })
+      if (!res.ok) throw new Error('Failed to remove from cart')
+      const data = await res.json()
+      setCartItems(data.items)
+    } catch (error) {
+      // handle error
+    }
   }
-  
-  const clearCart = () => {
-    setCartItems([])
-    localStorage.removeItem('agriguide-cart')
+
+  // Clear cart via backend
+  const clearCart = async () => {
+    if (!user?.token) return
+    try {
+      const res = await fetch('/api/cart/clear', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+        credentials: 'include',
+      })
+      if (!res.ok) throw new Error('Failed to clear cart')
+      const data = await res.json()
+      setCartItems(data.items)
+    } catch (error) {
+      // handle error
+    }
   }
-  
+
   const value = {
     cartItems,
     addToCart,
@@ -74,6 +110,6 @@ export const CartProvider = ({ children }) => {
     clearCart,
     isCartUpdated
   }
-  
+
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

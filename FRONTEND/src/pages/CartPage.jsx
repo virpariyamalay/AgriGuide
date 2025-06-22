@@ -40,11 +40,12 @@ const CartPage = () => {
     }
   ];
 
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const shipping = subtotal > 100 ? 0 : 10;
+  const subtotal = cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  const shipping = subtotal >= 1500 ? 0 : 60; // Free shipping for 1500 and above
   const gst = subtotal * 0.18;
-  const discount = subtotal > 200 ? 20 : 0;
-  const total = subtotal + shipping + gst - discount;
+  const companyCharge = subtotal * 0.05;
+  const discount = subtotal >= 1000 ? subtotal * 0.05 : 0; // Discount for 1000 and above
+  const total = subtotal + shipping + gst + companyCharge - discount;
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -81,9 +82,9 @@ const CartPage = () => {
   };
 
   const handleProceedToConfirm = () => {
-    if (!deliveryDetails.fullName || !deliveryDetails.email || !deliveryDetails.phone || 
-        !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.state || 
-        !deliveryDetails.pincode) {
+    if (!deliveryDetails.fullName || !deliveryDetails.email || !deliveryDetails.phone ||
+      !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.state ||
+      !deliveryDetails.pincode) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -116,7 +117,6 @@ const CartPage = () => {
       const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
       localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]));
 
-      clearCart();
       navigate('/order-success');
     }, 2000);
   };
@@ -154,17 +154,15 @@ const CartPage = () => {
         <div className="flex items-center justify-center">
           {progressSteps.map((stepItem, index) => (
             <div key={index} className="flex items-center">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl ${
-                stepItem.status === 'current' ? 'bg-primary-600 text-white' :
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl ${stepItem.status === 'current' ? 'bg-primary-600 text-white' :
                 stepItem.status === 'complete' ? 'bg-green-500 text-white' :
-                'bg-gray-200 text-gray-500'
-              } transition-all duration-300`}>
+                  'bg-gray-200 text-gray-500'
+                } transition-all duration-300`}>
                 {stepItem.status === 'complete' ? '✓' : stepItem.icon}
               </div>
               {index < progressSteps.length - 1 && (
-                <div className={`h-1 w-24 ${
-                  stepItem.status === 'complete' ? 'bg-green-500' : 'bg-gray-200'
-                } transition-all duration-300`}></div>
+                <div className={`h-1 w-24 ${stepItem.status === 'complete' ? 'bg-green-500' : 'bg-gray-200'
+                  } transition-all duration-300`}></div>
               )}
             </div>
           ))}
@@ -194,25 +192,25 @@ const CartPage = () => {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               <div className="p-6">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
+                  <div key={item._id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.image}
+                      alt={item.product.name}
                       className="w-24 h-24 object-cover rounded-lg"
                     />
                     <div className="flex-1 ml-6">
-                      <h3 className="text-lg font-semibold">{item.name}</h3>
-                      <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+                      <h3 className="text-lg font-semibold">{item.product.name}</h3>
+                      <p className="text-gray-600 text-sm mb-2">{item.product.description}</p>
                       <div className="flex items-center">
                         <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
                           className="text-gray-500 hover:text-gray-700"
                         >
                           -
                         </button>
                         <span className="mx-4">{item.quantity}</span>
                         <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
                           className="text-gray-500 hover:text-gray-700"
                         >
                           +
@@ -220,9 +218,9 @@ const CartPage = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-lg font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
                       <button
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item.product._id)}
                         className="text-red-600 hover:text-red-700 text-sm"
                       >
                         Remove
@@ -230,6 +228,14 @@ const CartPage = () => {
                     </div>
                   </div>
                 ))}
+                {cartItems.length > 0 && (
+                  <button
+                    onClick={clearCart}
+                    className="mt-6 btn btn-outline w-full"
+                  >
+                    Clear Cart
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -250,9 +256,13 @@ const CartPage = () => {
                   <span>GST (18%)</span>
                   <span>${gst.toFixed(2)}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span>Company Charge (5%)</span>
+                  <span>${companyCharge.toFixed(2)}</span>
+                </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
+                    <span>Discount (5%)</span>
                     <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}
@@ -412,7 +422,7 @@ const CartPage = () => {
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold mb-6">Confirm Order</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Delivery Details</h3>
@@ -431,19 +441,19 @@ const CartPage = () => {
                 <h3 className="font-medium text-gray-900 mb-2">Order Items</h3>
                 <div className="space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center">
+                    <div key={item._id} className="flex justify-between items-center">
                       <div className="flex items-center">
                         <img
-                          src={item.image}
-                          alt={item.name}
+                          src={item.product.image}
+                          alt={item.product.name}
                           className="w-16 h-16 object-cover rounded-md"
                         />
                         <div className="ml-4">
-                          <h4 className="font-medium">{item.name}</h4>
+                          <h4 className="font-medium">{item.product.name}</h4>
                           <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                         </div>
                       </div>
-                      <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -463,9 +473,13 @@ const CartPage = () => {
                     <span>GST (18%)</span>
                     <span>${gst.toFixed(2)}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span>Company Charge (5%)</span>
+                    <span>${companyCharge.toFixed(2)}</span>
+                  </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
-                      <span>Discount</span>
+                      <span>Discount (5%)</span>
                       <span>-${discount.toFixed(2)}</span>
                     </div>
                   )}
