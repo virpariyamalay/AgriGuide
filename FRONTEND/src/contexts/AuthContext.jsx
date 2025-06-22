@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (userData) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +94,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUserProfile = async () => {
     if (!user?.token) return null;
     try {
-      const response = await fetch('http://localhost:5000/api/users/profile', {
+      const response = await fetch(API_ENDPOINTS.USER.PROFILE, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (updatedData) => {
     if (!user?.token) return null;
     try {
-      const response = await fetch('http://localhost:5000/api/users/profile', {
+      const response = await fetch(API_ENDPOINTS.USER.PROFILE, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

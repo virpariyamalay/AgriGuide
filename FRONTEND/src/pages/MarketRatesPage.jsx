@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
+import { API_ENDPOINTS } from '../config/api'
 
 const MarketRatesPage = () => {
   const [marketData, setMarketData] = useState([])
@@ -42,7 +43,7 @@ const MarketRatesPage = () => {
   const fetchMarketData = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:5000/api/crop-market')
+      const response = await fetch(API_ENDPOINTS.MARKET.RATES)
       if (!response.ok) {
         throw new Error('Failed to fetch market data')
       }
@@ -105,11 +106,10 @@ const MarketRatesPage = () => {
                 <button
                   key={city.id}
                   onClick={() => setSelectedCity(city.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCity === city.id
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCity === city.id
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                 >
                   {city.name}
                 </button>
@@ -123,11 +123,10 @@ const MarketRatesPage = () => {
                 <button
                   key={crop.id}
                   onClick={() => setSelectedCrop(crop.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCrop === crop.id
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCrop === crop.id
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                 >
                   {crop.name}
                 </button>
@@ -155,14 +154,13 @@ const MarketRatesPage = () => {
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 mb-1">
                     {gujaratCities.find(city => city.id === item.city)?.name}
                   </span>
-                  <span className={`inline-flex items-center text-sm ${
-                    item.trend === 'up' ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <span className={`inline-flex items-center text-sm ${item.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                    }`}>
                     {item.trend === 'up' ? '↑' : '↓'} {item.change}
                   </span>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Market</span>
@@ -181,7 +179,7 @@ const MarketRatesPage = () => {
                   <span className="font-bold text-primary-700">₹{item.modalPrice}/quintal</span>
                 </div>
               </div>
-              
+
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500">
                   Last updated: {format(new Date(item.lastUpdated), 'PP')}

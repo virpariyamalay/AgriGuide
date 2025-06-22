@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { OWM_API_KEY, API_ENDPOINTS } from '../config/api';
 
 ChartJS.register(
   CategoryScale,
@@ -23,8 +24,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const OWM_API_KEY = import.meta.env.VITE_OWM_API_KEY;
 
 const WeatherPage = () => {
   const [city, setCity] = useState('');
@@ -47,7 +46,7 @@ const WeatherPage = () => {
     }
     try {
       const res = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${OWM_API_KEY}`
+        `${API_ENDPOINTS.WEATHER.GEOCODING}?q=${encodeURIComponent(query)}&limit=5&appid=${OWM_API_KEY}`
       );
       if (!res.ok) throw new Error('Failed to fetch city suggestions');
       const data = await res.json();
