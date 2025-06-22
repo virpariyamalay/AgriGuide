@@ -15,12 +15,11 @@ const CartPage = () => {
     email: '',
     phone: '',
     address: '',
+    landmark: '',
     city: '',
-    state: '',
     pincode: '',
-    gstin: '',
-    pan: '',
-    notes: ''
+    deliveryInstructions: '',
+    alternatePhone: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
@@ -94,8 +93,7 @@ const CartPage = () => {
 
   const handleProceedToConfirm = () => {
     if (!deliveryDetails.fullName || !deliveryDetails.email || !deliveryDetails.phone ||
-      !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.state ||
-      !deliveryDetails.pincode) {
+      !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.pincode) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -117,10 +115,19 @@ const CartPage = () => {
         })),
         shippingAddress: {
           address: deliveryDetails.address,
+          landmark: deliveryDetails.landmark,
           city: deliveryDetails.city,
           postalCode: deliveryDetails.pincode,
           country: 'India',
+          phone: deliveryDetails.phone,
+          deliveryInstructions: deliveryDetails.deliveryInstructions,
+          alternatePhone: deliveryDetails.alternatePhone,
         },
+        productSubtotal: subtotal,
+        shipping: shipping,
+        gst: gst,
+        companyCharge: companyCharge,
+        discount: discount,
         totalAmount: total,
       };
       const response = await fetch(getApiUrl('/api/orders'), {
@@ -368,29 +375,26 @@ const CartPage = () => {
                   required
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">City *</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={deliveryDetails.city}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">State *</label>
-                  <input
-                    type="text"
-                    name="state"
-                    value={deliveryDetails.state}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    required
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Landmark</label>
+                <input
+                  type="text"
+                  name="landmark"
+                  value={deliveryDetails.landmark}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">City *</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={deliveryDetails.city}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  required
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Pincode *</label>
@@ -404,34 +408,26 @@ const CartPage = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">GSTIN (Optional)</label>
-                <input
-                  type="text"
-                  name="gstin"
-                  value={deliveryDetails.gstin}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">PAN (Optional)</label>
-                <input
-                  type="text"
-                  name="pan"
-                  value={deliveryDetails.pan}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700">Delivery Instructions</label>
                 <textarea
-                  name="notes"
-                  value={deliveryDetails.notes}
+                  name="deliveryInstructions"
+                  value={deliveryDetails.deliveryInstructions}
                   onChange={handleInputChange}
-                  rows="3"
+                  rows="2"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  placeholder="e.g. Call before delivery, leave at gate, etc."
                 ></textarea>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Alternate Phone</label>
+                <input
+                  type="tel"
+                  name="alternatePhone"
+                  value={deliveryDetails.alternatePhone}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  placeholder="Optional alternate contact number"
+                />
               </div>
               <button
                 type="button"
@@ -458,9 +454,11 @@ const CartPage = () => {
                   <p><span className="font-medium">Email:</span> {deliveryDetails.email}</p>
                   <p><span className="font-medium">Phone:</span> {deliveryDetails.phone}</p>
                   <p><span className="font-medium">Address:</span> {deliveryDetails.address}</p>
+                  <p><span className="font-medium">Landmark:</span> {deliveryDetails.landmark}</p>
                   <p><span className="font-medium">City:</span> {deliveryDetails.city}</p>
-                  <p><span className="font-medium">State:</span> {deliveryDetails.state}</p>
                   <p><span className="font-medium">Pincode:</span> {deliveryDetails.pincode}</p>
+                  <p><span className="font-medium">Delivery Instructions:</span> {deliveryDetails.deliveryInstructions}</p>
+                  <p><span className="font-medium">Alternate Phone:</span> {deliveryDetails.alternatePhone}</p>
                 </div>
               </div>
 

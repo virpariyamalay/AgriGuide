@@ -60,4 +60,16 @@ exports.clearCart = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Failed to clear cart' });
     }
+};
+
+// Remove a product from all carts (admin use only)
+exports.removeProductFromAllCarts = async (productId) => {
+    try {
+        await Cart.updateMany(
+            {},
+            { $pull: { items: { product: productId } } }
+        );
+    } catch (error) {
+        console.error('Failed to remove product from all carts:', error);
+    }
 }; 

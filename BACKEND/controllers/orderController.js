@@ -4,12 +4,15 @@ const Product = require('../models/Product');
 // Place a new order and decrement product stock
 exports.placeOrder = async (req, res) => {
     try {
-        const { items, shippingAddress, totalAmount } = req.body;
+        const { items, shippingAddress, totalAmount, productSubtotal, shipping, gst, companyCharge, discount } = req.body;
         const userId = req.user._id;
 
         // Validate items
         if (!items || !Array.isArray(items) || items.length === 0) {
             return res.status(400).json({ message: 'No items in order.' });
+        }
+        if (productSubtotal == null || shipping == null || gst == null || companyCharge == null || totalAmount == null) {
+            return res.status(400).json({ message: 'Missing order cost breakdown.' });
         }
 
         // Check stock for each product
@@ -33,6 +36,11 @@ exports.placeOrder = async (req, res) => {
             user: userId,
             items,
             shippingAddress,
+            productSubtotal,
+            shipping,
+            gst,
+            companyCharge,
+            discount: discount || 0,
             totalAmount,
         });
         await order.save();

@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const cartController = require('./cartController');
 
 exports.addProduct = async (req, res) => {
     try {
@@ -59,6 +60,7 @@ exports.deleteProduct = async (req, res) => {
         if (!deleted) {
             return res.status(404).json({ error: 'Product not found' });
         }
+        await cartController.removeProductFromAllCarts(id);
         res.json({ message: 'Product deleted' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete product' });
