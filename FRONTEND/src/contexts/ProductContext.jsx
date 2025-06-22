@@ -35,6 +35,8 @@ export const ProductProvider = ({ children }) => {
     formData.append('category', product.category);
     formData.append('description', product.description);
     formData.append('price', product.price);
+    formData.append('stock', product.stock);
+    formData.append('unit', product.unit || '');
     if (product.imageFile) {
       formData.append('image', product.imageFile);
     }

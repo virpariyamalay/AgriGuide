@@ -1,0 +1,9 @@
+export { default as HeroSection } from './HeroSection';
+export { default as StatsSection } from './StatsSection';
+export { default as HowToStartSection } from './HowToStartSection';
+export { default as PopularCropsSection } from './PopularCropsSection';
+export { default as FeaturesSection } from './FeaturesSection';
+export { default as CTASection } from './CTASection';
+export { default as TestimonialsSection } from './TestimonialsSection';
+export { default as MarketplacePreviewSection } from './MarketplacePreviewSection';
+export { default as WeatherWidgetSection } from './WeatherWidgetSection'; 

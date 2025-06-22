@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from './AuthContext'
+import { toast } from 'react-toastify'
 
 const CartContext = createContext()
 
@@ -36,6 +37,11 @@ export const CartProvider = ({ children }) => {
   // Add or update item in cart via backend
   const addToCart = async (product, quantity = 1) => {
     if (!user?.token) return
+    // Prevent adding more than available stock
+    if (typeof product.stock === 'number' && quantity > product.stock) {
+      toast.error('Cannot add more than available stock')
+      return
+    }
     try {
       const res = await fetch('/api/cart/add', {
         method: 'POST',
@@ -59,7 +65,13 @@ export const CartProvider = ({ children }) => {
   // Update quantity
   const updateQuantity = async (productId, quantity) => {
     if (!user?.token) return
-    await addToCart({ _id: productId }, quantity)
+    // Find the product in cartItems to check stock
+    const item = cartItems.find(i => i.product && (i.product._id === productId || i.product.id === productId))
+    if (item && typeof item.product.stock === 'number' && quantity > item.product.stock) {
+      toast.error('Cannot add more than available stock')
+      return
+    }
+    await addToCart({ _id: productId, stock: item?.product?.stock }, quantity)
   }
 
   // Remove item from cart via backend

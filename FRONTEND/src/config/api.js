@@ -46,6 +46,10 @@ export const API_ENDPOINTS = {
     // Weather endpoints
     WEATHER: {
         GEOCODING: `https://api.openweathermap.org/geo/1.0/direct`,
+        GEOCODING_REVERSE: `https://api.openweathermap.org/geo/1.0/reverse`,
+        CURRENT: `https://api.openweathermap.org/data/2.5/weather`,
+        FORECAST: `https://api.openweathermap.org/data/2.5/forecast`,
+        ONECALL: `https://api.openweathermap.org/data/3.0/onecall`,
     },
 };
 

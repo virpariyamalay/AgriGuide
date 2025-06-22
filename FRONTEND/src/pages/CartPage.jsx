@@ -40,7 +40,10 @@ const CartPage = () => {
     }
   ];
 
-  const subtotal = cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  const subtotal = cartItems.reduce((total, item) => {
+    if (!item.product) return total;
+    return total + (item.product.price * item.quantity);
+  }, 0);
   const shipping = subtotal >= 1500 ? 0 : 60; // Free shipping for 1500 and above
   const gst = subtotal * 0.18;
   const companyCharge = subtotal * 0.05;
@@ -192,41 +195,45 @@ const CartPage = () => {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               <div className="p-6">
                 {cartItems.map((item) => (
-                  <div key={item._id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    <div className="flex-1 ml-6">
-                      <h3 className="text-lg font-semibold">{item.product.name}</h3>
-                      <p className="text-gray-600 text-sm mb-2">{item.product.description}</p>
-                      <div className="flex items-center">
+                  !item.product ? null : (
+                    <div key={item._id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div className="flex-1 ml-6">
+                        <h3 className="text-lg font-semibold">{item.product.name}</h3>
+                        <p className="text-gray-600 text-sm mb-2">{item.product.description}</p>
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            -
+                          </button>
+                          <span className="mx-4">{item.quantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
+                            className="text-gray-500 hover:text-gray-700"
+                            disabled={item.quantity >= item.product.stock}
+                            title={item.quantity >= item.product.stock ? 'No more stock available' : 'Increase quantity'}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
                         <button
-                          onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
-                          className="text-gray-500 hover:text-gray-700"
+                          onClick={() => handleRemoveItem(item.product._id)}
+                          className="text-red-600 hover:text-red-700 text-sm"
                         >
-                          -
-                        </button>
-                        <span className="mx-4">{item.quantity}</span>
-                        <button
-                          onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          +
+                          Remove
                         </button>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-lg font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
-                      <button
-                        onClick={() => handleRemoveItem(item.product._id)}
-                        className="text-red-600 hover:text-red-700 text-sm"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
+                  )
                 ))}
                 {cartItems.length > 0 && (
                   <button
@@ -441,20 +448,27 @@ const CartPage = () => {
                 <h3 className="font-medium text-gray-900 mb-2">Order Items</h3>
                 <div className="space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item._id} className="flex justify-between items-center">
-                      <div className="flex items-center">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-16 h-16 object-cover rounded-md"
-                        />
-                        <div className="ml-4">
-                          <h4 className="font-medium">{item.product.name}</h4>
-                          <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                        </div>
+                    !item.product ? (
+                      <div key={item._id} className="flex justify-between items-center text-red-500">
+                        <span>Product unavailable</span>
+                        <span>—</span>
                       </div>
-                      <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
-                    </div>
+                    ) : (
+                      <div key={item._id} className="flex justify-between items-center">
+                        <div className="flex items-center">
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-16 h-16 object-cover rounded-md"
+                          />
+                          <div className="ml-4">
+                            <h4 className="font-medium">{item.product.name}</h4>
+                            <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                          </div>
+                        </div>
+                        <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
+                      </div>
+                    )
                   ))}
                 </div>
               </div>

@@ -134,8 +134,8 @@ const MarketplacePage = () => {
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
                   className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedCategory === category.id
-                      ? 'bg-primary-100 text-primary-700 font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-primary-100 text-primary-700 font-medium'
+                    : 'text-gray-700 hover:bg-gray-100'
                     }`}
                 >
                   {category.name}
@@ -228,7 +228,7 @@ const MarketplacePage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-md overflow-hidden"
+                  className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col"
                 >
                   <div className="relative">
                     <img
@@ -236,13 +236,8 @@ const MarketplacePage = () => {
                       alt={product.name}
                       className="w-full h-48 object-cover"
                     />
-                    {product.isOnSale && (
-                      <div className="absolute top-2 right-2 bg-accent-500 text-white px-2 py-1 rounded-md text-xs font-bold">
-                        SALE
-                      </div>
-                    )}
                   </div>
-                  <div className="p-4">
+                  <div className="p-4 flex-1 flex flex-col">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-semibold text-lg line-clamp-1">{product.name}</h3>
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
@@ -250,25 +245,26 @@ const MarketplacePage = () => {
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
-                    <div className="flex justify-between items-center">
-                      <div>
-                        {product.oldPrice ? (
-                          <div>
-                            <span className="line-through text-gray-500 text-sm mr-2">${product.oldPrice.toFixed(2)}</span>
-                            <span className="font-bold text-accent-600">${product.price.toFixed(2)}</span>
-                          </div>
-                        ) : (
-                          <span className="font-bold text-gray-800">${product.price.toFixed(2)}</span>
-                        )}
-                      </div>
+                    <div className="flex items-center gap-3 mb-2">
+                      {product.unit && product.unit.trim() && (
+                        <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs">Unit: {product.unit}</span>
+                      )}
+                      {typeof product.stock === 'number' && product.stock > 0 && (
+                        <span className="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded text-xs">Stock: {product.stock}</span>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-end mt-auto">
+                      <span className="font-bold text-gray-800 text-lg">${product.price.toFixed(2)}</span>
                       <button
                         onClick={() => handleAddToCart(product)}
                         className="flex items-center justify-center btn-primary px-3 py-1.5 rounded-lg text-sm font-medium"
+                        disabled={product.stock === 0}
+                        title={product.stock === 0 ? 'Out of stock' : 'Add to Cart'}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        Add to Cart
+                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </button>
                     </div>
                   </div>

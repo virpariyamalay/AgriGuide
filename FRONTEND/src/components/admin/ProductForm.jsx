@@ -9,9 +9,11 @@ const schema = yup.object().shape({
   category: yup.string().required('Category is required'),
   description: yup.string().required('Description is required'),
   price: yup.number().positive('Price must be positive').required('Price is required'),
+  unit: yup.string(),
+  stock: yup.number().integer().min(0, 'Stock must be 0 or more'),
 });
 
-const ProductForm = ({ onSubmit, initialData = null }) => {
+const ProductForm = ({ onSubmit, initialData = null, loading = false }) => {
   const [imagePreview, setImagePreview] = useState(initialData?.image || '');
   const [imageFile, setImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -60,7 +62,6 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
             <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
           )}
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
           <select
@@ -75,6 +76,38 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
           </select>
           {errors.category && (
             <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Unit</label>
+          <select
+            {...register('unit')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            <option value="">Select unit</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="litre">litre</option>
+            <option value="ml">ml</option>
+            <option value="piece">piece</option>
+            <option value="bag">bag</option>
+            <option value="pack">pack</option>
+          </select>
+          {errors.unit && (
+            <p className="mt-1 text-sm text-red-600">{errors.unit.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Stock / Quantity</label>
+          <input
+            type="number"
+            {...register('stock')}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            placeholder="Available stock"
+            min={0}
+          />
+          {errors.stock && (
+            <p className="mt-1 text-sm text-red-600">{errors.stock.message}</p>
           )}
         </div>
       </div>
@@ -92,21 +125,23 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
         )}
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
-        <div className="relative">
-          <span className="absolute left-3 top-2 text-gray-500">$</span>
-          <input
-            type="number"
-            step="0.01"
-            {...register('price')}
-            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            placeholder="0.00"
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
+          <div className="relative">
+            <span className="absolute left-3 top-2 text-gray-500">$</span>
+            <input
+              type="number"
+              step="0.01"
+              {...register('price')}
+              className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="0.00"
+            />
+          </div>
+          {errors.price && (
+            <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+          )}
         </div>
-        {errors.price && (
-          <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
-        )}
       </div>
 
       <div>
@@ -172,12 +207,17 @@ const ProductForm = ({ onSubmit, initialData = null }) => {
         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        disabled={isUploading}
+        disabled={isUploading || loading}
       >
         {isUploading ? (
           <div className="flex items-center">
             <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
             Uploading...
+          </div>
+        ) : loading ? (
+          <div className="flex items-center">
+            <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
+            Saving...
           </div>
         ) : initialData ? (
           'Update Product'

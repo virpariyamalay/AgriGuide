@@ -2,18 +2,36 @@ const Product = require('../models/Product');
 
 exports.addProduct = async (req, res) => {
     try {
-        const { name, price, description, category } = req.body;
-        const imageUrl = req.file?.path;
+        // Debug log
+        console.log('addProduct req.body:', req.body);
+        console.log('addProduct req.file:', req.file);
 
-        if (!name || !price || !description || !category || !imageUrl) {
-            return res.status(400).json({ error: 'All fields are required.' });
-        }
-
-        const newProduct = new Product({
+        const {
             name,
             price,
             description,
             category,
+            unit,
+            stock
+        } = req.body;
+        const imageUrl = req.file?.path;
+
+        if (!name || !price || !description || !category) {
+            return res.status(400).json({ error: 'Name, price, description, and category are required.' });
+        }
+
+        // Ensure numeric fields are numbers
+        const parsedPrice = price !== undefined && price !== '' ? Number(price) : 0;
+        const parsedStock = stock !== undefined && stock !== '' ? Number(stock) : 0;
+        console.log('Parsed stock value:', parsedStock);
+
+        const newProduct = new Product({
+            name,
+            price: parsedPrice,
+            description,
+            category,
+            unit,
+            stock: parsedStock,
             image: imageUrl,
         });
 
