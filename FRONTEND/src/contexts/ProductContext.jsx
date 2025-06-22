@@ -75,12 +75,41 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
+  // Update product via backend
+  const updateProduct = async (productId, product) => {
+    const formData = new FormData();
+    if (product.name) formData.append('name', product.name);
+    if (product.category) formData.append('category', product.category);
+    if (product.description) formData.append('description', product.description);
+    if (product.price !== undefined) formData.append('price', product.price);
+    if (product.stock !== undefined) formData.append('stock', product.stock);
+    if (product.unit) formData.append('unit', product.unit);
+    if (product.imageFile) formData.append('image', product.imageFile);
+    try {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        body: formData,
+        credentials: 'include',
+        headers: {
+          Authorization: user?.token ? `Bearer ${user.token}` : '',
+        },
+      });
+      if (!res.ok) throw new Error('Failed to update product');
+      const data = await res.json();
+      setProducts(prev => prev.map(p => p._id === productId ? data.product : p));
+      return data.product;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const value = {
     products,
     loading,
     fetchProducts,
     addProduct,
     deleteProduct,
+    updateProduct,
   };
 
   return (

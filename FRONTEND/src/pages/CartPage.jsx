@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
+import { useAuth } from '../contexts/AuthContext';
+import { getApiUrl } from '../config/api';
 
 const CartPage = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -21,6 +23,7 @@ const CartPage = () => {
     notes: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const progressSteps = [
     {
@@ -52,6 +55,11 @@ const CartPage = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
+    const item = cartItems.find(i => i.product && (i.product._id === productId || i.product.id === productId));
+    if (item && typeof item.product.stock === 'number' && newQuantity > item.product.stock) {
+      toast.error('Cannot add more than available stock');
+      return;
+    }
     updateQuantity(productId, newQuantity);
   };
 
@@ -98,30 +106,42 @@ const CartPage = () => {
     }, 1000);
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      const orderId = `ORD${Date.now()}`;
-      const orderDate = new Date().toISOString();
-
-      const order = {
-        id: orderId,
-        date: orderDate,
-        items: cartItems,
-        subtotal,
-        shipping,
-        gst,
-        discount,
-        total,
-        status: 'Processing',
-        deliveryDetails
+    try {
+      const orderPayload = {
+        items: cartItems.map(item => ({
+          product: item.product._id,
+          quantity: item.quantity,
+          price: item.product.price,
+        })),
+        shippingAddress: {
+          address: deliveryDetails.address,
+          city: deliveryDetails.city,
+          postalCode: deliveryDetails.pincode,
+          country: 'India',
+        },
+        totalAmount: total,
       };
-
-      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]));
-
+      const response = await fetch(getApiUrl('/api/orders'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: user?.token ? `Bearer ${user.token}` : '',
+        },
+        body: JSON.stringify(orderPayload),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Order placement failed');
+      }
+      // Success: redirect to order success page (do NOT clear cart)
       navigate('/order-success');
-    }, 2000);
+    } catch (error) {
+      toast.error(error.message || 'Order placement failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (cartItems.length === 0 && step === 'cart') {

@@ -28,6 +28,7 @@ app.use('/api/crop-market', cropMarketRoutes);
 app.use('/api/crops', cropRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/orders', require('./routes/orderRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

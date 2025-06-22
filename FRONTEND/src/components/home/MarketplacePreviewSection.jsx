@@ -1,61 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-
-const featuredProducts = [
-    {
-        id: 1,
-        name: 'Premium Wheat Seeds',
-        category: 'Seeds',
-        price: '₹450',
-        originalPrice: '₹600',
-        discount: '25% OFF',
-        image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop',
-        rating: 4.8,
-        reviews: 124,
-        badge: 'Best Seller',
-        badgeColor: 'bg-red-500'
-    },
-    {
-        id: 2,
-        name: 'Organic Fertilizer Pack',
-        category: 'Fertilizers',
-        price: '₹1,200',
-        originalPrice: '₹1,500',
-        discount: '20% OFF',
-        image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=300&h=200&fit=crop',
-        rating: 4.9,
-        reviews: 89,
-        badge: 'Organic',
-        badgeColor: 'bg-green-500'
-    },
-    {
-        id: 3,
-        name: 'Smart Irrigation System',
-        category: 'Equipment',
-        price: '₹8,500',
-        originalPrice: '₹12,000',
-        discount: '29% OFF',
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
-        rating: 4.7,
-        reviews: 56,
-        badge: 'New',
-        badgeColor: 'bg-blue-500'
-    },
-    {
-        id: 4,
-        name: 'Pest Control Solution',
-        category: 'Pesticides',
-        price: '₹750',
-        originalPrice: '₹900',
-        discount: '17% OFF',
-        image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=300&h=200&fit=crop',
-        rating: 4.6,
-        reviews: 203,
-        badge: 'Popular',
-        badgeColor: 'bg-purple-500'
-    }
-];
+import { useProducts } from '../../contexts/ProductContext';
+import { useCart } from '../../contexts/CartContext';
+import { toast } from 'react-toastify';
 
 const categories = [
     { name: 'Seeds', icon: '🌱', count: '500+' },
@@ -65,6 +13,24 @@ const categories = [
 ];
 
 const MarketplacePreviewSection = () => {
+    const { products, loading } = useProducts();
+    const { addToCart, cartItems } = useCart();
+
+    // Only show first 4 available products (stock > 0)
+    const availableProducts = products.filter(p => typeof p.stock === 'number' ? p.stock > 0 : true).slice(0, 4);
+
+    const handleAddToCart = (product) => {
+        // Find if product is already in cart
+        const cartItem = cartItems.find(item => item.product && (item.product._id === product._id || item.product.id === product._id));
+        const currentQty = cartItem ? cartItem.quantity : 0;
+        if (typeof product.stock === 'number' && currentQty >= product.stock) {
+            toast.error('Cannot add more than available stock');
+            return;
+        }
+        addToCart(product);
+        toast.success(`Added ${product.name} to cart!`);
+    };
+
     return (
         <section className="py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,72 +70,63 @@ const MarketplacePreviewSection = () => {
 
                 {/* Featured Products */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    {featuredProducts.map((product, index) => (
-                        <motion.div
-                            key={product.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                            whileHover={{ y: -8 }}
-                            className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
-                        >
-                            {/* Product Image */}
-                            <div className="relative">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="w-full h-48 object-cover"
-                                />
-                                <div className={`absolute top-3 left-3 ${product.badgeColor} text-white px-3 py-1 rounded-full text-xs font-semibold`}>
-                                    {product.badge}
+                    {loading ? (
+                        Array.from({ length: 4 }).map((_, idx) => (
+                            <div key={idx} className="bg-white rounded-xl shadow-md p-6 animate-pulse h-80" />
+                        ))
+                    ) : availableProducts.length === 0 ? (
+                        <div className="col-span-4 text-center text-gray-500 text-lg py-12">No products available</div>
+                    ) : (
+                        availableProducts.map((product, index) => (
+                            <motion.div
+                                key={product._id || product.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                                className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col"
+                            >
+                                <div className="relative">
+                                    <img
+                                        src={product.image || 'https://via.placeholder.com/300x200?text=No+Image'}
+                                        alt={product.name}
+                                        className="w-full h-48 object-cover"
+                                    />
                                 </div>
-                                <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-bold">
-                                    {product.discount}
-                                </div>
-                            </div>
-
-                            {/* Product Info */}
-                            <div className="p-6">
-                                <div className="text-sm text-gray-500 mb-2">{product.category}</div>
-                                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
-
-                                {/* Rating */}
-                                <div className="flex items-center mb-3">
-                                    <div className="flex items-center">
-                                        {[...Array(5)].map((_, i) => (
-                                            <span
-                                                key={i}
-                                                className={`text-sm ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                                            >
-                                                ⭐
-                                            </span>
-                                        ))}
+                                <div className="p-4 flex-1 flex flex-col">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="font-semibold text-lg line-clamp-1">{product.name}</h3>
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-800">
+                                            {product.category}
+                                        </span>
                                     </div>
-                                    <span className="text-sm text-gray-600 ml-2">
-                                        ({product.reviews})
-                                    </span>
-                                </div>
-
-                                {/* Price */}
-                                <div className="flex items-center justify-between mb-4">
-                                    <div>
-                                        <span className="text-2xl font-bold text-gray-900">{product.price}</span>
-                                        <span className="text-sm text-gray-500 line-through ml-2">{product.originalPrice}</span>
+                                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        {product.unit && product.unit.trim() && (
+                                            <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs">Unit: {product.unit}</span>
+                                        )}
+                                        {typeof product.stock === 'number' && product.stock > 0 && (
+                                            <span className="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded text-xs">Stock: {product.stock}</span>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-between items-end mt-auto">
+                                        <span className="font-bold text-gray-800 text-lg">₹{product.price}</span>
+                                        <button
+                                            onClick={() => handleAddToCart(product)}
+                                            className="flex items-center justify-center btn-primary px-3 py-1.5 rounded-lg text-sm font-medium"
+                                            disabled={product.stock === 0}
+                                            title={product.stock === 0 ? 'Out of stock' : 'Add to Cart'}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                        </button>
                                     </div>
                                 </div>
-
-                                {/* Add to Cart Button */}
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200"
-                                >
-                                    Add to Cart
-                                </motion.button>
-                            </div>
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        ))
+                    )}
                 </div>
 
                 {/* Marketplace Features */}

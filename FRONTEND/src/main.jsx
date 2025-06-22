@@ -11,6 +11,7 @@ import { ProgressProvider } from './contexts/ProgressContext.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
 import { ProductProvider } from './contexts/ProductContext.jsx'
 import { AuthProvider } from './contexts/AuthContext'
+import { OrderProvider } from './contexts/OrderContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,10 +21,12 @@ createRoot(document.getElementById('root')).render(
           <WeatherProvider>
             <ProgressProvider>
               <ProductProvider>
-                <CartProvider>
-                  <App />
-                  <ToastContainer position="top-right" autoClose={3000} />
-                </CartProvider>
+                <OrderProvider>
+                  <CartProvider>
+                    <App />
+                    <ToastContainer position="top-right" autoClose={3000} />
+                  </CartProvider>
+                </OrderProvider>
               </ProductProvider>
             </ProgressProvider>
           </WeatherProvider>

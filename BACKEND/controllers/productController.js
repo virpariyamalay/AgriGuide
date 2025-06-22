@@ -63,4 +63,24 @@ exports.deleteProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete product' });
     }
+};
+
+exports.updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateFields = { ...req.body };
+        if (req.file) {
+            updateFields.image = req.file.path;
+        }
+        // Ensure numeric fields are numbers
+        if (updateFields.price !== undefined) updateFields.price = Number(updateFields.price);
+        if (updateFields.stock !== undefined) updateFields.stock = Number(updateFields.stock);
+        const updated = await Product.findByIdAndUpdate(id, updateFields, { new: true });
+        if (!updated) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.json({ message: 'Product updated', product: updated });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update product', details: error.message });
+    }
 }; 
