@@ -29,6 +29,7 @@ app.use('/api/crops', cropRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/razorpay', require('./routes/razorpayRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

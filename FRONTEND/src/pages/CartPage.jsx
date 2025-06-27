@@ -5,6 +5,19 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiUrl } from '../config/api';
+import axios from 'axios';
+
+const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+function loadRazorpayScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 const CartPage = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -105,48 +118,112 @@ const CartPage = () => {
   };
 
   const handlePlaceOrder = async () => {
+    // Check stock before proceeding
+    for (const item of cartItems) {
+      if (!item.product || typeof item.product.stock !== 'number') continue;
+      if (item.quantity > item.product.stock) {
+        toast.error(`Insufficient stock for ${item.product.name}`);
+        return;
+      }
+    }
     setIsLoading(true);
     try {
-      const orderPayload = {
-        items: cartItems.map(item => ({
-          product: item.product._id,
-          quantity: item.quantity,
-          price: item.product.price,
-        })),
-        shippingAddress: {
-          address: deliveryDetails.address,
-          landmark: deliveryDetails.landmark,
-          city: deliveryDetails.city,
-          postalCode: deliveryDetails.pincode,
-          country: 'India',
-          phone: deliveryDetails.phone,
-          deliveryInstructions: deliveryDetails.deliveryInstructions,
-          alternatePhone: deliveryDetails.alternatePhone,
-        },
-        productSubtotal: subtotal,
-        shipping: shipping,
-        gst: gst,
-        companyCharge: companyCharge,
-        discount: discount,
-        totalAmount: total,
-      };
-      const response = await fetch(getApiUrl('/api/orders'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: user?.token ? `Bearer ${user.token}` : '',
-        },
-        body: JSON.stringify(orderPayload),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Order placement failed');
+      // 1. Load Razorpay script
+      const res = await loadRazorpayScript('https://checkout.razorpay.com/v1/checkout.js');
+      if (!res) {
+        toast.error('Razorpay SDK failed to load. Are you online?');
+        setIsLoading(false);
+        return;
       }
-      // Success: redirect to order success page (do NOT clear cart)
-      navigate('/order-success');
+
+      // 2. Create Razorpay order on backend
+      const { data: razorpayOrder } = await axios.post(
+        getApiUrl('/api/razorpay/create-order'),
+        { amount: total },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: user?.token ? `Bearer ${user.token}` : '',
+          },
+        }
+      );
+
+      // 3. Open Razorpay checkout
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        order_id: razorpayOrder.id,
+        name: 'AgriGuide',
+        description: 'Order Payment',
+        handler: async function (response) {
+          // 4. On payment success, place the order in your backend
+          try {
+            const orderPayload = {
+              items: cartItems.map(item => ({
+                product: item.product._id,
+                quantity: item.quantity,
+                price: item.product.price,
+              })),
+              shippingAddress: {
+                address: deliveryDetails.address,
+                landmark: deliveryDetails.landmark,
+                city: deliveryDetails.city,
+                postalCode: deliveryDetails.pincode,
+                country: 'India',
+                phone: deliveryDetails.phone,
+                deliveryInstructions: deliveryDetails.deliveryInstructions,
+                alternatePhone: deliveryDetails.alternatePhone,
+              },
+              productSubtotal: subtotal,
+              shipping: shipping,
+              gst: gst,
+              companyCharge: companyCharge,
+              discount: discount,
+              totalAmount: total,
+              paymentInfo: {
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              },
+            };
+            const orderRes = await fetch(getApiUrl('/api/orders'), {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: user?.token ? `Bearer ${user.token}` : '',
+              },
+              body: JSON.stringify(orderPayload),
+            });
+            if (!orderRes.ok) {
+              const errorData = await orderRes.json();
+              throw new Error(errorData.message || 'Order placement failed');
+            }
+            navigate('/order-success');
+          } catch (error) {
+            toast.error(error.message || 'Order placement failed');
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        prefill: {
+          name: deliveryDetails.fullName,
+          email: deliveryDetails.email,
+          contact: deliveryDetails.phone,
+        },
+        theme: {
+          color: '#3399cc',
+        },
+        modal: {
+          ondismiss: () => {
+            setIsLoading(false);
+          },
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
-      toast.error(error.message || 'Order placement failed');
-    } finally {
+      toast.error(error.message || 'Payment initiation failed');
       setIsLoading(false);
     }
   };
