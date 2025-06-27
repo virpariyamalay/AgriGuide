@@ -31,7 +31,7 @@ function App() {
   return (
     <WeatherAlertProvider>
       <div className="flex flex-col min-h-screen bg-primary-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
-        {/* Promo Banner with Tailwind Marquee Effect */}
+        <Header />
         {showBanner && (
           <div className="w-full py-2.5 font-medium text-sm text-white bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 overflow-hidden relative">
             <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 text-center overflow-hidden">
@@ -59,10 +59,9 @@ function App() {
             </div>
           </div>
         )}
-        <Header />
         <main className="flex-grow py-0 px-0 sm:px-6 lg:px-8">
           {/* Enhanced Weather Alerts */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${showBanner ? 'pt-4' : ''}`}>
             <WeatherAlertEnhanced />
           </div>
 

@@ -19,14 +19,22 @@ const OrderCard = ({ order, generatePDF }) => (
                     </p>
                 </div>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'delivered'
-                        ? 'bg-green-100 text-green-800'
-                        : order.status === 'shipped'
-                            ? 'bg-blue-100 text-blue-800'
-                            : order.status === 'paid'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-primary-100 text-primary-800'
+                    ? 'bg-green-100 text-green-800'
+                    : order.status === 'shipped'
+                        ? 'bg-blue-100 text-blue-800'
+                        : order.status === 'paid'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-primary-100 text-primary-800'
                     }`}>
                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                </span>
+            </div>
+            <div className="flex gap-2 mt-2">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold 
+                  ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' :
+                        order.paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}
+                >
+                    {order.paymentStatus === 'paid' ? 'Paid' : order.paymentStatus === 'failed' ? 'Failed' : 'Pending'}
                 </span>
             </div>
             <div className="space-y-4">

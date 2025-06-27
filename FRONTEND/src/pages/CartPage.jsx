@@ -157,8 +157,28 @@ const CartPage = () => {
         name: 'AgriGuide',
         description: 'Order Payment',
         handler: async function (response) {
-          // 4. On payment success, place the order in your backend
+          // 4. On payment success, verify payment before placing the order
           try {
+            const verifyRes = await axios.post(
+              getApiUrl('/api/razorpay/verify-payment'),
+              {
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: user?.token ? `Bearer ${user.token}` : '',
+                },
+              }
+            );
+            if (!verifyRes.data.success) {
+              toast.error('Payment verification failed');
+              setIsLoading(false);
+              return;
+            }
+            // Now place the order in your backend
             const orderPayload = {
               items: cartItems.map(item => ({
                 product: item.product._id,
@@ -202,7 +222,6 @@ const CartPage = () => {
             navigate('/order-success');
           } catch (error) {
             toast.error(error.message || 'Order placement failed');
-          } finally {
             setIsLoading(false);
           }
         },

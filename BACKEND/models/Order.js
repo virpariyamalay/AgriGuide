@@ -50,6 +50,20 @@ const orderSchema = new mongoose.Schema({
         enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'],
         default: 'pending',
     },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid', 'failed'],
+        default: 'pending',
+    },
+    isPaid: {
+        type: Boolean,
+        default: false,
+    },
+    paymentInfo: {
+        razorpayOrderId: String,
+        razorpayPaymentId: String,
+        razorpaySignature: String,
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema); 

@@ -32,6 +32,9 @@ exports.placeOrder = async (req, res) => {
         }
 
         // Create and save the order
+        const paymentInfo = req.body.paymentInfo;
+        const isPaid = !!paymentInfo;
+        const paymentStatus = isPaid ? 'paid' : 'pending';
         const order = new Order({
             user: userId,
             items,
@@ -42,6 +45,9 @@ exports.placeOrder = async (req, res) => {
             companyCharge,
             discount: discount || 0,
             totalAmount,
+            paymentStatus,
+            isPaid,
+            paymentInfo: paymentInfo || undefined,
         });
         await order.save();
 
