@@ -3,47 +3,64 @@ import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
+import OrderList from '../components/OrdersPage/OrderList'
+import { useOrders } from '../contexts/OrderContext'
+import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([])
+  const { fetchUserOrders, userOrders, loading } = useOrders()
+  const { user } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const savedOrders = localStorage.getItem('orders')
-    if (savedOrders) {
-      setOrders(JSON.parse(savedOrders))
+    if (!user) {
+      navigate('/login')
+      return
     }
-  }, [])
+
+    const loadOrders = async () => {
+      await fetchUserOrders()
+    }
+
+    loadOrders()
+  }, [user, navigate, fetchUserOrders])
+
+  useEffect(() => {
+    setOrders(userOrders)
+  }, [userOrders])
 
   const generatePDF = (order) => {
     const doc = new jsPDF()
-    
+
     // Add white background
     doc.setFillColor(255, 255, 255)
     doc.rect(0, 0, 210, 297, 'F')
-    
+
     // Add header with dark green background
     doc.setFillColor(22, 38, 38)
     doc.rect(0, 0, 210, 40, 'F')
-    
+
     // Remove logo image since SVG is not supported by jsPDF
     // Instead, add company name in white text
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(20)
     doc.setFont('helvetica', 'bold')
     doc.text('AgriGuide', 20, 25)
-    
+
     // Add INVOICE text
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(24)
     doc.setFont('helvetica', 'bold')
     doc.text('INVOICE', 140, 30)
-    
+
     // Add billing information
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
     doc.text('BILL FROM:', 20, 60)
     doc.text('BILL TO:', 140, 60)
-    
+
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     // From details
@@ -52,31 +69,31 @@ const OrdersPage = () => {
       '1234 Street Name',
       'City, State, Zip'
     ], 20, 70)
-    
+
     // To details
     doc.text([
-      order.deliveryDetails.fullName,
-      order.deliveryDetails.address,
-      `${order.deliveryDetails.city}, ${order.deliveryDetails.state} ${order.deliveryDetails.pincode}`
+      order.shippingAddress?.address || 'N/A',
+      order.shippingAddress?.city || 'N/A',
+      order.shippingAddress?.postalCode || 'N/A'
     ], 140, 70)
-    
+
     // Add invoice details
     doc.text([
-      `Number: ${order.id}`,
-      `Issue Date: ${format(new Date(order.date), 'MMM d, yyyy')}`,
-      `Due Date: ${format(new Date(order.date), 'MMM d, yyyy')}`,
-      `Total Due: $${order.total.toFixed(2)}`
+      `Number: ${order._id}`,
+      `Issue Date: ${new Date(order.createdAt).toLocaleDateString()}`,
+      `Due Date: ${new Date(order.createdAt).toLocaleDateString()}`,
+      `Total Due: ₹${order.totalAmount}`
     ], 140, 95)
-    
+
     // Add items table
     doc.autoTable({
       startY: 120,
       head: [['DESCRIPTION', 'QTY', 'PRICE', 'TOTAL']],
       body: order.items.map(item => [
-        item.name,
+        item.product?.name || 'N/A',
         item.quantity,
-        `$${item.price.toFixed(2)}`,
-        `$${(item.price * item.quantity).toFixed(2)}`
+        `₹${item.price}`,
+        `₹${(item.price * item.quantity)}`
       ]),
       theme: 'plain',
       headStyles: {
@@ -95,63 +112,84 @@ const OrdersPage = () => {
         3: { cellWidth: 30, halign: 'right' }
       }
     })
-    
+
     const finalY = doc.autoTable.previous.finalY + 20
-    
+
     // Add totals
     doc.setFontSize(10)
     doc.text('SUBTOTAL', 140, finalY)
-    doc.text(`$${order.subtotal.toFixed(2)}`, 180, finalY, 'right')
-    
-    doc.text('TAX (8%)', 140, finalY + 10)
-    const tax = order.subtotal * 0.08
-    doc.text(`$${tax.toFixed(2)}`, 180, finalY + 10, 'right')
-    
+    doc.text(`₹${order.productSubtotal}`, 180, finalY, 'right')
+
+    doc.text('SHIPPING', 140, finalY + 10)
+    doc.text(`₹${order.shipping}`, 180, finalY + 10, 'right')
+
+    doc.text('GST', 140, finalY + 20)
+    doc.text(`₹${order.gst}`, 180, finalY + 20, 'right')
+
+    doc.text('COMPANY CHARGE', 140, finalY + 30)
+    doc.text(`₹${order.companyCharge}`, 180, finalY + 30, 'right')
+
+    if (order.discount > 0) {
+      doc.text('DISCOUNT', 140, finalY + 40)
+      doc.text(`-₹${order.discount}`, 180, finalY + 40, 'right')
+    }
+
     // Add amount due with colored background
     doc.setFillColor(22, 38, 38)
-    doc.rect(140, finalY + 15, 40, 10, 'F')
+    doc.rect(140, finalY + 50, 40, 10, 'F')
     doc.setTextColor(255, 255, 255)
-    doc.text('AMOUNT DUE', 142, finalY + 22)
-    doc.text(`$${order.total.toFixed(2)}`, 180, finalY + 22, 'right')
-    
+    doc.text('AMOUNT DUE', 142, finalY + 57)
+    doc.text(`₹${order.totalAmount}`, 180, finalY + 57, 'right')
+
     // Add terms and conditions
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(10)
     doc.setFont('helvetica', 'bold')
-    doc.text('TERMS & CONDITIONS:', 20, finalY + 40)
+    doc.text('TERMS & CONDITIONS:', 20, finalY + 70)
     doc.setFont('helvetica', 'normal')
     doc.text([
       'Payment Due within 30 days of invoice date.',
       'Late Fee: 1.5% monthly on overdue amounts.',
       'Discrepancies: Notify in writing within 7 days.',
       'Returns/Refunds: Not accepted unless otherwise agreed.'
-    ], 20, finalY + 50)
-    
+    ], 20, finalY + 80)
+
     // Add bank details
     doc.text([
       'Bank of America',
       'Account Name: AgriGuide Solutions, Inc.',
       'Account No: 99999999',
       'Routing No: 303030000'
-    ], 20, finalY + 80)
-    
+    ], 20, finalY + 110)
+
     // Add signature
     doc.setFont('helvetica', 'bold')
-    doc.text('Jane Smith', 140, finalY + 80)
+    doc.text('Jane Smith', 140, finalY + 110)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(9)
-    doc.text('Founder & CEO', 140, finalY + 85)
-    doc.text('For AgriGuide Solutions Inc.', 140, finalY + 90)
-    
+    doc.text('Founder & CEO', 140, finalY + 115)
+    doc.text('For AgriGuide Solutions Inc.', 140, finalY + 120)
+
     // Add footer
     doc.setFontSize(8)
     doc.text([
       'https://www.agriguide.com',
       'Phone +1-240-229-2234 | accounts@agriguide.com'
     ], 105, 280, 'center')
-    
+
     // Save the PDF
-    doc.save(`Invoice-${order.id}.pdf`)
+    doc.save(`Invoice-${order._id}.pdf`)
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading orders...</p>
+        </div>
+      </div>
+    )
   }
 
   if (orders.length === 0) {
@@ -168,78 +206,7 @@ const OrdersPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">My Orders</h1>
-      
-      <div className="space-y-6">
-        {orders.map((order) => (
-          <motion.div
-            key={order.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-md overflow-hidden"
-          >
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold mb-1">
-                    Order #{order.id}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Placed on {format(new Date(order.date), 'PPp')}
-                  </p>
-                </div>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  order.status === 'Delivered' 
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-primary-100 text-primary-800'
-                }`}>
-                  {order.status}
-                </span>
-              </div>
-              
-              <div className="space-y-4">
-                {order.items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                      <div className="ml-4">
-                        <h4 className="font-medium">{item.name}</h4>
-                        <p className="text-sm text-gray-600">
-                          Quantity: {item.quantity}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-gray-600">Total</p>
-                    <p className="text-2xl font-bold">${order.total.toFixed(2)}</p>
-                  </div>
-                  <button
-                    onClick={() => generatePDF(order)}
-                    className="btn btn-primary flex items-center"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
-                    </svg>
-                    Download Invoice
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <OrderList orders={orders} generatePDF={generatePDF} />
     </div>
   )
 }

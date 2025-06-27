@@ -17,7 +17,7 @@ const ProfilePage = () => {
     bio: ''
   });
 
-    useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate('/login');
       return;
@@ -39,7 +39,8 @@ const ProfilePage = () => {
     };
 
     loadUserProfile();
-  }, [user, navigate]);
+    // eslint-disable-next-line
+  }, []); // Only run once on mount
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +53,10 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updatedProfile = await updateProfile(formData);
+      // Map fullName to name for the API
+      const payload = { ...formData, name: formData.fullName };
+      delete payload.fullName;
+      const updatedProfile = await updateProfile(payload);
       if (updatedProfile) {
         setFormData({
           fullName: updatedProfile.name || '',
@@ -225,23 +229,23 @@ const ProfilePage = () => {
                   <p className="mt-1 text-gray-900">{formData.pincode || 'Not set'}</p>
                 )}
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Bio
-              </label>
-              {isEditing ? (
-                <textarea
-                  name="bio"
-                  rows="3"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              ) : (
-                <p className="mt-1 text-gray-900">{formData.bio || 'No bio added yet.'}</p>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Bio
+                </label>
+                {isEditing ? (
+                  <textarea
+                    name="bio"
+                    rows="3"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  />
+                ) : (
+                  <p className="mt-1 text-gray-900">{formData.bio || 'No bio added yet.'}</p>
+                )}
+              </div>
             </div>
 
             {isEditing && (

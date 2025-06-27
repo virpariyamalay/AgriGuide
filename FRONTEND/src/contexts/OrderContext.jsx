@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 const OrderContext = createContext();
@@ -7,6 +7,7 @@ export const useOrders = () => useContext(OrderContext);
 
 export const OrderProvider = ({ children }) => {
     const [orders, setOrders] = useState([]);
+    const [userOrders, setUserOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
 
@@ -29,6 +30,26 @@ export const OrderProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+    // Fetch user's own orders
+    const fetchUserOrders = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/orders', {
+                headers: {
+                    Authorization: user?.token ? `Bearer ${user.token}` : '',
+                },
+                credentials: 'include',
+            });
+            if (!res.ok) throw new Error('Failed to fetch user orders');
+            const data = await res.json();
+            setUserOrders(data);
+        } catch (error) {
+            setUserOrders([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [user]);
 
     // Update order status
     const updateOrderStatus = async (orderId, status) => {
@@ -70,8 +91,10 @@ export const OrderProvider = ({ children }) => {
 
     const value = {
         orders,
+        userOrders,
         loading,
         fetchOrders,
+        fetchUserOrders,
         updateOrderStatus,
         deleteOrder,
     };

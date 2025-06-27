@@ -63,6 +63,19 @@ exports.getAllOrders = async (req, res) => {
     }
 };
 
+// Get orders for the authenticated user
+exports.getUserOrders = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const orders = await Order.find({ user: userId })
+            .populate('items.product', 'name image')
+            .sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch user orders', error: error.message });
+    }
+};
+
 exports.updateOrderStatus = async (req, res) => {
     try {
         const { id } = req.params;

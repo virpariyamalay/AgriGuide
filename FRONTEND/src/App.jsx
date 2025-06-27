@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage'
 import CropDetailPage from './pages/CropDetailPage'
 import MarketplacePage from './pages/MarketplacePage'
 import CartPage from './pages/CartPage'
+import OrdersPage from './pages/OrdersPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import ConfirmOrderPage from './pages/ConfirmOrderPage'
 import ProgressPage from './pages/ProgressPage'
@@ -89,6 +90,11 @@ function App() {
             <Route path="/cart" element={
               <PrivateRoute>
                 <CartPage />
+              </PrivateRoute>
+            } />
+            <Route path="/orders" element={
+              <PrivateRoute>
+                <OrdersPage />
               </PrivateRoute>
             } />
             <Route path="/order-success" element={

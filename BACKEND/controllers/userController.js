@@ -32,10 +32,11 @@ exports.updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     console.log('updateUserProfile req.body.fullName:', req.body.fullName);
+    console.log('updateUserProfile req.body.name:', req.body.name);
     console.log('updateUserProfile before update user.name:', user.name);
 
     if (user) {
-      user.name = req.body.fullName || user.name;
+      user.name = req.body.fullName || req.body.name || user.name;
       user.email = req.body.email || user.email;
       user.phone = req.body.phone || user.phone;
       user.address = req.body.address || user.address;
