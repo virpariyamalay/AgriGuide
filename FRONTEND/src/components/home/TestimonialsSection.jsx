@@ -20,8 +20,8 @@ const testimonials = [
         location: 'Maharashtra, India',
         role: 'Organic Farmer',
         rating: 5,
-        image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-        quote: 'As a new farmer, I was overwhelmed. AgriGuide made everything simple with their detailed crop guides and progress tracking. My organic vegetables are thriving!',
+        image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&h=150&q=80',
+        quote: 'As a new farmer, I was overwhelmed. AgriGuide made everything simple with their detailed crop guides and market intelligence. My organic vegetables are thriving!',
         crops: ['Tomatoes', 'Bell Peppers', 'Herbs'],
         yield: '+60%',
         experience: '1 year'
@@ -54,6 +54,7 @@ const testimonials = [
 
 const TestimonialsSection = () => {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
+    const [imageError, setImageError] = useState({});
 
     const nextTestimonial = () => {
         setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -65,6 +66,18 @@ const TestimonialsSection = () => {
 
     const goToTestimonial = (index) => {
         setCurrentTestimonial(index);
+    };
+
+    const handleImageError = (testimonialId) => {
+        setImageError(prev => ({ ...prev, [testimonialId]: true }));
+    };
+
+    const getImageSrc = (testimonial) => {
+        if (imageError[testimonial.id]) {
+            // Fallback to a placeholder image or initials
+            return null;
+        }
+        return testimonial.image;
     };
 
     return (
@@ -156,11 +169,18 @@ const TestimonialsSection = () => {
                                         transition={{ delay: 0.3 }}
                                         className="mb-6"
                                     >
-                                        <img
-                                            src={testimonials[currentTestimonial].image}
-                                            alt={testimonials[currentTestimonial].name}
-                                            className="w-24 h-24 rounded-full mx-auto lg:mx-0 border-4 border-white shadow-lg"
-                                        />
+                                        {getImageSrc(testimonials[currentTestimonial]) ? (
+                                            <img
+                                                src={getImageSrc(testimonials[currentTestimonial])}
+                                                alt={testimonials[currentTestimonial].name}
+                                                className="w-24 h-24 rounded-full mx-auto lg:mx-0 border-4 border-white shadow-lg"
+                                                onError={() => handleImageError(testimonials[currentTestimonial].id)}
+                                            />
+                                        ) : (
+                                            <div className="w-24 h-24 rounded-full mx-auto lg:mx-0 border-4 border-white shadow-lg bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold">
+                                                {testimonials[currentTestimonial].name.split(' ').map(n => n[0]).join('')}
+                                            </div>
+                                        )}
                                     </motion.div>
 
                                     <h3 className="text-xl font-bold text-gray-900 mb-1">
@@ -206,8 +226,8 @@ const TestimonialsSection = () => {
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.8 }}
                             className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentTestimonial
-                                    ? 'bg-orange-500 scale-125'
-                                    : 'bg-gray-300 hover:bg-gray-400'
+                                ? 'bg-orange-500 scale-125'
+                                : 'bg-gray-300 hover:bg-gray-400'
                                 }`}
                         />
                     ))}

@@ -1,15 +1,13 @@
 import React from 'react';
-import {
-  HeroSection,
-  StatsSection,
-  HowToStartSection,
-  PopularCropsSection,
-  FeaturesSection,
-  TestimonialsSection,
-  MarketplacePreviewSection,
-  WeatherWidgetSection,
-  CTASection
-} from '../components/home';
+import HeroSection from '../components/home/HeroSection';
+import StatsSection from '../components/home/StatsSection';
+import HowToStartSection from '../components/home/HowToStartSection';
+import PopularCropsSection from '../components/home/PopularCropsSection';
+import FeaturesSection from '../components/home/FeaturesSection';
+import TestimonialsSection from '../components/home/TestimonialsSection';
+import MarketplacePreviewSection from '../components/home/MarketplacePreviewSection';
+import WeatherWidgetSection from '../components/home/WeatherWidgetSection';
+import CTASection from '../components/home/CTASection';
 
 const HomePage = () => {
   return (

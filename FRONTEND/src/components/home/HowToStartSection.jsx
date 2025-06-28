@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 const steps = [
@@ -6,60 +6,37 @@ const steps = [
         id: 1,
         title: 'Search Your Crop',
         description: 'Find detailed information about the crop you want to grow',
-        icon: '🔍',
-        color: 'from-emerald-400 to-emerald-600',
-        bgColor: 'bg-emerald-50',
-        textColor: 'text-emerald-700',
-        animation: {
-            hover: { scale: 1.05, rotate: 5 },
-            tap: { scale: 0.95 }
-        }
+        icon: '🔍'
     },
     {
         id: 2,
-        title: 'Start Growing',
-        description: 'Begin your growing journey with our step-by-step guidance',
-        icon: '🌱',
-        color: 'from-blue-400 to-blue-600',
-        bgColor: 'bg-blue-50',
-        textColor: 'text-blue-700',
-        animation: {
-            hover: { scale: 1.05, y: -5 },
-            tap: { scale: 0.95 }
-        }
+        title: 'Get Expert Guidance',
+        description: 'Access comprehensive growing guides and best practices',
+        icon: '🌱'
     },
     {
         id: 3,
-        title: 'Track Progress',
-        description: 'Monitor your crop\'s growth and get timely notifications',
-        icon: '📈',
-        color: 'from-purple-400 to-purple-600',
-        bgColor: 'bg-purple-50',
-        textColor: 'text-purple-700',
-        animation: {
-            hover: { scale: 1.05, rotate: -5 },
-            tap: { scale: 0.95 }
-        }
+        title: 'Market Intelligence',
+        description: 'Stay informed with real-time market rates and trends',
+        icon: '📈'
     }
 ];
 
 const HowToStartSection = () => {
-    const [activeStep, setActiveStep] = useState(null);
-
     return (
-        <section className="py-20 bg-gradient-to-br from-green-50 to-emerald-50">
+        <section className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                        🌱 How to Get Started with AgriGuide
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        How to Get Started with AgriGuide
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Follow these simple steps to begin your successful farming journey
                     </p>
                 </motion.div>
@@ -68,34 +45,26 @@ const HowToStartSection = () => {
                     {steps.map((step, index) => (
                         <motion.div
                             key={step.id}
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: index * 0.2 }}
+                            transition={{ duration: 0.6, delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            whileHover={step.animation.hover}
-                            whileTap={step.animation.tap}
-                            onHoverStart={() => setActiveStep(step.id)}
-                            onHoverEnd={() => setActiveStep(null)}
-                            className="relative group"
+                            className="group"
                         >
-                            <div className={`${step.bgColor} rounded-2xl p-8 h-full border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm`}>
+                            <div className="bg-gray-50 rounded-lg p-6 h-full border border-gray-200 hover:border-primary-300 transition-colors duration-200">
                                 <div className="text-center">
-                                    <motion.div
-                                        className="text-6xl mb-6"
-                                        animate={activeStep === step.id ? { scale: 1.2, rotate: 360 } : {}}
-                                        transition={{ duration: 0.6 }}
-                                    >
+                                    <div className="text-4xl mb-4">
                                         {step.icon}
-                                    </motion.div>
+                                    </div>
 
-                                    <div className={`absolute top-4 left-4 w-10 h-10 ${step.color} rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                                    <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mx-auto mb-4">
                                         {step.id}
                                     </div>
 
-                                    <h3 className={`text-2xl font-bold mb-4 ${step.textColor}`}>
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
                                         {step.title}
                                     </h3>
-                                    <p className="text-gray-700 text-lg leading-relaxed">
+                                    <p className="text-gray-600 leading-relaxed">
                                         {step.description}
                                     </p>
                                 </div>

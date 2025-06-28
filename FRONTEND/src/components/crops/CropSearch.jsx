@@ -29,13 +29,13 @@ const CropSearch = ({ setSearchQuery }) => {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    
+
     if (query.trim() === '') return
-    
+
     const foundCrop = crops.find(
       crop => crop.name.toLowerCase() === query.toLowerCase()
     )
-    
+
     if (foundCrop) {
       navigate(`/crop/${foundCrop._id || foundCrop.id}`)
     } else {
@@ -46,11 +46,11 @@ const CropSearch = ({ setSearchQuery }) => {
   const handleQueryChange = (e) => {
     const value = e.target.value
     setQuery(value)
-    
+
     if (value.trim() === '') {
       setSuggestions([])
     } else {
-      const filtered = crops.filter(crop => 
+      const filtered = crops.filter(crop =>
         crop.name.toLowerCase().includes(value.toLowerCase())
       )
       setSuggestions(filtered.slice(0, 5))
@@ -64,7 +64,7 @@ const CropSearch = ({ setSearchQuery }) => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <motion.div 
+      <motion.div
         className="mx-auto w-full"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -98,19 +98,19 @@ const CropSearch = ({ setSearchQuery }) => {
               </svg>
             </button>
           </form>
-          
+
           {isFocused && suggestions.length > 0 && (
             <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
               <ul className="py-1">
                 {suggestions.map(crop => (
-                  <li 
+                  <li
                     key={crop._id || crop.id}
                     onClick={() => handleSuggestionClick(crop._id || crop.id)}
                     className="px-4 py-2 hover:bg-primary-50 cursor-pointer flex items-center"
                   >
-                    <img 
-                      src={crop.image} 
-                      alt={crop.name} 
+                    <img
+                      src={crop.image}
+                      alt={crop.name}
                       className="w-8 h-8 rounded-full object-cover mr-3"
                     />
                     <span>{crop.name}</span>
@@ -121,31 +121,31 @@ const CropSearch = ({ setSearchQuery }) => {
           )}
         </div>
       </motion.div>
-      
+
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">
-          Popular searches: 
-          <button 
+        <p className="text-sm text-white/90">
+          Popular searches:
+          <button
             onClick={() => handleSuggestionClick('tomato')}
-            className="text-primary-600 hover:text-primary-700 font-medium mx-1"
+            className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Tomato
           </button>
-          <button 
+          <button
             onClick={() => handleSuggestionClick('cucumber')}
-            className="text-primary-600 hover:text-primary-700 font-medium mx-1"
+            className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Cucumber
           </button>
-          <button 
+          <button
             onClick={() => handleSuggestionClick('carrot')}
-            className="text-primary-600 hover:text-primary-700 font-medium mx-1"
+            className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Carrot
           </button>
-          <button 
+          <button
             onClick={() => handleSuggestionClick('lettuce')}
-            className="text-primary-600 hover:text-primary-700 font-medium mx-1"
+            className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Lettuce
           </button>

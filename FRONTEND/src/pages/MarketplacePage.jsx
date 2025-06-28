@@ -79,7 +79,6 @@ const MarketplacePage = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product)
-    toast.success(`Added ${product.name} to cart!`)
   }
 
   if (loading) {

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import CropSearch from '../crops/CropSearch';
 
 const sliderImages = [
-    'https://images.pexels.com/photos/18793006/pexels-photo-18793006/free-photo-of-crop-field-with-trees-in-the-background.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'https://images.unsplash.com/photo-1560493676-04071c5f467b?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.pexels.com/photos/21393/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1200',
-    'https://images.pexels.com/photos/583459/pexels-photo-583459.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    'https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'https://plus.unsplash.com/premium_photo-1664300110866-15f2980d5bba?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1524486361537-8ad15938e1a3?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.pexels.com/photos/5230972/pexels-photo-5230972.jpeg?auto=compress&cs=tinysrgb&w=1200'
 ];
 
@@ -105,8 +105,8 @@ const HeroSection = () => {
                             key={index}
                             onClick={() => setCurrentSlide(index)}
                             className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index
-                                    ? 'bg-white scale-125'
-                                    : 'bg-white/50 hover:bg-white/75'
+                                ? 'bg-white scale-125'
+                                : 'bg-white/50 hover:bg-white/75'
                                 }`}
                         />
                     ))}

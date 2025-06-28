@@ -142,16 +142,8 @@ const WeatherWidgetSection = () => {
         } catch (err) {
             console.error('Weather fetch error:', err);
             setError(`Unable to fetch weather data: ${err.message}`);
-            // Set fallback data
-            setCurrentWeather({
-                location: 'Location Unavailable',
-                temperature: 25,
-                condition: 'Clear',
-                humidity: 60,
-                windSpeed: 10,
-                icon: '☀️',
-                feelsLike: 27
-            });
+            // Don't set fallback data when fetch fails
+            setCurrentWeather(null);
         } finally {
             setLoading(false);
         }
@@ -170,16 +162,8 @@ const WeatherWidgetSection = () => {
                     console.error('Geolocation error:', error);
                     setError(`Location access denied: ${error.message}`);
                     setLoading(false);
-                    // Set fallback data
-                    setCurrentWeather({
-                        location: 'Location Unavailable',
-                        temperature: 25,
-                        condition: 'Clear',
-                        humidity: 60,
-                        windSpeed: 10,
-                        icon: '☀️',
-                        feelsLike: 27
-                    });
+                    // Don't set fallback data when location is denied
+                    setCurrentWeather(null);
                 },
                 {
                     enableHighAccuracy: true,
@@ -190,6 +174,7 @@ const WeatherWidgetSection = () => {
         } else {
             setError('Geolocation not supported');
             setLoading(false);
+            setCurrentWeather(null);
         }
     }, []);
 
@@ -262,7 +247,7 @@ const WeatherWidgetSection = () => {
                                 )}
                             </div>
 
-                            {currentWeather && (
+                            {currentWeather ? (
                                 <>
                                     <div className="text-center mb-8">
                                         <div className="text-6xl mb-4">{currentWeather.icon}</div>
@@ -286,6 +271,12 @@ const WeatherWidgetSection = () => {
                                         </div>
                                     </div>
                                 </>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="text-6xl mb-4">🌤️</div>
+                                    <p className="text-gray-600 mb-2">Weather data unavailable</p>
+                                    <p className="text-sm text-gray-500">Please enable location access to view weather information</p>
+                                </div>
                             )}
 
                             <Link

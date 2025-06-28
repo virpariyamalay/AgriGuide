@@ -31,14 +31,14 @@ const Footer = () => {
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 px-6 py-16">
           {/* Brand Section */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <motion.div 
+            <motion.div
               className="flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -82,16 +82,15 @@ const Footer = () => {
                 { to: "/", text: "Home" },
                 { to: "/marketplace", text: "Shop" },
                 { to: "/market-rates", text: "Market Updates" },
-                { to: "/weather", text: "Weather" },
-                { to: "/contact", text: "Contact Us" }
+                { to: "/weather", text: "Weather" }
               ].map((link, index) => (
                 <motion.li
                   key={link.to}
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <Link 
-                    to={link.to} 
+                  <Link
+                    to={link.to}
                     className="text-primary-100 hover:text-white transition-colors inline-flex items-center"
                   >
                     <span className="mr-2">→</span>
@@ -111,7 +110,7 @@ const Footer = () => {
           >
             <h3 className="text-lg font-semibold mb-4 text-primary-50">Contact Us</h3>
             <ul className="space-y-3">
-              <motion.li 
+              <motion.li
                 className="flex items-center space-x-3 text-primary-100"
                 whileHover={{ x: 5 }}
               >
@@ -120,7 +119,7 @@ const Footer = () => {
                 </svg>
                 <span>45 Greenfield Road, Nashik, Maharashtra</span>
               </motion.li>
-              <motion.li 
+              <motion.li
                 className="flex items-center space-x-3 text-primary-100"
                 whileHover={{ x: 5 }}
               >
@@ -130,12 +129,12 @@ const Footer = () => {
                 </svg>
                 <span>contact@agriguide.com</span>
               </motion.li>
-              <motion.li 
+              <motion.li
                 className="flex items-center space-x-3 text-primary-100"
                 whileHover={{ x: 5 }}
               >
                 <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.493 1.498a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
                 <span>+91 9876543210</span>
               </motion.li>
@@ -189,7 +188,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-primary-700 px-6 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <motion.p 
+            <motion.p
               className="text-primary-100 text-sm"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}

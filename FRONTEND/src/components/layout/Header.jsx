@@ -4,6 +4,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { FaShoppingCart } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,6 @@ const Header = () => {
     { to: '/marketplace', label: 'Marketplace' },
     { to: '/market-rates', label: 'Market Rates' },
     { to: '/weather', label: 'Weather' },
-    { to: '/contact', label: 'Contact' },
     { to: '/orders', label: 'My Orders', protected: true },
   ];
 
@@ -100,9 +100,11 @@ const Header = () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary-600 text-base font-medium px-3 py-2 rounded-lg hover:bg-primary-50 transition"
+                  className="flex items-center gap-2 text-red-600 hover:text-white bg-red-100 hover:bg-red-600 text-base font-medium px-3 py-2 rounded-lg transition shadow-sm border border-red-200 hover:shadow-md"
+                  title="Logout"
                 >
-                  Logout
+                  <FiLogOut className="h-5 w-5" />
+                  <span>Logout</span>
                 </button>
               </>
             ) : (
@@ -200,8 +202,13 @@ const Header = () => {
                     </div>
                     Profile
                   </Link>
-                  <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-600 text-white font-semibold text-lg hover:bg-red-700 transition">
-                    Logout
+                  <button
+                    onClick={() => { setIsMenuOpen(false); handleLogout(); }}
+                    className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-100 text-red-600 font-semibold text-lg hover:bg-red-600 hover:text-white transition border border-red-200"
+                    title="Logout"
+                  >
+                    <FiLogOut className="h-5 w-5" />
+                    <span>Logout</span>
                   </button>
                 </>
               ) : (

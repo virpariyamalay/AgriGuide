@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useProgress } from '../contexts/ProgressContext'
 import GrowthStages from '../components/crops/GrowthStages'
 import { toast } from 'react-toastify'
 
@@ -10,8 +9,6 @@ const CropDetailPage = () => {
   const [crop, setCrop] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('instructions')
-  const { startProgress, getProgress } = useProgress()
-  const [cropProgress, setCropProgress] = useState(null)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -28,10 +25,6 @@ const CropDetailPage = () => {
         const data = await response.json()
         setCrop(data)
         setLoading(false)
-
-        // Check if this crop has progress
-        const progress = getProgress(cropId)
-        setCropProgress(progress)
       } catch (error) {
         console.error('Error fetching crop details:', error)
         setCrop(null)
@@ -40,13 +33,7 @@ const CropDetailPage = () => {
     }
 
     fetchCrop()
-  }, [cropId, getProgress])
-
-  const handleStartGrowing = () => {
-    startProgress(cropId)
-    setCropProgress(getProgress(cropId))
-    toast.success(`Started growing ${crop.name}!`)
-  }
+  }, [cropId])
 
   if (loading) {
     return (
@@ -112,41 +99,6 @@ const CropDetailPage = () => {
                   <span className="block font-bold text-primary-700">{crop.sunlight}</span>
                 </div>
               </div>
-
-              {/* <div className="mt-6">
-                {cropProgress ? (
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Link 
-                      to="/progress" 
-                      className="btn btn-primary flex items-center justify-center"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                      </svg>
-                      View Progress
-                    </Link>
-                    <Link 
-                      to="/marketplace" 
-                      className="btn btn-outline flex items-center justify-center"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14.0..." />
-                      </svg>
-                      Shop Supplies
-                    </Link>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={handleStartGrowing}
-                    className="btn btn-primary w-full sm:w-auto flex items-center justify-center"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-                    </svg>
-                    Start Growing
-                  </button>
-                )}
-              </div> */}
             </div>
           </div>
         </div>
@@ -157,8 +109,8 @@ const CropDetailPage = () => {
               <button
                 onClick={() => setActiveTab('instructions')}
                 className={`${activeTab === 'instructions'
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Growing Instructions
@@ -166,8 +118,8 @@ const CropDetailPage = () => {
               <button
                 onClick={() => setActiveTab('stages')}
                 className={`${activeTab === 'stages'
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Growth Stages
@@ -175,8 +127,8 @@ const CropDetailPage = () => {
               <button
                 onClick={() => setActiveTab('tips')}
                 className={`${activeTab === 'tips'
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
               >
                 Tips & Troubleshooting

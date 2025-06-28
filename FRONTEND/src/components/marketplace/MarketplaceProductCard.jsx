@@ -17,7 +17,6 @@ const MarketplaceProductCard = ({ product, addToCart, cartItems, quantity, setQu
             return;
         }
         addToCart(product, quantity);
-        toast.success(`Added ${quantity} x ${product.name} to cart!`);
         setQuantity(1);
     };
 

@@ -11,14 +11,12 @@ import CartPage from './pages/CartPage'
 import OrdersPage from './pages/OrdersPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import ConfirmOrderPage from './pages/ConfirmOrderPage'
-import ProgressPage from './pages/ProgressPage'
 import MarketRatesPage from './pages/MarketRatesPage'
 import WeatherPage from './pages/WeatherPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import ProfilePage from './pages/ProfilePage'
-import ContactPage from './pages/ContactPage'
 import NotFoundPage from './pages/NotFoundPage'
 import WeatherAlertEnhanced from './components/weather/WeatherAlertEnhanced'
 import { useAuth } from './contexts/AuthContext'
@@ -59,9 +57,9 @@ function App() {
             </div>
           </div>
         )}
-        <main className="flex-grow py-0 px-0 sm:px-6 lg:px-8">
+        <main className="flex-grow py-0 px-0">
           {/* Enhanced Weather Alerts */}
-          <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${showBanner ? 'pt-4' : ''}`}>
+          <div className={`w-full px-4 sm:px-6 lg:px-8 ${showBanner ? 'pt-2' : ''}`}>
             <WeatherAlertEnhanced />
           </div>
 
@@ -69,11 +67,6 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/contact" element={
-              <PrivateRoute>
-                <ContactPage />
-              </PrivateRoute>
-            } />
 
             {/* Protected Routes */}
             <Route path="/crop/:cropId" element={
@@ -104,11 +97,6 @@ function App() {
             <Route path="/confirm-order" element={
               <PrivateRoute>
                 <ConfirmOrderPage />
-              </PrivateRoute>
-            } />
-            <Route path="/progress" element={
-              <PrivateRoute>
-                <ProgressPage />
               </PrivateRoute>
             } />
             <Route path="/market-rates" element={

@@ -11,11 +11,13 @@ const WeatherAlertEnhanced = () => {
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r-xl"
+                className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-4 rounded-lg border border-blue-200 shadow-sm"
             >
-                <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
-                    <p className="text-blue-700">Loading weather alerts...</p>
+                <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded-r-xl shadow-md">
+                    <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+                        <p className="text-blue-700 font-medium">Loading weather alerts...</p>
+                    </div>
                 </div>
             </motion.div>
         );
@@ -26,17 +28,17 @@ const WeatherAlertEnhanced = () => {
     }
 
     const getAlertStyles = (type, severity) => {
-        const baseStyles = 'border-l-4 p-4 mb-4 rounded-r-xl';
+        const baseStyles = 'border-l-4 p-4 rounded-r-xl shadow-md';
 
         switch (type) {
             case 'warning':
-                return `${baseStyles} bg-red-50 border-red-400`;
+                return `${baseStyles} bg-red-100 border-red-500 shadow-red-100`;
             case 'info':
-                return `${baseStyles} bg-blue-50 border-blue-400`;
+                return `${baseStyles} bg-blue-100 border-blue-500 shadow-blue-100`;
             case 'success':
-                return `${baseStyles} bg-green-50 border-green-400`;
+                return `${baseStyles} bg-green-100 border-green-500 shadow-green-100`;
             default:
-                return `${baseStyles} bg-yellow-50 border-yellow-400`;
+                return `${baseStyles} bg-yellow-100 border-yellow-500 shadow-yellow-100`;
         }
     };
 
@@ -54,7 +56,7 @@ const WeatherAlertEnhanced = () => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-4 rounded-lg border border-blue-200 shadow-sm">
             {alerts.map((alert, index) => (
                 <motion.div
                     key={alert.id}

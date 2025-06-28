@@ -37,11 +37,23 @@ export const CartProvider = ({ children }) => {
   // Add or update item in cart via backend
   const addToCart = async (product, quantity = 1) => {
     if (!user?.token) return
+
+    // Check if item is already in cart
+    const existingItem = cartItems.find(item =>
+      item.product && (item.product._id === product._id || item.product.id === product._id)
+    )
+
+    if (existingItem) {
+      toast.info(`${product.name} is already in your cart!`)
+      return
+    }
+
     // Prevent adding more than available stock
     if (typeof product.stock === 'number' && quantity > product.stock) {
       toast.error('Cannot add more than available stock')
       return
     }
+
     try {
       const res = await fetch('/api/cart/add', {
         method: 'POST',
@@ -57,6 +69,7 @@ export const CartProvider = ({ children }) => {
       setCartItems(data.items)
       setIsCartUpdated(true)
       setTimeout(() => setIsCartUpdated(false), 2000)
+      toast.success(`Added ${quantity} x ${product.name} to cart!`)
     } catch (error) {
       // handle error
     }

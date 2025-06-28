@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import {
-  WeatherHero,
-  WeatherSearchForm,
-  WeatherChart,
-  WeatherDataTable
-} from '../components/weather';
+import WeatherHero from '../components/weather/WeatherHero';
+import WeatherSearchForm from '../components/weather/WeatherSearchForm';
+import WeatherChart from '../components/weather/WeatherChart';
+import WeatherDataTable from '../components/weather/WeatherDataTable';
 
 const WeatherPage = () => {
   const [loading, setLoading] = useState(false);

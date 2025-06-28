@@ -21,21 +21,21 @@ const features = [
         ]
     },
     {
-        id: 'progress-tracking',
-        title: 'Progress Tracking',
-        description: 'Monitor your plants\' growth, set reminders, and track your farming journey.',
-        icon: '📊',
+        id: 'market-intelligence',
+        title: 'Market Intelligence',
+        description: 'Get real-time market prices, trends, and insights to maximize your profits.',
+        icon: '📈',
         gradient: 'from-blue-400 to-indigo-500',
         stats: {
-            users: '10K+',
-            crops: '100+',
-            success: '95%'
+            markets: '500+',
+            updates: 'Daily',
+            accuracy: '98%'
         },
         benefits: [
-            'Growth stage tracking',
-            'Custom reminders',
-            'Photo documentation',
-            'Yield predictions'
+            'Real-time price tracking',
+            'Market trend analysis',
+            'Profit optimization',
+            'Demand forecasting'
         ]
     },
     {

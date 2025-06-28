@@ -7,6 +7,7 @@ const PopularCrops = () => {
   const [crops, setCrops] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [imageErrors, setImageErrors] = useState({})
 
   const categories = [
     { id: 'all', name: 'All' },
@@ -15,6 +16,18 @@ const PopularCrops = () => {
     { id: 'herbs', name: 'Herbs' },
     { id: 'grains', name: 'Grains' }
   ]
+
+  const handleImageError = (cropId) => {
+    setImageErrors(prev => ({ ...prev, [cropId]: true }))
+  }
+
+  const getImageSrc = (crop) => {
+    if (imageErrors[crop.id]) {
+      // Return a placeholder image or null to show fallback
+      return null
+    }
+    return crop.image
+  }
 
   useEffect(() => {
     const fetchCrops = async () => {
@@ -56,11 +69,10 @@ const PopularCrops = () => {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 ${
-                selectedCategory === category.id
-                  ? 'bg-white text-primary-600 shadow-sm'
-                  : 'text-gray-600 hover:text-primary-600'
-              }`}
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 ${selectedCategory === category.id
+                ? 'bg-white text-primary-600 shadow-sm'
+                : 'text-gray-600 hover:text-primary-600'
+                }`}
             >
               {category.name}
             </button>
@@ -81,16 +93,21 @@ const PopularCrops = () => {
               className="block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="aspect-w-16 aspect-h-9 relative">
-                <img
-                  src={crop.image}
-                  alt={crop.name}
-                  className="w-full h-32 sm:h-36 md:h-40 object-cover"
-                />
-                <div className="absolute top-1 right-1 sm:top-2 sm:right-2">
-                  <span className="inline-flex items-center px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                    {crop.difficulty}
-                  </span>
-                </div>
+                {getImageSrc(crop) ? (
+                  <img
+                    src={getImageSrc(crop)}
+                    alt={crop.name}
+                    className="w-full h-32 sm:h-36 md:h-40 object-cover"
+                    onError={() => handleImageError(crop.id)}
+                  />
+                ) : (
+                  <div className="w-full h-32 sm:h-36 md:h-40 bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-3xl mb-2">🌱</div>
+                      <div className="text-sm text-gray-600 font-medium">{crop.name}</div>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="p-2 sm:p-3 md:p-4">
                 <h3 className="font-bold text-sm sm:text-base md:text-lg mb-1">{crop.name}</h3>
