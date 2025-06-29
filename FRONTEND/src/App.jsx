@@ -21,6 +21,8 @@ import NotFoundPage from './pages/NotFoundPage'
 import WeatherAlertEnhanced from './components/weather/WeatherAlertEnhanced'
 import { useAuth } from './contexts/AuthContext'
 import { WeatherAlertProvider } from './contexts/WeatherAlertContext'
+import ScrollProgress from "./components/ScrollProgress"
+import CircularScrollProgress from "./components/CircularScrollProgress"
 
 function App() {
   const { user } = useAuth()
@@ -30,6 +32,8 @@ function App() {
     <WeatherAlertProvider>
       <div className="flex flex-col min-h-screen bg-primary-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
         <Header />
+        <ScrollProgress />
+        <CircularScrollProgress />
         {showBanner && (
           <div className="w-full py-2.5 font-medium text-sm text-white bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 overflow-hidden relative">
             <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 text-center overflow-hidden">

@@ -43,10 +43,7 @@ const Footer = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <span className="text-3xl animate-bounce-slow">🌱</span>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-                AgriGuide
-              </h2>
+              <img src="/logo.png" alt="logo" className="h-16 w-auto mr-2 rounded-md shadow-sm" />
             </motion.div>
             <p className="text-primary-100 leading-relaxed">
               Empowering farmers with innovative solutions for sustainable agriculture. Your trusted partner in modern farming practices.
@@ -117,7 +114,7 @@ const Footer = () => {
                 <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
-                <span>45 Greenfield Road, Nashik, Maharashtra</span>
+                <span>201, Corporate Heights, SG Highway, Ahmedabad, Gujarat</span>
               </motion.li>
               <motion.li
                 className="flex items-center space-x-3 text-primary-100"
@@ -127,7 +124,7 @@ const Footer = () => {
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                <span>contact@agriguide.com</span>
+                <span>malayvirpariya2026@gmail.com</span>
               </motion.li>
               <motion.li
                 className="flex items-center space-x-3 text-primary-100"
@@ -136,7 +133,7 @@ const Footer = () => {
                 <svg className="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.493 1.498a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
-                <span>+91 9876543210</span>
+                <span>+91 81414 24177</span>
               </motion.li>
             </ul>
           </motion.div>

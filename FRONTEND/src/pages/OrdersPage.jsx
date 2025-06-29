@@ -32,153 +32,135 @@ const OrdersPage = () => {
   }, [userOrders])
 
   const generatePDF = (order) => {
-    const doc = new jsPDF()
+    const doc = new jsPDF();
 
-    // Add white background
-    doc.setFillColor(255, 255, 255)
-    doc.rect(0, 0, 210, 297, 'F')
+    // Modern, simple header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text('AgriGuide', 20, 20);
+    doc.setFontSize(16);
+    doc.text('INVOICE', 160, 20);
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 25, 190, 25);
 
-    // Add header with dark green background
-    doc.setFillColor(22, 38, 38)
-    doc.rect(0, 0, 210, 40, 'F')
-
-    // Remove logo image since SVG is not supported by jsPDF
-    // Instead, add company name in white text
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(20)
-    doc.setFont('helvetica', 'bold')
-    doc.text('AgriGuide', 20, 25)
-
-    // Add INVOICE text
-    doc.setTextColor(0, 0, 0)
-    doc.setFontSize(24)
-    doc.setFont('helvetica', 'bold')
-    doc.text('INVOICE', 140, 30)
-
-    // Add billing information
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('BILL FROM:', 20, 60)
-    doc.text('BILL TO:', 140, 60)
-
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(10)
-    // From details
-    doc.text([
+    // Billing info
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BILL FROM:', 20, 35);
+    doc.text('BILL TO:', 120, 35);
+    doc.setFont('helvetica', 'normal');
+    const billFrom = [
       'AgriGuide',
-      '1234 Street Name',
-      'City, State, Zip'
-    ], 20, 70)
-
-    // To details
-    doc.text([
+      '201, Corporate Heights, SG Highway, Ahmedabad, Gujarat',
+      'malayvirpariya2026@gmail.com',
+      '+91 81414 24177'
+    ];
+    const billTo = [
       order.shippingAddress?.address || 'N/A',
       order.shippingAddress?.city || 'N/A',
-      order.shippingAddress?.postalCode || 'N/A'
-    ], 140, 70)
+      order.shippingAddress?.postalCode || 'N/A',
+      order.shippingAddress?.country || 'India',
+      order.shippingAddress?.phone || ''
+    ];
+    const startY = 42;
+    for (let i = 0; i < Math.max(billFrom.length, billTo.length); i++) {
+      doc.text(billFrom[i] || '', 20, startY + i * 6);
+      doc.text(billTo[i] || '', 120, startY + i * 6);
+    }
 
-    // Add invoice details
-    doc.text([
-      `Number: ${order._id}`,
-      `Issue Date: ${new Date(order.createdAt).toLocaleDateString()}`,
-      `Due Date: ${new Date(order.createdAt).toLocaleDateString()}`,
-      `Total Due: ₹${order.totalAmount}`
-    ], 140, 95)
+    // Invoice details
+    doc.setFont('helvetica', 'bold');
+    doc.text('Invoice No:', 20, 70);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${order._id}`, 50, 70);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Date:', 120, 70);
+    doc.setFont('helvetica', 'normal');
+    doc.text(format(new Date(order.createdAt), 'PPP'), 140, 70);
 
-    // Add items table
+    // Items table
     doc.autoTable({
-      startY: 120,
-      head: [['DESCRIPTION', 'QTY', 'PRICE', 'TOTAL']],
+      startY: 80,
+      head: [['Description', 'Qty', 'Price', 'Total']],
       body: order.items.map(item => [
         item.product?.name || 'N/A',
         item.quantity,
-        `₹${item.price}`,
-        `₹${(item.price * item.quantity)}`
+        item.price,
+        (item.price * item.quantity)
       ]),
-      theme: 'plain',
-      headStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-        fontStyle: 'bold',
-        fontSize: 10
-      },
-      bodyStyles: {
-        fontSize: 10
-      },
+      theme: 'grid',
+      headStyles: { fillColor: [245, 245, 245], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 10 },
+      bodyStyles: { fontSize: 10 },
       columnStyles: {
-        0: { cellWidth: 90 },
-        1: { cellWidth: 30, halign: 'center' },
+        0: { cellWidth: 80 },
+        1: { cellWidth: 20, halign: 'center' },
         2: { cellWidth: 30, halign: 'right' },
         3: { cellWidth: 30, halign: 'right' }
       }
-    })
+    });
 
-    const finalY = doc.autoTable.previous.finalY + 20
-
-    // Add totals
-    doc.setFontSize(10)
-    doc.text('SUBTOTAL', 140, finalY)
-    doc.text(`₹${order.productSubtotal}`, 180, finalY, 'right')
-
-    doc.text('SHIPPING', 140, finalY + 10)
-    doc.text(`₹${order.shipping}`, 180, finalY + 10, 'right')
-
-    doc.text('GST', 140, finalY + 20)
-    doc.text(`₹${order.gst}`, 180, finalY + 20, 'right')
-
-    doc.text('COMPANY CHARGE', 140, finalY + 30)
-    doc.text(`₹${order.companyCharge}`, 180, finalY + 30, 'right')
-
+    let y = doc.autoTable.previous.finalY + 10;
+    doc.setFont('helvetica', 'bold');
+    doc.text('Subtotal:', 140, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${order.productSubtotal}`, 180, y, 'right');
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.text('Shipping:', 140, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${order.shipping}`, 180, y, 'right');
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.text('GST:', 140, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${order.gst}`, 180, y, 'right');
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.text('Company Charge:', 140, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${order.companyCharge}`, 180, y, 'right');
+    y += 8;
     if (order.discount > 0) {
-      doc.text('DISCOUNT', 140, finalY + 40)
-      doc.text(`-₹${order.discount}`, 180, finalY + 40, 'right')
+      doc.setFont('helvetica', 'bold');
+      doc.text('Discount:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`-₹${order.discount}`, 180, y, 'right');
+      y += 8;
     }
+    doc.setFont('helvetica', 'bold');
+    doc.text('Total:', 140, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`₹${order.totalAmount}`, 180, y, 'right');
 
-    // Add amount due with colored background
-    doc.setFillColor(22, 38, 38)
-    doc.rect(140, finalY + 50, 40, 10, 'F')
-    doc.setTextColor(255, 255, 255)
-    doc.text('AMOUNT DUE', 142, finalY + 57)
-    doc.text(`₹${order.totalAmount}`, 180, finalY + 57, 'right')
-
-    // Add terms and conditions
-    doc.setTextColor(0, 0, 0)
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'bold')
-    doc.text('TERMS & CONDITIONS:', 20, finalY + 70)
-    doc.setFont('helvetica', 'normal')
+    // Modern, simple terms
+    y += 16;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('Terms & Conditions', 20, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
     doc.text([
-      'Payment Due within 30 days of invoice date.',
-      'Late Fee: 1.5% monthly on overdue amounts.',
-      'Discrepancies: Notify in writing within 7 days.',
-      'Returns/Refunds: Not accepted unless otherwise agreed.'
-    ], 20, finalY + 80)
+      '1. This invoice is for pre-paid orders only.',
+      '2. Orders cannot be cancelled or refunded once payment is made.',
+      '3. For support, contact malayvirpariya2026@gmail.com or +91 81414 24177.'
+    ], 20, y + 7);
 
-    // Add bank details
-    doc.text([
-      'Bank of America',
-      'Account Name: AgriGuide Solutions, Inc.',
-      'Account No: 99999999',
-      'Routing No: 303030000'
-    ], 20, finalY + 110)
+    // Signature and footer
+    let footerY = y + 32;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('Malay Virpariya', 140, footerY);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Founder & CEO', 140, footerY + 6);
+    doc.text('For AgriGuide Solutions Inc.', 140, footerY + 12);
+    doc.setFontSize(8);
+    doc.text('https://www.agriguide.com', 20, footerY + 24);
+    doc.text('Phone +91 81414 24177 | accounts@agriguide.com', 20, footerY + 30);
 
-    // Add signature
-    doc.setFont('helvetica', 'bold')
-    doc.text('Jane Smith', 140, finalY + 110)
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(9)
-    doc.text('Founder & CEO', 140, finalY + 115)
-    doc.text('For AgriGuide Solutions Inc.', 140, finalY + 120)
+    doc.setFontSize(8);
+    doc.text('Thank you for shopping with AgriGuide!', 105, 290, 'center');
 
-    // Add footer
-    doc.setFontSize(8)
-    doc.text([
-      'https://www.agriguide.com',
-      'Phone +1-240-229-2234 | accounts@agriguide.com'
-    ], 105, 280, 'center')
-
-    // Save the PDF
-    doc.save(`Invoice-${order._id}.pdf`)
+    doc.save(`Invoice-${order._id}.pdf`);
   }
 
   if (loading) {

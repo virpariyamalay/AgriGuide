@@ -1,8 +1,13 @@
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { format, addDays } from 'date-fns';
+import { useEffect } from 'react';
 
 const OrderSuccessPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const location = useLocation();
   const orderData = location.state?.orderData;
   const expectedDeliveryDate = orderData?.createdAt

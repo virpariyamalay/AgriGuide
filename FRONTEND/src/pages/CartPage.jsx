@@ -416,122 +416,139 @@ const CartPage = () => {
 
       {step === 'delivery' && (
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Delivery Details</h2>
+          <div className="bg-white rounded-2xl shadow-xl p-0 overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 px-8 py-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-white">Delivery Details</h2>
               <button
                 onClick={handleBackToCart}
-                className="text-primary-600 hover:text-primary-700"
+                className="text-white bg-white/20 hover:bg-white/30 font-medium px-4 py-2 rounded-lg transition duration-200 backdrop-blur-sm"
               >
                 Back to Cart
               </button>
             </div>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Full Name *</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={deliveryDetails.fullName}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
+            <form className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50" autoComplete="off">
+              {/* Left Column */}
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={deliveryDetails.fullName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={deliveryDetails.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Phone <span className="text-red-500">*</span></label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={deliveryDetails.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Enter your phone number"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Alternate Phone</label>
+                  <input
+                    type="tel"
+                    name="alternatePhone"
+                    value={deliveryDetails.alternatePhone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Optional alternate contact number"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={deliveryDetails.email}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
+              {/* Right Column */}
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Address <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={deliveryDetails.address}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Enter your address"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Landmark</label>
+                  <input
+                    type="text"
+                    name="landmark"
+                    value={deliveryDetails.landmark}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="Nearby landmark (optional)"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">City <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={deliveryDetails.city}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                      placeholder="City"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Pincode <span className="text-red-500">*</span></label>
+                    <input
+                      type="text"
+                      name="pincode"
+                      value={deliveryDetails.pincode}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                      placeholder="Pincode"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Delivery Instructions</label>
+                  <textarea
+                    name="deliveryInstructions"
+                    value={deliveryDetails.deliveryInstructions}
+                    onChange={handleInputChange}
+                    rows="2"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
+                    placeholder="e.g. Call before delivery, leave at gate, etc."
+                  ></textarea>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Phone *</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={deliveryDetails.phone}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
+              <div className="md:col-span-2 pt-6">
+                <button
+                  type="button"
+                  onClick={handleProceedToConfirm}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-xl text-lg shadow-lg transition duration-200"
+                >
+                  Proceed to Confirm
+                </button>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Address *</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={deliveryDetails.address}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Landmark</label>
-                <input
-                  type="text"
-                  name="landmark"
-                  value={deliveryDetails.landmark}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">City *</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={deliveryDetails.city}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Pincode *</label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={deliveryDetails.pincode}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Delivery Instructions</label>
-                <textarea
-                  name="deliveryInstructions"
-                  value={deliveryDetails.deliveryInstructions}
-                  onChange={handleInputChange}
-                  rows="2"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  placeholder="e.g. Call before delivery, leave at gate, etc."
-                ></textarea>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Alternate Phone</label>
-                <input
-                  type="tel"
-                  name="alternatePhone"
-                  value={deliveryDetails.alternatePhone}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  placeholder="Optional alternate contact number"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={handleProceedToConfirm}
-                className="w-full btn btn-primary py-3"
-              >
-                Proceed to Confirm
-              </button>
             </form>
           </div>
         </div>

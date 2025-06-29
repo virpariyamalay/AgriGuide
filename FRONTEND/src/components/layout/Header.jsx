@@ -41,7 +41,7 @@ const Header = () => {
           <img
             src="/logo.png"
             alt="AgriGuide Logo"
-            className="h-[200px] w-auto"
+            className="h-10 w-auto"
             style={{ objectFit: 'contain' }}
           />
         </Link>
@@ -145,7 +145,7 @@ const Header = () => {
           <div className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 rounded-b-3xl shadow-2xl p-6 pt-4 flex flex-col min-h-[60vh] animate-slideDown">
             <div className="flex items-center justify-between mb-6">
               <Link to="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
-                <img src="/logo.png" alt="AgriGuide Logo" className="h-10 w-auto" style={{ objectFit: 'contain' }} />
+                <img src="/logo.png" alt="AgriGuide Logo" className="h-8 w-auto" style={{ objectFit: 'contain' }} />
               </Link>
               <button onClick={() => setIsMenuOpen(false)} className="text-2xl text-gray-700 dark:text-gray-200 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                 &times;

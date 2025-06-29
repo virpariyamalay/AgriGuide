@@ -117,17 +117,57 @@ exports.requestOtp = async (req, res) => {
     // Save new OTP
     await Otp.create({ email, otp, expiresAt });
 
-    // For testing: always return OTP in response
-    console.log(`OTP for ${email}: ${otp}`);
+
+
 
     // Try to send email if configured
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       try {
         await transporter.sendMail({
+          // from: process.env.EMAIL_USER,
+          // to: email,
+          // subject: 'Your AgriGuide Login OTP',
+          // text: `Your OTP for AgriGuide login is: ${otp}. It is valid for 5 minutes.`,
           from: process.env.EMAIL_USER,
           to: email,
-          subject: 'Your AgriGuide Login OTP',
-          text: `Your OTP for AgriGuide login is: ${otp}. It is valid for 5 minutes.`,
+          subject: 'AgriGuide Login - Your One-Time Password (OTP)',
+          html: `
+  <div style="font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f4; padding: 30px;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+      <h2 style="color: #2E7D32; text-align: center; font-size: 24px;">🔐 AgriGuide Login Verification</h2>
+      <p style="font-size: 16px; color: #444; text-align: center;">Use the OTP below to log in to your AgriGuide account:</p>
+
+      <div style="
+        background-color: #2E7D32;
+        color: white;
+        font-size: 36px;
+        font-weight: bold;
+        letter-spacing: 8px;
+        text-align: center;
+        margin: 30px auto;
+        padding: 20px 0;
+        width: 80%;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+      ">
+        ${otp}
+      </div>
+
+      <p style="font-size: 14px; color: #666; text-align: center;">
+        This OTP is valid for <strong>5 minutes</strong>.
+      </p>
+      <p style="font-size: 14px; color: #999; text-align: center;">
+        If you did not request this OTP, you can safely ignore this email.
+      </p>
+
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+      <p style="font-size: 13px; color: #aaa; text-align: center;">
+        &copy; ${new Date().getFullYear()} AgriGuide. All rights reserved.
+      </p>
+    </div>
+  </div>
+`
+
         });
         res.json({ message: 'OTP sent to email', otp: otp });
       } catch (err) {
