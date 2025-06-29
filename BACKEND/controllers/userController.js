@@ -10,13 +10,9 @@ exports.getUserProfile = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        phone: user.phone,
-        address: user.address,
-        city: user.city,
-        state: user.state,
-        pincode: user.pincode,
-        bio: user.bio,
         isAdmin: user.isAdmin,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         token: generateToken(user._id),
       });
     } else {
@@ -31,21 +27,14 @@ exports.updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    console.log('updateUserProfile req.body.fullName:', req.body.fullName);
-    console.log('updateUserProfile req.body.name:', req.body.name);
-    console.log('updateUserProfile before update user.name:', user.name);
-
     if (user) {
-      user.name = req.body.fullName || req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.phone = req.body.phone || user.phone;
-      user.address = req.body.address || user.address;
-      user.city = req.body.city || user.city;
-      user.state = req.body.state || user.state;
-      user.pincode = req.body.pincode || user.pincode;
-      user.bio = req.body.bio || user.bio;
+      // Only update fields that exist in the schema
+      if (req.body.name) {
+        user.name = req.body.name;
+      }
 
-      console.log('updateUserProfile after update user.name:', user.name);
+      // Note: Email is typically not updated through profile update
+      // If email update is needed, it should be a separate endpoint with verification
 
       if (req.body.password) {
         const salt = await bcrypt.genSalt(10);
@@ -58,13 +47,9 @@ exports.updateUserProfile = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
-        phone: updatedUser.phone,
-        address: updatedUser.address,
-        city: updatedUser.city,
-        state: updatedUser.state,
-        pincode: updatedUser.pincode,
-        bio: updatedUser.bio,
         isAdmin: updatedUser.isAdmin,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
         token: generateToken(updatedUser._id),
       });
     } else {

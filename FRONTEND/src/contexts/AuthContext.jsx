@@ -25,12 +25,6 @@ export const AuthProvider = ({ children }) => {
           email: userData.email,
           password: userData.password,
           otp: userData.otp,
-          phone: userData.phone || '',
-          address: userData.address || '',
-          city: userData.city || '',
-          state: userData.state || '',
-          pincode: userData.pincode || '',
-          bio: userData.bio || '',
         }),
       });
 

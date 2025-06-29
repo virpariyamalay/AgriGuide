@@ -46,18 +46,12 @@ exports.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user with simplified data
+    // Create user with only schema fields
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       isAdmin: false,
-      phone: '',
-      address: '',
-      city: '',
-      state: '',
-      pincode: '',
-      bio: '',
     });
 
     if (user) {
@@ -69,13 +63,9 @@ exports.registerUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        phone: user.phone,
-        address: user.address,
-        city: user.city,
-        state: user.state,
-        pincode: user.pincode,
-        bio: user.bio,
         isAdmin: user.isAdmin,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         token: generateToken(user._id),
       });
     } else {
@@ -100,6 +90,8 @@ exports.loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         token: generateToken(user._id),
       });
     } else {
@@ -179,6 +171,8 @@ exports.verifyOtp = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
       token: generateToken(user._id),
     });
   } catch (error) {
