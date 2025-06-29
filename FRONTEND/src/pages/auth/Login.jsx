@@ -4,10 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, user } = useAuth();
   const navigate = useNavigate();
@@ -18,24 +16,15 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      setLoading(true);
-      await login(formData.email, formData.password);
-      navigate('/');
+      await login(email, password);
       toast.success('Logged in successfully!');
+      navigate('/');
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
@@ -49,6 +38,7 @@ const Login = () => {
             Sign in to your account
           </h2>
         </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
@@ -61,8 +51,8 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 placeholder="you@example.com"
               />
@@ -78,8 +68,8 @@ const Login = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 placeholder="••••••••"
               />

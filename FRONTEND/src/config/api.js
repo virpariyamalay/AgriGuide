@@ -10,6 +10,8 @@ export const API_ENDPOINTS = {
     AUTH: {
         REGISTER: `${API_BASE_URL}/api/auth/register`,
         LOGIN: `${API_BASE_URL}/api/auth/login`,
+        REQUEST_OTP: `${API_BASE_URL}/api/auth/request-otp`,
+        VERIFY_OTP: `${API_BASE_URL}/api/auth/verify-otp`,
     },
 
     // User endpoints

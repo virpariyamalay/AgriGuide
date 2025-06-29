@@ -18,30 +18,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    phone: {
-      type: String,
-      default: '',
-    },
-    address: {
-      type: String,
-      default: '',
-    },
-    city: {
-      type: String,
-      default: '',
-    },
-    state: {
-      type: String,
-      default: '',
-    },
-    pincode: {
-      type: String,
-      default: '',
-    },
-    bio: {
-      type: String,
-      default: '',
-    },
     isAdmin: {
       type: Boolean,
       required: true,

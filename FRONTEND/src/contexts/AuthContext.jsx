@@ -21,9 +21,10 @@ export const AuthProvider = ({ children }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: userData.fullName,
+          name: userData.name,
           email: userData.email,
           password: userData.password,
+          otp: userData.otp,
           phone: userData.phone || '',
           address: userData.address || '',
           city: userData.city || '',
@@ -39,6 +40,11 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
+      // Set user data and token after successful signup
+      if (data.token) {
+        setUser(data);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+      }
       await fetchUserProfile(); // Fetch full profile after signup
       setLoading(false);
       return data;
@@ -138,6 +144,52 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // OTP login methods
+  const requestOtp = async (email) => {
+    console.log('AuthContext: requestOtp called with email:', email);
+    setLoading(true);
+    try {
+      console.log('AuthContext: Making request to:', API_ENDPOINTS.AUTH.REQUEST_OTP);
+      const response = await fetch(API_ENDPOINTS.AUTH.REQUEST_OTP, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      console.log('AuthContext: Response status:', response.status);
+      const data = await response.json();
+      console.log('AuthContext: Response data:', data);
+      setLoading(false);
+      if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+      return data;
+    } catch (error) {
+      console.error('AuthContext: Error in requestOtp:', error);
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  const verifyOtp = async (email, otp) => {
+    setLoading(true);
+    try {
+      const response = await fetch(API_ENDPOINTS.AUTH.VERIFY_OTP, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await response.json();
+      setLoading(false);
+      if (!response.ok) throw new Error(data.message || 'Invalid OTP');
+      if (!data.token) throw new Error('Login response missing token');
+      setUser(data);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      await fetchUserProfile();
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -147,11 +199,13 @@ export const AuthProvider = ({ children }) => {
     isAdmin,
     updateProfile,
     fetchUserProfile,
+    requestOtp,
+    verifyOtp,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

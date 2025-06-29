@@ -1,7 +1,15 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+
+// Loading Spinner Component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center">
+    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+    <span className="ml-2">Loading...</span>
+  </div>
+);
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -9,16 +17,19 @@ const Signup = () => {
     password: '',
     confirmPassword: '',
     fullName: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
-    bio: ''
   });
+  const [otp, setOtp] = useState('');
+  const [step, setStep] = useState(1); // 1: fill form, 2: verify OTP
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signup, requestOtp } = useAuth();
   const navigate = useNavigate();
+
+  console.log('Signup component rendered, step:', step, 'loading:', loading);
+
+  // Monitor step changes
+  useEffect(() => {
+    console.log('Step changed to:', step);
+  }, [step]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,25 +39,74 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSendOtp = async () => {
+    console.log('handleSendOtp called');
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      return toast.error('Passwords do not match');
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    // Validate all required fields
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
+      toast.error('Please fill in all fields');
+      return;
     }
 
     try {
       setLoading(true);
+      console.log('Sending OTP request for:', formData.email);
+
+      const response = await requestOtp(formData.email);
+      console.log('OTP response:', response);
+
+      toast.success('OTP sent to your email!');
+      // For testing: if OTP is returned in response, show it in console
+      if (response.otp) {
+        console.log('OTP for testing:', response.otp);
+        toast.info(`OTP: ${response.otp} (check console for testing)`);
+      }
+      console.log('Setting step to 2 for OTP verification');
+      setStep(2);
+    } catch (error) {
+      console.error('Error in handleSendOtp:', error);
+      toast.error(error.message || 'Failed to send OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      setLoading(true);
+      console.log('Resending OTP for:', formData.email);
+
+      const response = await requestOtp(formData.email);
+      console.log('Resend OTP response:', response);
+
+      toast.success('OTP resent to your email!');
+      if (response.otp) {
+        console.log('New OTP for testing:', response.otp);
+        toast.info(`New OTP: ${response.otp} (check console for testing)`);
+      }
+    } catch (error) {
+      console.error('Error in handleResendOtp:', error);
+      toast.error(error.message || 'Failed to resend OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
       await signup({
-        fullName: formData.fullName,
+        name: formData.name,
         email: formData.email,
         password: formData.password,
-        phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-        bio: formData.bio,
+        otp,
       });
       navigate('/');
       toast.success('Account created successfully!');
@@ -59,140 +119,88 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+      <div className="max-w-md w-full space-y-8 relative">
+        {/* Loading Overlay */}
+        {loading && (
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10 rounded-lg">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+              <p className="mt-2 text-sm text-gray-600">Sending OTP...</p>
+            </div>
+          </div>
+        )}
+
         <div>
+          <img
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="AgriGuide"
+          />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link
+              to="/login"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              sign in to your existing account
+            </Link>
+          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
+
+        {/* Debug info - remove this later */}
+        <div className="text-center text-xs text-gray-500">
+          Current step: {step} | OTP: {otp}
+        </div>
+
+        {/* Temporary test button - remove this later */}
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => {
+              console.log('Manual step change to:', step === 1 ? 2 : 1);
+              setStep(step === 1 ? 2 : 1);
+            }}
+            className="text-xs text-blue-600 hover:text-blue-800"
+          >
+            Test: Change to Step {step === 1 ? 2 : 1}
+          </button>
+        </div>
+
+        {step === 1 ? (
+          // Step 1: Fill registration form
+          <div className="space-y-4">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Full Name
               </label>
               <input
-                id="fullName"
-                name="fullName"
                 type="text"
-                required
-                value={formData.fullName}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="John Doe"
+                required
+                disabled={loading}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:bg-gray-100"
               />
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                Email
               </label>
               <input
+                type="email"
                 id="email"
                 name="email"
-                type="email"
-                autoComplete="email"
-                required
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
                 required
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="1234567890"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                Address
-              </label>
-              <input
-                id="address"
-                name="address"
-                type="text"
-                required
-                value={formData.address}
-                onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="123 Street Name"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                  City
-                </label>
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  required
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="City"
-                />
-              </div>
-              <div>
-                <label htmlFor="state" className="block text-sm font-medium text-gray-700">
-                  State
-                </label>
-                <input
-                  id="state"
-                  name="state"
-                  type="text"
-                  required
-                  value={formData.state}
-                  onChange={handleChange}
-                  className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                  placeholder="State"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">
-                Pincode
-              </label>
-              <input
-                id="pincode"
-                name="pincode"
-                type="text"
-                required
-                value={formData.pincode}
-                onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="123456"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
-                Bio (Optional)
-              </label>
-              <textarea
-                id="bio"
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                rows="3"
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="Tell us about yourself..."
+                disabled={loading}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:bg-gray-100"
               />
             </div>
 
@@ -201,15 +209,15 @@ const Signup = () => {
                 Password
               </label>
               <input
+                type="password"
                 id="password"
                 name="password"
-                type="password"
-                autoComplete="new-password"
-                required
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="••••••••"
+                required
+                minLength={6}
+                disabled={loading}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:bg-gray-100"
               />
             </div>
 
@@ -218,38 +226,93 @@ const Signup = () => {
                 Confirm Password
               </label>
               <input
+                type="password"
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="mt-1 appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                placeholder="••••••••"
+                required
+                minLength={6}
+                disabled={loading}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:bg-gray-100"
               />
             </div>
-          </div>
 
-          <div>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSendOtp}
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {loading ? 'Creating account...' : 'Sign up'}
+              {loading ? <LoadingSpinner /> : 'Send OTP'}
             </button>
           </div>
+        ) : (
+          // Step 2: OTP verification
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="text-center">
+              <h3 className="text-lg font-medium text-gray-900">Verify Your Email</h3>
+              <p className="text-sm text-gray-600 mt-1">
+                We've sent a verification code to {formData.email}
+              </p>
+            </div>
 
-          <div className="text-center">
-            <Link
-              to="/login"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
-              Already have an account? Sign in
-            </Link>
-          </div>
-        </form>
+            <div>
+              <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+                Enter OTP
+              </label>
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+                maxLength={6}
+                disabled={loading}
+                placeholder="Enter 6-digit OTP"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-center text-lg tracking-widest disabled:opacity-50 disabled:bg-gray-100"
+              />
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Back
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              >
+                {loading ? <LoadingSpinner /> : 'Verify & Sign Up'}
+              </button>
+            </div>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={loading}
+                className="text-sm text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
+              >
+                Didn't receive code? Resend
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="text-center">
+          <Link
+            to="/login"
+            className="font-medium text-primary-600 hover:text-primary-500"
+          >
+            Already have an account? Sign in
+          </Link>
+        </div>
       </div>
     </div>
   );
