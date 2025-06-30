@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from './AuthContext'
 import { toast } from 'react-toastify'
-
+import { API_ENDPOINTS } from '../config/api.js'
 const CartContext = createContext()
 
 export const useCart = () => useContext(CartContext)
@@ -20,7 +20,7 @@ export const CartProvider = ({ children }) => {
         return
       }
       try {
-        const res = await fetch('/api/cart', {
+        const res = await fetch(API_ENDPOINTS.CART.GET, {
           headers: { Authorization: `Bearer ${user.token}` },
           credentials: 'include',
         })
@@ -56,7 +56,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch('/api/cart/add', {
+      const res = await fetch(API_ENDPOINTS.CART.ADD, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch('/api/cart/add', {
+      const res = await fetch(API_ENDPOINTS.CART.ADD, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (!user?.token) return
     try {
-      const res = await fetch('/api/cart/remove', {
+      const res = await fetch(API_ENDPOINTS.CART.REMOVE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     if (!user?.token) return
     try {
-      const res = await fetch('/api/cart/clear', {
+      const res = await fetch(API_ENDPOINTS.CART.CLEAR, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${user.token}`,

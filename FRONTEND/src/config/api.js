@@ -21,23 +21,23 @@ export const API_ENDPOINTS = {
 
     // Product endpoints
     PRODUCTS: {
-        LIST: '/api/products',
-        ADD: '/api/products/add',
-        DELETE: (id) => `/api/products/${id}`,
+        LIST: `${API_BASE_URL}/api/products`,
+        ADD: `${API_BASE_URL}/api/products/add`,
+        DELETE: (id) => `${API_BASE_URL}/api/products/${id}`,
     },
 
     // Cart endpoints
     CART: {
-        GET: '/api/cart',
-        ADD: '/api/cart/add',
-        REMOVE: '/api/cart/remove',
-        CLEAR: '/api/cart/clear',
+        GET: `${API_BASE_URL}/api/cart`,
+        ADD: `${API_BASE_URL}/api/cart/add`,
+        REMOVE: `${API_BASE_URL}/api/cart/remove`,
+        CLEAR: `${API_BASE_URL}/api/cart/clear`,
     },
 
     // Crop endpoints
     CROPS: {
-        LIST: '/api/crops',
-        DETAIL: (id) => `/api/crops/${id}`,
+        LIST: `${API_BASE_URL}/api/crops`,
+        DETAIL: (id) => `${API_BASE_URL}/api/crops/${id}`,
     },
 
     // Market endpoints
