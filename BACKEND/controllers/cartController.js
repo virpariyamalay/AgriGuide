@@ -4,7 +4,10 @@ const Product = require('../models/Product');
 // Get current user's cart
 exports.getCart = async (req, res) => {
     try {
+        console.log(req.user._id);
+
         const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+        console.log(cart);
         res.json(cart || { user: req.user._id, items: [] });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch cart' });
