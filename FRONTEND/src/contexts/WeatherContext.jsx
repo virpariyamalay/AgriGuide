@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { API_ENDPOINTS } from '../config/api'
 
 const WeatherContext = createContext()
 
@@ -8,12 +9,12 @@ export const WeatherProvider = ({ children }) => {
   const [weatherData, setWeatherData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  
+
   useEffect(() => {
     const fetchWeatherData = async () => {
       setLoading(true)
       setError(null)
-      
+
       try {
         // Normally we would use the OpenWeatherMap API here
         // For demo purposes, we're using mock data
@@ -63,7 +64,7 @@ export const WeatherProvider = ({ children }) => {
             }
           ]
         }
-        
+
         setTimeout(() => {
           setWeatherData(mockData)
           setLoading(false)
@@ -73,20 +74,20 @@ export const WeatherProvider = ({ children }) => {
         setLoading(false)
       }
     }
-    
+
     fetchWeatherData()
-    
+
     // Set up interval to refresh weather data every hour
     const interval = setInterval(fetchWeatherData, 3600000)
-    
+
     return () => clearInterval(interval)
   }, [])
-  
+
   const value = {
     weatherData,
     loading,
     error
   }
-  
+
   return <WeatherContext.Provider value={value}>{children}</WeatherContext.Provider>
 }

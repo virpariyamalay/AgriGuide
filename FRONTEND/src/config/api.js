@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
         LIST: `${API_BASE_URL}/api/products`,
         ADD: `${API_BASE_URL}/api/products/add`,
         DELETE: (id) => `${API_BASE_URL}/api/products/${id}`,
+        UPDATE: (id) => `${API_BASE_URL}/api/products/${id}`,
     },
 
     // Cart endpoints
@@ -32,6 +33,15 @@ export const API_ENDPOINTS = {
         ADD: `${API_BASE_URL}/api/cart/add`,
         REMOVE: `${API_BASE_URL}/api/cart/remove`,
         CLEAR: `${API_BASE_URL}/api/cart/clear`,
+    },
+
+    // Order endpoints
+    ORDERS: {
+        LIST: `${API_BASE_URL}/api/orders`,
+        DETAIL: (id) => `${API_BASE_URL}/api/orders/${id}`,
+        UPDATE_STATUS: (id) => `${API_BASE_URL}/api/orders/${id}/status`,
+        DELETE: (id) => `${API_BASE_URL}/api/orders/${id}`,
+        ADMIN_LIST: `${API_BASE_URL}/api/orders/admin`,
     },
 
     // Crop endpoints
@@ -51,7 +61,7 @@ export const API_ENDPOINTS = {
         GEOCODING_REVERSE: `https://api.openweathermap.org/geo/1.0/reverse`,
         CURRENT: `https://api.openweathermap.org/data/2.5/weather`,
         FORECAST: `https://api.openweathermap.org/data/2.5/forecast`,
-        ONECALL: `https://api.openweathermap.org/data/3.0/onecall`,
+        // ONECALL: `https://api.openweathermap.org/data/3.0/onecall`,
     },
 };
 

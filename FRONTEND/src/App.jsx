@@ -24,6 +24,8 @@ import { WeatherAlertProvider } from './contexts/WeatherAlertContext'
 import ScrollProgress from "./components/ScrollProgress"
 import CircularScrollProgress from "./components/CircularScrollProgress"
 
+
+
 function App() {
   const { user } = useAuth()
   const [showBanner, setShowBanner] = useState(true)

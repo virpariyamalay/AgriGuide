@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { API_ENDPOINTS } from '../../config/api'
 
 
 const CropSearch = ({ setSearchQuery }) => {
@@ -14,7 +15,7 @@ const CropSearch = ({ setSearchQuery }) => {
     // Fetch crops from backend API
     const fetchCrops = async () => {
       try {
-        const response = await fetch('/api/crops')
+        const response = await fetch(API_ENDPOINTS.CROPS.LIST)
         if (!response.ok) {
           throw new Error('Failed to fetch crops')
         }

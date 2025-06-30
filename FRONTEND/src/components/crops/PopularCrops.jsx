@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { API_ENDPOINTS } from '../../config/api'
 
 const PopularCrops = () => {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -33,7 +34,7 @@ const PopularCrops = () => {
     const fetchCrops = async () => {
       try {
         setLoading(true)
-        const response = await fetch('/api/crops')
+        const response = await fetch(API_ENDPOINTS.CROPS.LIST)
         if (!response.ok) {
           throw new Error('Failed to fetch crops')
         }

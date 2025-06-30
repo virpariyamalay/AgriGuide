@@ -12,11 +12,9 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         },
     });
 } else {
-    console.log('Email configuration not found. OTP will be logged to console for testing.');
-    // Create a dummy transporter for testing
+    // Create a dummy transporter for testing (no logging)
     transporter = {
         sendMail: async (options) => {
-            console.log('Email would be sent:', options);
             return Promise.resolve();
         }
     };

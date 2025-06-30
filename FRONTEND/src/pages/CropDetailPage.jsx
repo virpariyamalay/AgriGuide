@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import GrowthStages from '../components/crops/GrowthStages'
 import { toast } from 'react-toastify'
+import { API_ENDPOINTS } from '../config/api'
 
 const CropDetailPage = () => {
   const { cropId } = useParams()
@@ -18,7 +19,7 @@ const CropDetailPage = () => {
     const fetchCrop = async () => {
       setLoading(true)
       try {
-        const response = await fetch("/api/crops/" + cropId)
+        const response = await fetch(API_ENDPOINTS.CROPS.DETAIL(cropId))
         if (!response.ok) {
           throw new Error('Failed to fetch crop details')
         }

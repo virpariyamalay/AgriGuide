@@ -1459,5 +1459,563 @@ export const crops = [
                 image: 'https://images.pexels.com/photos/7469208/pexels-photo-7469208.jpeg?auto=compress&cs=tinysrgb&w=800'
             }
         ]
+    },
+    {
+        id: 'brinjal',
+        name: 'Brinjal (Eggplant)',
+        category: 'vegetables',
+        description: 'A versatile vegetable known for its glossy purple skin and rich flavor, commonly used in curries and stir-fries.',
+        difficulty: 'Beginner',
+        growingTime: '100-120 days',
+        waterNeeds: 'Moderate',
+        sunlight: 'Full Sun',
+        successRate: 80,
+        image: 'https://unsplash.com/photos/red-round-fruit-on-brown-wooden-table-2GNThmTC70Y',
+        instructions: {
+            preparation: [
+                'Start seeds indoors 6-9 weeks before the last frost.',
+                'Use a warm seed-starting mix in trays or pots with good drainage.',
+                'Maintain 75-85°F for best germination.',
+                'Transplant seedlings when they have at least 2-3 sets of true leaves.'
+            ],
+            planting: [
+                'Transplant outdoors when night temperatures stay above 55°F.',
+                'Plant in rich, well-drained soil with a pH of 6.0-6.8.',
+                'Space plants 18-24 inches apart in rows 2-3 feet apart.',
+                'Add compost or aged manure to the planting hole.',
+                'Water deeply after transplanting.'
+            ],
+            care: [
+                'Water regularly, 1-1.5 inches per week.',
+                'Mulch to retain moisture and suppress weeds.',
+                'Stake plants to prevent them from falling over.',
+                'Fertilize every 3-4 weeks with a balanced fertilizer.',
+                'Remove weeds regularly and monitor for pests.'
+            ],
+            harvesting: [
+                'Harvest when fruits are glossy and 6-8 inches long, before the skin becomes dull.',
+                'Cut fruits with pruning shears, leaving a short stem.',
+                'Harvest every 3-5 days to encourage new fruiting.',
+                'Handle gently to avoid bruising.'
+            ]
+        },
+        growthStages: [
+            {
+                day: 1,
+                name: 'Germination',
+                description: 'Seeds sprout and send up shoots and roots.',
+                image: 'https://images.pexels.com/photos/7766564/pexels-photo-7766564.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Keep soil warm (75-85°F)',
+                    'Provide humidity cover or dome',
+                    'Keep soil lightly moist'
+                ]
+            },
+            {
+                day: 14,
+                name: 'Seedling Stage',
+                description: 'First true leaves appear and plants begin photosynthesis.',
+                image: 'https://images.pexels.com/photos/2737041/pexels-photo-2737041.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Provide 14-16 hours of light',
+                    'Thin weak seedlings',
+                    'Begin light fertilization'
+                ]
+            },
+            {
+                day: 30,
+                name: 'Vegetative Growth',
+                description: 'Rapid leaf and stem development occurs.',
+                image: 'https://images.pexels.com/photos/6065419/pexels-photo-6065419.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Transplant if not already done',
+                    'Stake young plants for support',
+                    'Fertilize biweekly with nitrogen-rich mix'
+                ]
+            },
+            {
+                day: 60,
+                name: 'Flowering',
+                description: 'Purple flowers bloom, ready for pollination.',
+                image: 'https://images.pexels.com/photos/7438378/pexels-photo-7438378.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Encourage pollinators or hand-pollinate',
+                    'Water consistently',
+                    'Avoid overhead watering'
+                ]
+            },
+            {
+                day: 75,
+                name: 'Fruit Development',
+                description: 'Eggplants start forming and gain size.',
+                image: 'https://images.pexels.com/photos/7679685/pexels-photo-7679685.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Support heavy branches',
+                    'Watch for aphids and flea beetles',
+                    'Feed with potassium-rich fertilizer'
+                ]
+            },
+            {
+                day: 100,
+                name: 'Ripening',
+                description: 'Fruits mature and become glossy and deep-colored.',
+                image: 'https://images.pexels.com/photos/7195128/pexels-photo-7195128.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Harvest regularly',
+                    'Avoid letting fruits overripen',
+                    'Store in cool, dry place'
+                ]
+            }
+        ],
+        tips: {
+            commonProblems: [
+                {
+                    name: 'Aphids',
+                    solution: 'Spray with neem oil or use ladybugs to control aphid population.'
+                },
+                {
+                    name: 'Flea Beetles',
+                    solution: 'Use floating row covers early on and treat with insecticidal soap.'
+                },
+                {
+                    name: 'Verticillium Wilt',
+                    solution: 'Plant disease-resistant varieties and rotate crops every year.'
+                },
+                {
+                    name: 'Sunscald',
+                    solution: 'Ensure adequate leaf cover and mulch to protect soil moisture.'
+                }
+            ],
+            expertTips: [
+                'Avoid planting eggplants where tomatoes or peppers were grown last season.',
+                'Harvest fruits early and often for best flavor.',
+                'Pinch growing tips to encourage bushier growth.',
+                'Use black plastic mulch to warm soil and boost growth.',
+                'Companion plant with beans or marigolds to deter pests.'
+            ]
+        }
+    },
+
+    {
+        id: 'chili-pepper',
+        name: 'Chili Pepper',
+        category: 'vegetables',
+        description: 'Spicy fruiting plant used in a variety of cuisines, with many heat levels and colors.',
+        difficulty: 'Intermediate',
+        growingTime: '90-120 days',
+        waterNeeds: 'Low to Moderate',
+        sunlight: 'Full Sun',
+        successRate: 75,
+        image: 'https://unsplash.com/photos/sack-of-chili-yj0eN2meINw',
+        instructions: {
+            preparation: [
+                'Start seeds indoors 8-10 weeks before the last frost.',
+                'Keep soil at 75-85°F for optimal germination.',
+                'Use a light seed-starting mix.',
+                'Transplant seedlings after 2-3 true leaves appear.'
+            ],
+            planting: [
+                'Plant outdoors when nighttime temperatures stay above 60°F.',
+                'Space 18-24 inches apart in well-drained soil.',
+                'Use black plastic mulch to warm soil.',
+                'Water deeply after transplanting.'
+            ],
+            care: [
+                'Water only when top inch of soil is dry.',
+                'Stake plants to support branches loaded with fruit.',
+                'Apply fertilizer every 3-4 weeks.',
+                'Remove early flower buds to promote bushy growth.'
+            ],
+            harvesting: [
+                'Harvest green or wait until fully colored (red, orange, etc.).',
+                'Use scissors or clippers to cut peppers.',
+                'Handle with gloves for hot varieties.',
+                'Harvest regularly to encourage more fruiting.'
+            ]
+        },
+        growthStages: [
+            {
+                day: 1,
+                name: 'Germination',
+                description: 'Seeds sprout and begin early root and shoot development.',
+                image: 'https://images.pexels.com/photos/5699667/pexels-photo-5699667.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Keep warm and moist',
+                    'Avoid direct light initially',
+                    'Thin weak seedlings'
+                ]
+            },
+            {
+                day: 20,
+                name: 'Seedling Stage',
+                description: 'True leaves appear; seedlings ready for transplanting.',
+                image: 'https://images.pexels.com/photos/1378624/pexels-photo-1378624.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Provide 12-14 hours of light',
+                    'Transplant to larger pots if needed',
+                    'Harden off before outdoor planting'
+                ]
+            },
+            {
+                day: 50,
+                name: 'Vegetative Growth',
+                description: 'Plants develop stems and leaves rapidly.',
+                image: 'https://images.pexels.com/photos/1084575/pexels-photo-1084575.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Prune lower leaves',
+                    'Add nitrogen-rich feed',
+                    'Watch for aphids and whiteflies'
+                ]
+            },
+            {
+                day: 75,
+                name: 'Flowering',
+                description: 'White or purple flowers bloom and get pollinated.',
+                image: 'https://images.pexels.com/photos/7218636/pexels-photo-7218636.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Shake flowers gently or ensure pollinators',
+                    'Maintain even watering',
+                    'Avoid nitrogen-heavy feed now'
+                ]
+            },
+            {
+                day: 90,
+                name: 'Fruit Development',
+                description: 'Small peppers begin to grow and change color.',
+                image: 'https://images.pexels.com/photos/1437586/pexels-photo-1437586.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Provide support for heavy branches',
+                    'Harvest regularly to stimulate new fruit',
+                    'Reduce watering slightly to enhance flavor'
+                ]
+            }
+        ],
+        tips: {
+            commonProblems: [
+                {
+                    name: 'Aphids',
+                    solution: 'Spray neem oil or introduce ladybugs.'
+                },
+                {
+                    name: 'Blossom Drop',
+                    solution: 'Caused by temperature stress. Ensure consistent day/night temperatures.'
+                },
+                {
+                    name: 'Root Rot',
+                    solution: 'Avoid overwatering and use well-drained soil.'
+                }
+            ],
+            expertTips: [
+                'Hotter peppers develop more heat under water stress.',
+                'Chili peppers grow well in containers.',
+                'Avoid over-fertilizing, especially with nitrogen.',
+                'Rotate crops yearly to reduce soil disease.'
+            ]
+        }
+    },
+
+    {
+        id: 'potato',
+        name: 'Potato',
+        category: 'vegetables',
+        description: 'A staple underground tuber crop rich in starch, widely grown and consumed across the globe.',
+        difficulty: 'Beginner',
+        growingTime: '90-120 days',
+        waterNeeds: 'Moderate',
+        sunlight: 'Full Sun',
+        successRate: 85,
+        image: 'https://unsplash.com/photos/brown-potato-lot-B0s3Xndk6tw',
+        instructions: {
+            preparation: [
+                'Use certified seed potatoes or sprouted kitchen potatoes.',
+                'Cut large seed potatoes into chunks with 2-3 eyes each.',
+                'Let cut pieces dry for 1-2 days before planting to prevent rot.',
+                'Prepare loose, well-drained soil with compost.'
+            ],
+            planting: [
+                'Plant 4 inches deep and 12 inches apart in rows 2-3 feet apart.',
+                'Cover lightly with soil and water after planting.',
+                'As plants grow, mound soil around stems (hilling) every 2-3 weeks.',
+                'Keep the soil moist but not soggy.'
+            ],
+            care: [
+                'Water 1-2 inches per week, especially during tuber formation.',
+                'Mulch to suppress weeds and retain moisture.',
+                'Fertilize with a low-nitrogen fertilizer during early growth.',
+                'Hill soil around plants to protect developing potatoes.'
+            ],
+            harvesting: [
+                'Harvest early potatoes after plants flower (around 70-80 days).',
+                'For storage potatoes, wait until foliage dies back.',
+                'Use a fork to gently dig and lift tubers.',
+                'Cure in a dry, dark place for 7-10 days before storing.'
+            ]
+        },
+        growthStages: [
+            {
+                day: 1,
+                name: 'Sprouting',
+                description: 'Eyes on the seed potato begin to sprout shoots underground.',
+                image: 'https://images.pexels.com/photos/4110256/pexels-photo-4110256.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Keep soil warm (60–70°F)', 'Water lightly', 'Watch for shoot emergence']
+            },
+            {
+                day: 14,
+                name: 'Vegetative Growth',
+                description: 'Green leaves and stems grow above the soil.',
+                image: 'https://images.pexels.com/photos/1112094/pexels-photo-1112094.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Hill soil around plants', 'Check for pests', 'Provide full sun']
+            },
+            {
+                day: 40,
+                name: 'Tuber Initiation',
+                description: 'Tiny tubers begin forming below ground.',
+                image: 'https://images.pexels.com/photos/1816840/pexels-photo-1816840.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Ensure even watering', 'Add compost if needed', 'Avoid disturbing soil']
+            },
+            {
+                day: 80,
+                name: 'Tuber Bulking',
+                description: 'Tubers enlarge rapidly; plant focuses on starch storage.',
+                image: 'https://images.pexels.com/photos/1394486/pexels-photo-1394486.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Reduce watering slightly', 'Stop fertilizing', 'Prepare for harvest']
+            },
+            {
+                day: 100,
+                name: 'Maturity',
+                description: 'Foliage dies back and tubers are ready for harvest.',
+                image: 'https://images.pexels.com/photos/161559/potatoes-vegetables-market-bazaar-161559.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Stop watering', 'Cure tubers in shade', 'Store in cool dark place']
+            }
+        ],
+        tips: {
+            commonProblems: [
+                {
+                    name: 'Blight',
+                    solution: 'Remove infected foliage and avoid overhead watering.'
+                },
+                {
+                    name: 'Green Potatoes',
+                    solution: 'Caused by sun exposure—hill up soil or use mulch.'
+                },
+                {
+                    name: 'Scab',
+                    solution: 'Maintain slightly acidic soil (pH 5.5-6.0).'
+                }
+            ],
+            expertTips: [
+                'Rotate crops each season to prevent soil disease.',
+                'Harvest in dry conditions to reduce bruising.',
+                'Avoid fresh manure as it can promote scab.',
+                'Use straw mulch for better yield.'
+            ]
+        }
+    },
+
+    {
+        id: 'coriander',
+        name: 'Coriander',
+        category: 'herbs',
+        description: 'An aromatic herb used for its fresh leaves (cilantro) and dried seeds (coriander).',
+        difficulty: 'Beginner',
+        growingTime: '40-50 days',
+        waterNeeds: 'Low to Moderate',
+        sunlight: 'Full Sun to Partial Shade',
+        successRate: 90,
+        image: 'https://unsplash.com/photos/green-parsley-9rt6gV_IjhA',
+        instructions: {
+            preparation: [
+                'Choose well-drained soil rich in organic matter.',
+                'Sow seeds directly; coriander doesn’t transplant well.',
+                'Crush seeds gently to split them before planting.',
+                'Soak for 4–6 hours to improve germination.'
+            ],
+            planting: [
+                'Sow seeds ½ inch deep, 6 inches apart.',
+                'Thin to 8 inches apart once seedlings emerge.',
+                'Water gently to avoid displacing seeds.',
+                'Plant in rows 12 inches apart.'
+            ],
+            care: [
+                'Water regularly, but avoid overwatering.',
+                'Mulch to keep soil moist and cool.',
+                'Harvest leaves often to delay bolting.',
+                'Fertilize lightly once during growth.'
+            ],
+            harvesting: [
+                'Harvest leaves at 4-6 weeks (cilantro).',
+                'Cut seed heads when they turn brown (coriander).',
+                'Dry seeds in shade before storing.',
+                'Use sharp scissors to snip young leaves.'
+            ]
+        },
+        growthStages: [
+            {
+                day: 1,
+                name: 'Germination',
+                description: 'Seeds crack and rootlets begin emerging.',
+                image: 'https://images.pexels.com/photos/7565779/pexels-photo-7565779.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Keep soil moist', 'Avoid direct sun', 'Thin weak sprouts']
+            },
+            {
+                day: 10,
+                name: 'Seedling Stage',
+                description: 'First feathery leaves appear.',
+                image: 'https://images.pexels.com/photos/4110317/pexels-photo-4110317.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Provide partial shade', 'Avoid crowding', 'Start light watering']
+            },
+            {
+                day: 25,
+                name: 'Leaf Growth',
+                description: 'Bushy leaf production begins.',
+                image: 'https://images.pexels.com/photos/12876641/pexels-photo-12876641.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Harvest outer leaves', 'Water at root zone', 'Pinch flower buds']
+            },
+            {
+                day: 45,
+                name: 'Flowering & Seeding',
+                description: 'White flowers bloom and seeds start to form.',
+                image: 'https://images.pexels.com/photos/7399961/pexels-photo-7399961.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: ['Collect seeds when dry', 'Cut flower heads', 'Dry and store in jar']
+            }
+        ],
+        tips: {
+            commonProblems: [
+                {
+                    name: 'Bolting',
+                    solution: 'Keep soil cool and harvest frequently.'
+                },
+                {
+                    name: 'Powdery Mildew',
+                    solution: 'Improve air circulation and avoid overhead watering.'
+                }
+            ],
+            expertTips: [
+                'Sow every 2-3 weeks for continuous harvest.',
+                'Grow in partial shade during hot months.',
+                'Harvest in the morning for best flavor.',
+                'Leave some plants to flower for seed harvest.'
+            ]
+        }
+    },
+
+    {
+        id: 'okra',
+        name: 'Okra (Lady Finger)',
+        category: 'vegetables',
+        description: 'A heat-loving vegetable known for its tender green pods, commonly used in Indian and African cuisines.',
+        difficulty: 'Beginner',
+        growingTime: '50-65 days',
+        waterNeeds: 'Moderate',
+        sunlight: 'Full Sun',
+        successRate: 80,
+        image: 'https://unsplash.com/photos/a-metal-bowl-filled-with-green-beans-on-top-of-a-wooden-table-YxJcb7QpsV0',
+        instructions: {
+            preparation: [
+                'Soak seeds overnight in warm water to speed up germination.',
+                'Choose a sunny spot with well-draining, fertile soil.',
+                'Work compost or aged manure into the soil before planting.',
+                'Warm soil (above 70°F) is essential for germination.'
+            ],
+            planting: [
+                'Sow seeds 1 inch deep and 12-18 inches apart.',
+                'Space rows 2-3 feet apart to allow airflow.',
+                'Thin seedlings to the strongest plants once germinated.',
+                'Keep soil moist during germination.'
+            ],
+            care: [
+                'Water regularly, especially during flowering and pod development.',
+                'Apply mulch to retain moisture and suppress weeds.',
+                'Fertilize with compost tea or balanced fertilizer every 3-4 weeks.',
+                'Stake plants if they grow tall or get heavy with pods.'
+            ],
+            harvesting: [
+                'Harvest pods when they are 3-4 inches long for best texture.',
+                'Use pruning shears or a sharp knife to cut pods cleanly.',
+                'Harvest every 1-2 days to encourage continuous production.',
+                'Wear gloves when harvesting; okra pods and leaves may irritate the skin.'
+            ]
+        },
+        growthStages: [
+            {
+                day: 1,
+                name: 'Germination',
+                description: 'Seeds swell and sprout roots in warm, moist soil.',
+                image: 'https://images.pexels.com/photos/7766564/pexels-photo-7766564.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Keep soil temperature above 70°F',
+                    'Water lightly but consistently',
+                    'Thin overcrowded seedlings after 5-7 days'
+                ]
+            },
+            {
+                day: 14,
+                name: 'Seedling Stage',
+                description: 'First leaves (cotyledons) and true leaves begin to develop.',
+                image: 'https://images.pexels.com/photos/1023408/pexels-photo-1023408.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Ensure full sun exposure',
+                    'Add light fertilizer',
+                    'Protect from early pests like aphids'
+                ]
+            },
+            {
+                day: 30,
+                name: 'Vegetative Growth',
+                description: 'Plant grows tall with strong stems and multiple leaves.',
+                image: 'https://images.pexels.com/photos/12878761/pexels-photo-12878761.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Mulch base to retain moisture',
+                    'Side-dress with compost',
+                    'Stake tall plants if needed'
+                ]
+            },
+            {
+                day: 45,
+                name: 'Flowering',
+                description: 'Large yellow flowers with red centers bloom.',
+                image: 'https://images.pexels.com/photos/11283363/pexels-photo-11283363.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Water deeply 2-3 times per week',
+                    'Avoid water on foliage to prevent mildew',
+                    'Monitor for pollination activity'
+                ]
+            },
+            {
+                day: 55,
+                name: 'Pod Development',
+                description: 'Pods begin forming soon after pollination.',
+                image: 'https://images.pexels.com/photos/2132016/pexels-photo-2132016.jpeg?auto=compress&cs=tinysrgb&w=800',
+                tasks: [
+                    'Harvest when pods are young (3-4 inches)',
+                    'Harvest frequently to promote more pods',
+                    'Watch for overripe pods and remove them'
+                ]
+            }
+        ],
+        tips: {
+            commonProblems: [
+                {
+                    name: 'Powdery Mildew',
+                    solution: 'Improve airflow and avoid wetting leaves; apply neem oil.'
+                },
+                {
+                    name: 'Aphids',
+                    solution: 'Spray with insecticidal soap or neem oil; attract ladybugs.'
+                },
+                {
+                    name: 'Root Rot',
+                    solution: 'Avoid overwatering and ensure soil is well-drained.'
+                }
+            ],
+            expertTips: [
+                'Okra thrives in hot climates—plant in late spring or early summer.',
+                'Harvest early and often for the most tender pods.',
+                'Avoid letting pods grow too large—they become woody and inedible.',
+                'Use crop rotation to prevent soil-borne diseases.'
+            ]
+        }
     }
+
 ]
+

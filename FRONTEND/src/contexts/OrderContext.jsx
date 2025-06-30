@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
 const OrderContext = createContext();
 
@@ -15,7 +16,7 @@ export const OrderProvider = ({ children }) => {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/orders/admin', {
+            const res = await fetch(API_ENDPOINTS.ORDERS.ADMIN_LIST, {
                 headers: {
                     Authorization: user?.token ? `Bearer ${user.token}` : '',
                 },
@@ -35,7 +36,7 @@ export const OrderProvider = ({ children }) => {
     const fetchUserOrders = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/orders', {
+            const res = await fetch(API_ENDPOINTS.ORDERS.LIST, {
                 headers: {
                     Authorization: user?.token ? `Bearer ${user.token}` : '',
                 },
@@ -54,7 +55,7 @@ export const OrderProvider = ({ children }) => {
     // Update order status
     const updateOrderStatus = async (orderId, status) => {
         try {
-            const res = await fetch(`/api/orders/${orderId}/status`, {
+            const res = await fetch(API_ENDPOINTS.ORDERS.UPDATE_STATUS(orderId), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ export const OrderProvider = ({ children }) => {
     // Delete order
     const deleteOrder = async (orderId) => {
         try {
-            const res = await fetch(`/api/orders/${orderId}`, {
+            const res = await fetch(API_ENDPOINTS.ORDERS.DELETE(orderId), {
                 method: 'DELETE',
                 headers: {
                     Authorization: user?.token ? `Bearer ${user.token}` : '',

@@ -13,6 +13,7 @@ import AdminStats from '../../components/admin/AdminStats';
 import ProductManagement from '../../components/admin/ProductManagement';
 import OrderManagement from '../../components/admin/OrderManagement';
 
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('products');
   const { logout } = useAuth();

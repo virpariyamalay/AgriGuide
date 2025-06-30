@@ -4,7 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
-import { getApiUrl } from '../config/api';
+import { API_ENDPOINTS, getApiUrl } from '../config/api';
 import axios from 'axios';
 import CartItemsList from '../components/cart/CartItemsList';
 import OrderSummary from '../components/cart/OrderSummary';
@@ -211,7 +211,7 @@ const CartPage = () => {
                 razorpaySignature: response.razorpay_signature,
               },
             };
-            const orderRes = await fetch(getApiUrl('/api/orders'), {
+            const orderRes = await fetch(API_ENDPOINTS.ORDERS.LIST, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

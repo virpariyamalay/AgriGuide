@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 
 const ProductContext = createContext();
 
@@ -14,7 +15,7 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/products');
+      const res = await fetch(API_ENDPOINTS.PRODUCTS.LIST);
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -41,7 +42,7 @@ export const ProductProvider = ({ children }) => {
       formData.append('image', product.imageFile);
     }
     try {
-      const res = await fetch('/api/products/add', {
+      const res = await fetch(API_ENDPOINTS.PRODUCTS.ADD, {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -61,7 +62,7 @@ export const ProductProvider = ({ children }) => {
   // Delete product via backend
   const deleteProduct = async (productId) => {
     try {
-      const res = await fetch(`/api/products/${productId}`, {
+      const res = await fetch(API_ENDPOINTS.PRODUCTS.DELETE(productId), {
         method: 'DELETE',
         credentials: 'include',
         headers: {
@@ -86,7 +87,7 @@ export const ProductProvider = ({ children }) => {
     if (product.unit) formData.append('unit', product.unit);
     if (product.imageFile) formData.append('image', product.imageFile);
     try {
-      const res = await fetch(`/api/products/${productId}`, {
+      const res = await fetch(API_ENDPOINTS.PRODUCTS.UPDATE(productId), {
         method: 'PUT',
         body: formData,
         credentials: 'include',

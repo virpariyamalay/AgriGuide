@@ -23,7 +23,7 @@ const features = [
     {
         id: 'market-intelligence',
         title: 'Market Intelligence',
-        description: 'Get real-time market prices, trends, and insights to maximize your profits.',
+        description: 'Get real-time market prices, trends, and insights to maximize your profits,Make smarter moves.',
         icon: '📈',
         gradient: 'from-blue-400 to-indigo-500',
         stats: {
