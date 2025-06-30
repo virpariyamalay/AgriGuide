@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
-import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { FaShoppingCart } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
@@ -9,7 +8,6 @@ import { FiLogOut } from 'react-icons/fi';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems } = useCart();
-  const { theme, toggleTheme } = useTheme();
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 

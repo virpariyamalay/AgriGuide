@@ -82,11 +82,6 @@ const WeatherAlertEnhanced = () => {
                                             {currentLocation}
                                         </span>
                                     )}
-                                    {currentCoords && (
-                                        <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">
-                                            [{currentCoords.lat?.toFixed(3)}, {currentCoords.lon?.toFixed(3)}]
-                                        </span>
-                                    )}
                                 </div>
 
                                 <p className="text-gray-700 mb-3 leading-relaxed">

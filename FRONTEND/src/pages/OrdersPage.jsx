@@ -149,13 +149,13 @@ const OrdersPage = () => {
     let footerY = y + 32;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.text('Malay Virpariya', 140, footerY);
+    doc.text('MALAY VIRPARIYA', 140, footerY);
     doc.setFont('helvetica', 'normal');
     doc.text('Founder & CEO', 140, footerY + 6);
     doc.text('For AgriGuide Solutions Inc.', 140, footerY + 12);
     doc.setFontSize(8);
     doc.text('https://www.agriguide.com', 20, footerY + 24);
-    doc.text('Phone +91 81414 24177 | accounts@agriguide.com', 20, footerY + 30);
+    doc.text('Phone +91 81414 24177 | malayvirpariya@gmail.com', 20, footerY + 30);
 
     doc.setFontSize(8);
     doc.text('Thank you for shopping with AgriGuide!', 105, 290, 'center');

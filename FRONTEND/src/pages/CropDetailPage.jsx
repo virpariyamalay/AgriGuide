@@ -104,32 +104,48 @@ const CropDetailPage = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex" aria-label="Tabs">
+          <div className="border-b border-gray-100">
+            <nav
+              className="flex space-x-2 overflow-x-auto no-scrollbar px-2 py-4 sm:justify-center bg-gray-50"
+              aria-label="Tabs"
+              role="tablist"
+            >
               <button
                 onClick={() => setActiveTab('instructions')}
-                className={`${activeTab === 'instructions'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                className={`transition-all duration-200 px-5 py-2 rounded-full font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2
+                  ${activeTab === 'instructions'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-700 border border-gray-200'}
+                `}
+                aria-selected={activeTab === 'instructions'}
+                role="tab"
+                tabIndex={activeTab === 'instructions' ? 0 : -1}
               >
                 Growing Instructions
               </button>
               <button
                 onClick={() => setActiveTab('stages')}
-                className={`${activeTab === 'stages'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                className={`transition-all duration-200 px-5 py-2 rounded-full font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2
+                  ${activeTab === 'stages'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-700 border border-gray-200'}
+                `}
+                aria-selected={activeTab === 'stages'}
+                role="tab"
+                tabIndex={activeTab === 'stages' ? 0 : -1}
               >
                 Growth Stages
               </button>
               <button
                 onClick={() => setActiveTab('tips')}
-                className={`${activeTab === 'tips'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm`}
+                className={`transition-all duration-200 px-5 py-2 rounded-full font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2
+                  ${activeTab === 'tips'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-700 border border-gray-200'}
+                `}
+                aria-selected={activeTab === 'tips'}
+                role="tab"
+                tabIndex={activeTab === 'tips' ? 0 : -1}
               >
                 Tips & Troubleshooting
               </button>

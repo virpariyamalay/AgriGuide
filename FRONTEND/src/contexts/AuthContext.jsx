@@ -140,23 +140,18 @@ export const AuthProvider = ({ children }) => {
 
   // OTP login methods
   const requestOtp = async (email) => {
-    console.log('AuthContext: requestOtp called with email:', email);
     setLoading(true);
     try {
-      console.log('AuthContext: Making request to:', API_ENDPOINTS.AUTH.REQUEST_OTP);
       const response = await fetch(API_ENDPOINTS.AUTH.REQUEST_OTP, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      console.log('AuthContext: Response status:', response.status);
       const data = await response.json();
-      console.log('AuthContext: Response data:', data);
       setLoading(false);
       if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
       return data;
     } catch (error) {
-      console.error('AuthContext: Error in requestOtp:', error);
       setLoading(false);
       throw error;
     }

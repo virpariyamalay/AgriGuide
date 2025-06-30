@@ -24,8 +24,6 @@ const Signup = () => {
   const { signup, requestOtp } = useAuth();
   const navigate = useNavigate();
 
-  console.log('Signup component rendered, step:', step, 'loading:', loading);
-
   // Monitor step changes
   useEffect(() => {
     console.log('Step changed to:', step);
@@ -62,11 +60,6 @@ const Signup = () => {
       console.log('OTP response:', response);
 
       toast.success('OTP sent to your email!');
-      // For testing: if OTP is returned in response, show it in console
-      if (response.otp) {
-        console.log('OTP for testing:', response.otp);
-        toast.info(`OTP: ${response.otp} (check console for testing)`);
-      }
       console.log('Setting step to 2 for OTP verification');
       setStep(2);
     } catch (error) {
@@ -86,10 +79,6 @@ const Signup = () => {
       console.log('Resend OTP response:', response);
 
       toast.success('OTP resent to your email!');
-      if (response.otp) {
-        console.log('New OTP for testing:', response.otp);
-        toast.info(`New OTP: ${response.otp} (check console for testing)`);
-      }
     } catch (error) {
       console.error('Error in handleResendOtp:', error);
       toast.error(error.message || 'Failed to resend OTP');
@@ -148,25 +137,6 @@ const Signup = () => {
               sign in to your existing account
             </Link>
           </p>
-        </div>
-
-        {/* Debug info - remove this later */}
-        <div className="text-center text-xs text-gray-500">
-          Current step: {step} | OTP: {otp}
-        </div>
-
-        {/* Temporary test button - remove this later */}
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={() => {
-              console.log('Manual step change to:', step === 1 ? 2 : 1);
-              setStep(step === 1 ? 2 : 1);
-            }}
-            className="text-xs text-blue-600 hover:text-blue-800"
-          >
-            Test: Change to Step {step === 1 ? 2 : 1}
-          </button>
         </div>
 
         {step === 1 ? (

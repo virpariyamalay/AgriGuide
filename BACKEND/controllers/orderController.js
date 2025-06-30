@@ -5,7 +5,7 @@ const transporter = require('../config/nodemailer');
 
 // Helper to generate modern HTML email for order confirmation
 function generateOrderConfirmationEmail(order, user) {
-    const itemsHtml = order.items.map(item => `
+  const itemsHtml = order.items.map(item => `
     <tr>
       <td style="padding:8px 0; border-bottom:1px solid #eee;">
         <strong>${item.product.name}</strong><br/>
@@ -16,7 +16,7 @@ function generateOrderConfirmationEmail(order, user) {
       </td>
     </tr>
   `).join('');
-    return `
+  return `
     <div style="font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; padding: 32px;">
       <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
         <div style="background: linear-gradient(90deg, #22c55e 0%, #2563eb 100%); color: #fff; padding: 24px 24px 16px 24px; text-align: center;">
@@ -67,7 +67,7 @@ function generateOrderConfirmationEmail(order, user) {
           </div>
         </div>
         <div style="background:#f1f5f9; color:#64748b; text-align:center; padding:16px; font-size:0.95rem; border-top:1px solid #e5e7eb;">
-          If you have any questions, contact us at <a href="mailto:support@agriguide.com" style="color:#2563eb; text-decoration:underline;">support@agriguide.com</a>
+          If you have any questions, contact us at <a href="mailto:malayvirpariya@gmail.com" style="color:#2563eb; text-decoration:underline;">malayvirpariya@gmail.com</a> or call +91 81414 24177
         </div>
       </div>
     </div>
@@ -76,123 +76,123 @@ function generateOrderConfirmationEmail(order, user) {
 
 // Place a new order and decrement product stock
 exports.placeOrder = async (req, res) => {
-    try {
-        const { items, shippingAddress, totalAmount, productSubtotal, shipping, gst, companyCharge, discount } = req.body;
-        const userId = req.user._id;
+  try {
+    const { items, shippingAddress, totalAmount, productSubtotal, shipping, gst, companyCharge, discount } = req.body;
+    const userId = req.user._id;
 
-        // Validate items
-        if (!items || !Array.isArray(items) || items.length === 0) {
-            return res.status(400).json({ message: 'No items in order.' });
-        }
-        if (productSubtotal == null || shipping == null || gst == null || companyCharge == null || totalAmount == null) {
-            return res.status(400).json({ message: 'Missing order cost breakdown.' });
-        }
-
-        // Check stock for each product
-        for (const item of items) {
-            const product = await Product.findById(item.product);
-            if (!product) {
-                return res.status(404).json({ message: `Product not found: ${item.product}` });
-            }
-            if (product.stock < item.quantity) {
-                return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
-            }
-        }
-
-        // Decrement stock for each product
-        for (const item of items) {
-            await Product.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } });
-        }
-
-        // Create and save the order
-        const paymentInfo = req.body.paymentInfo;
-        const isPaid = !!paymentInfo;
-        const paymentStatus = isPaid ? 'paid' : 'pending';
-        const order = new Order({
-            user: userId,
-            items,
-            shippingAddress,
-            productSubtotal,
-            shipping,
-            gst,
-            companyCharge,
-            discount: discount || 0,
-            totalAmount,
-            paymentStatus,
-            isPaid,
-            paymentInfo: paymentInfo || undefined,
-        });
-        await order.populate('items.product', 'name image');
-        await order.save();
-
-        // Send order confirmation email
-        const user = await User.findById(userId);
-        if (user && user.email) {
-            const html = generateOrderConfirmationEmail(order, user);
-            await transporter.sendMail({
-                from: process.env.EMAIL_USER || 'no-reply@agriguide.com',
-                to: user.email,
-                subject: `Order Confirmation - AgriGuide (Order #${order._id.toString().slice(-8)})`,
-                html,
-            });
-        }
-
-        res.status(201).json({ message: 'Order placed successfully', order });
-    } catch (error) {
-        console.error('Order placement error:', error);
-        res.status(500).json({ message: 'Failed to place order', error: error.message });
+    // Validate items
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: 'No items in order.' });
     }
+    if (productSubtotal == null || shipping == null || gst == null || companyCharge == null || totalAmount == null) {
+      return res.status(400).json({ message: 'Missing order cost breakdown.' });
+    }
+
+    // Check stock for each product
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ message: `Product not found: ${item.product}` });
+      }
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
+      }
+    }
+
+    // Decrement stock for each product
+    for (const item of items) {
+      await Product.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } });
+    }
+
+    // Create and save the order
+    const paymentInfo = req.body.paymentInfo;
+    const isPaid = !!paymentInfo;
+    const paymentStatus = isPaid ? 'paid' : 'pending';
+    const order = new Order({
+      user: userId,
+      items,
+      shippingAddress,
+      productSubtotal,
+      shipping,
+      gst,
+      companyCharge,
+      discount: discount || 0,
+      totalAmount,
+      paymentStatus,
+      isPaid,
+      paymentInfo: paymentInfo || undefined,
+    });
+    await order.populate('items.product', 'name image');
+    await order.save();
+
+    // Send order confirmation email
+    const user = await User.findById(userId);
+    if (user && user.email) {
+      const html = generateOrderConfirmationEmail(order, user);
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER || 'no-reply@agriguide.com',
+        to: user.email,
+        subject: `Order Confirmation - AgriGuide (Order #${order._id.toString().slice(-8)})`,
+        html,
+      });
+    }
+
+    res.status(201).json({ message: 'Order placed successfully', order });
+  } catch (error) {
+    console.error('Order placement error:', error);
+    res.status(500).json({ message: 'Failed to place order', error: error.message });
+  }
 };
 
 exports.getAllOrders = async (req, res) => {
-    try {
-        const orders = await Order.find()
-            .populate('user', 'name email')
-            .populate('items.product', 'name image');
-        res.json(orders);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch orders', error: error.message });
-    }
+  try {
+    const orders = await Order.find()
+      .populate('user', 'name email')
+      .populate('items.product', 'name image');
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch orders', error: error.message });
+  }
 };
 
 // Get orders for the authenticated user
 exports.getUserOrders = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const orders = await Order.find({ user: userId })
-            .populate('items.product', 'name image')
-            .sort({ createdAt: -1 });
-        res.json(orders);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch user orders', error: error.message });
-    }
+  try {
+    const userId = req.user._id;
+    const orders = await Order.find({ user: userId })
+      .populate('items.product', 'name image')
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch user orders', error: error.message });
+  }
 };
 
 exports.updateOrderStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
-        const order = await Order.findByIdAndUpdate(id, { status }, { new: true })
-            .populate('user', 'name email')
-            .populate('items.product', 'name image');
-        if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-        res.json({ message: 'Order status updated', order });
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to update order', error: error.message });
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true })
+      .populate('user', 'name email')
+      .populate('items.product', 'name image');
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
     }
+    res.json({ message: 'Order status updated', order });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update order', error: error.message });
+  }
 };
 
 exports.deleteOrder = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deleted = await Order.findByIdAndDelete(id);
-        if (!deleted) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-        res.json({ message: 'Order deleted' });
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to delete order', error: error.message });
+  try {
+    const { id } = req.params;
+    const deleted = await Order.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Order not found' });
     }
+    res.json({ message: 'Order deleted' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete order', error: error.message });
+  }
 }; 

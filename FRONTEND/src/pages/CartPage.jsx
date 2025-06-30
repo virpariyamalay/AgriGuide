@@ -6,6 +6,10 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiUrl } from '../config/api';
 import axios from 'axios';
+import CartItemsList from '../components/cart/CartItemsList';
+import OrderSummary from '../components/cart/OrderSummary';
+import DeliveryForm from '../components/cart/DeliveryForm';
+import OrderConfirmation from '../components/cart/OrderConfirmation';
 
 const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
@@ -315,345 +319,49 @@ const CartPage = () => {
       {step === 'cart' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <div className="p-6">
-                {cartItems.map((item) => (
-                  !item.product ? null : (
-                    <div key={item._id} className="flex items-center py-5 border-b border-gray-200 last:border-0">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-24 h-24 object-cover rounded-lg"
-                      />
-                      <div className="flex-1 ml-6">
-                        <h3 className="text-lg font-semibold">{item.product.name}</h3>
-                        <p className="text-gray-600 text-sm mb-2">{item.product.description}</p>
-                        <div className="flex items-center">
-                          <button
-                            onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
-                            className="text-gray-500 hover:text-gray-700"
-                          >
-                            -
-                          </button>
-                          <span className="mx-4">{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item.product._id, item.quantity + 1)}
-                            className="text-gray-500 hover:text-gray-700"
-                            disabled={item.quantity >= item.product.stock}
-                            title={item.quantity >= item.product.stock ? 'No more stock available' : 'Increase quantity'}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-semibold">${(item.product.price * item.quantity).toFixed(2)}</p>
-                        <button
-                          onClick={() => handleRemoveItem(item.product._id)}
-                          className="text-red-600 hover:text-red-700 text-sm"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  )
-                ))}
-                {cartItems.length > 0 && (
-                  <button
-                    onClick={clearCart}
-                    className="mt-6 btn btn-outline w-full"
-                  >
-                    Clear Cart
-                  </button>
-                )}
-              </div>
-            </div>
+            <CartItemsList
+              cartItems={cartItems}
+              handleQuantityChange={handleQuantityChange}
+              handleRemoveItem={handleRemoveItem}
+              clearCart={clearCart}
+            />
           </div>
-
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>GST (18%)</span>
-                  <span>${gst.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Company Charge (5%)</span>
-                  <span>${companyCharge.toFixed(2)}</span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount (5%)</span>
-                    <span>-${discount.toFixed(2)}</span>
-                  </div>
-                )}
-                <div className="border-t pt-3 mt-3">
-                  <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={handleProceedToDelivery}
-                className="w-full btn btn-primary mt-6"
-              >
-                Proceed to Delivery
-              </button>
-            </div>
+            <OrderSummary
+              subtotal={subtotal}
+              shipping={shipping}
+              gst={gst}
+              companyCharge={companyCharge}
+              discount={discount}
+              total={total}
+              handleProceedToDelivery={handleProceedToDelivery}
+            />
           </div>
         </div>
       )}
 
       {step === 'delivery' && (
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-0 overflow-hidden">
-            <div className="bg-gradient-to-r from-green-600 to-blue-600 px-8 py-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">Delivery Details</h2>
-              <button
-                onClick={handleBackToCart}
-                className="text-white bg-white/20 hover:bg-white/30 font-medium px-4 py-2 rounded-lg transition duration-200 backdrop-blur-sm"
-              >
-                Back to Cart
-              </button>
-            </div>
-            <form className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50" autoComplete="off">
-              {/* Left Column */}
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={deliveryDetails.fullName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Enter your full name"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={deliveryDetails.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Phone <span className="text-red-500">*</span></label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={deliveryDetails.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Enter your phone number"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Alternate Phone</label>
-                  <input
-                    type="tel"
-                    name="alternatePhone"
-                    value={deliveryDetails.alternatePhone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Optional alternate contact number"
-                  />
-                </div>
-              </div>
-              {/* Right Column */}
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Address <span className="text-red-500">*</span></label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={deliveryDetails.address}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Enter your address"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Landmark</label>
-                  <input
-                    type="text"
-                    name="landmark"
-                    value={deliveryDetails.landmark}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="Nearby landmark (optional)"
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">City <span className="text-red-500">*</span></label>
-                    <input
-                      type="text"
-                      name="city"
-                      value={deliveryDetails.city}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                      placeholder="City"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Pincode <span className="text-red-500">*</span></label>
-                    <input
-                      type="text"
-                      name="pincode"
-                      value={deliveryDetails.pincode}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                      placeholder="Pincode"
-                      required
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Delivery Instructions</label>
-                  <textarea
-                    name="deliveryInstructions"
-                    value={deliveryDetails.deliveryInstructions}
-                    onChange={handleInputChange}
-                    rows="2"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-400 transition duration-200"
-                    placeholder="e.g. Call before delivery, leave at gate, etc."
-                  ></textarea>
-                </div>
-              </div>
-              <div className="md:col-span-2 pt-6">
-                <button
-                  type="button"
-                  onClick={handleProceedToConfirm}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-xl text-lg shadow-lg transition duration-200"
-                >
-                  Proceed to Confirm
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <DeliveryForm
+          deliveryDetails={deliveryDetails}
+          handleInputChange={handleInputChange}
+          handleProceedToConfirm={handleProceedToConfirm}
+          handleBackToCart={handleBackToCart}
+        />
       )}
 
       {step === 'confirm' && (
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-6">Confirm Order</h2>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-medium text-gray-900 mb-2">Delivery Details</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p><span className="font-medium">Name:</span> {deliveryDetails.fullName}</p>
-                  <p><span className="font-medium">Email:</span> {deliveryDetails.email}</p>
-                  <p><span className="font-medium">Phone:</span> {deliveryDetails.phone}</p>
-                  <p><span className="font-medium">Address:</span> {deliveryDetails.address}</p>
-                  <p><span className="font-medium">Landmark:</span> {deliveryDetails.landmark}</p>
-                  <p><span className="font-medium">City:</span> {deliveryDetails.city}</p>
-                  <p><span className="font-medium">Pincode:</span> {deliveryDetails.pincode}</p>
-                  <p><span className="font-medium">Delivery Instructions:</span> {deliveryDetails.deliveryInstructions}</p>
-                  <p><span className="font-medium">Alternate Phone:</span> {deliveryDetails.alternatePhone}</p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="font-medium text-gray-900 mb-2">Order Items</h3>
-                <div className="space-y-4">
-                  {cartItems.map((item) => (
-                    !item.product ? (
-                      <div key={item._id} className="flex justify-between items-center text-red-500">
-                        <span>Product unavailable</span>
-                        <span>—</span>
-                      </div>
-                    ) : (
-                      <div key={item._id} className="flex justify-between items-center">
-                        <div className="flex items-center">
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="w-16 h-16 object-cover rounded-md"
-                          />
-                          <div className="ml-4">
-                            <h4 className="font-medium">{item.product.name}</h4>
-                            <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                          </div>
-                        </div>
-                        <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
-                      </div>
-                    )
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span>${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>GST (18%)</span>
-                    <span>${gst.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Company Charge (5%)</span>
-                    <span>${companyCharge.toFixed(2)}</span>
-                  </div>
-                  {discount > 0 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Discount (5%)</span>
-                      <span>-${discount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="border-t pt-2 mt-2">
-                    <div className="flex justify-between font-semibold">
-                      <span>Total</span>
-                      <span>${total.toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setStep('delivery')}
-                  className="flex-1 btn btn-outline"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handlePlaceOrder}
-                  className="flex-1 btn btn-primary"
-                >
-                  Place Order
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <OrderConfirmation
+          deliveryDetails={deliveryDetails}
+          cartItems={cartItems}
+          subtotal={subtotal}
+          shipping={shipping}
+          gst={gst}
+          companyCharge={companyCharge}
+          discount={discount}
+          total={total}
+          handleBack={() => setStep('delivery')}
+          handlePlaceOrder={handlePlaceOrder}
+        />
       )}
     </div>
   );

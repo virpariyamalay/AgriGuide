@@ -41,60 +41,41 @@ const WeatherWidgetSection = () => {
             setLoading(true);
             setError(null);
 
-            console.log('Fetching weather data for:', lat, lon);
-            console.log('API Key available:', !!OWM_API_KEY);
-            console.log('API Endpoints:', API_ENDPOINTS.WEATHER);
-
-            if (!OWM_API_KEY) {
-                throw new Error('OpenWeatherMap API key is not configured');
-            }
-
             // Fetch current weather
             const currentUrl = `${API_ENDPOINTS.WEATHER.CURRENT}?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric`;
-            console.log('Current weather URL:', currentUrl);
 
             const currentResponse = await fetch(currentUrl);
 
             if (!currentResponse.ok) {
                 const errorText = await currentResponse.text();
-                console.error('Current weather API error:', currentResponse.status, errorText);
                 throw new Error(`Failed to fetch current weather: ${currentResponse.status}`);
             }
 
             const currentData = await currentResponse.json();
-            console.log('Current weather data:', currentData);
 
             // Fetch 5-day forecast
             const forecastUrl = `${API_ENDPOINTS.WEATHER.FORECAST}?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric`;
-            console.log('Forecast URL:', forecastUrl);
 
             const forecastResponse = await fetch(forecastUrl);
 
             if (!forecastResponse.ok) {
-                const errorText = await forecastResponse.text();
-                console.error('Forecast API error:', forecastResponse.status, errorText);
                 throw new Error(`Failed to fetch forecast: ${forecastResponse.status}`);
             }
 
             const forecastData = await forecastResponse.json();
-            console.log('Forecast data:', forecastData);
 
             // Get location name using reverse geocoding
             const geoUrl = `${API_ENDPOINTS.WEATHER.GEOCODING_REVERSE}?lat=${lat}&lon=${lon}&limit=1&appid=${OWM_API_KEY}`;
-            console.log('Geocoding URL:', geoUrl);
 
             const geoResponse = await fetch(geoUrl);
 
             let locationName = 'Current Location';
             if (geoResponse.ok) {
                 const geoData = await geoResponse.json();
-                console.log('Geocoding data:', geoData);
                 if (geoData.length > 0) {
                     const location = geoData[0];
                     locationName = `${location.name}${location.state ? ', ' + location.state : ''}, ${location.country}`;
                 }
-            } else {
-                console.warn('Geocoding failed:', geoResponse.status);
             }
 
             setLocation(locationName);
@@ -137,10 +118,8 @@ const WeatherWidgetSection = () => {
             }
 
             setForecast(dailyForecasts);
-            console.log('Weather data processed successfully');
 
         } catch (err) {
-            console.error('Weather fetch error:', err);
             setError(`Unable to fetch weather data: ${err.message}`);
             // Don't set fallback data when fetch fails
             setCurrentWeather(null);
@@ -155,11 +134,9 @@ const WeatherWidgetSection = () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    console.log('Got location:', latitude, longitude);
                     fetchWeatherData(latitude, longitude);
                 },
                 (error) => {
-                    console.error('Geolocation error:', error);
                     setError(`Location access denied: ${error.message}`);
                     setLoading(false);
                     // Don't set fallback data when location is denied

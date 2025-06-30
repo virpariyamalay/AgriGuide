@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-// Removed import of crops from cropData.js
+
 
 const CropSearch = ({ setSearchQuery }) => {
   const [query, setQuery] = useState('')
