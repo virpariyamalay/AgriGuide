@@ -38,133 +38,155 @@ const OrdersPage = () => {
   const generatePDF = (order) => {
     const doc = new jsPDF();
 
-    // Modern, simple header
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.text('AgriGuide', 20, 20);
-    doc.setFontSize(16);
-    doc.text('INVOICE', 160, 20);
-    doc.setDrawColor(200, 200, 200);
-    doc.line(20, 25, 190, 25);
-
-    // Billing info
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text('BILL FROM:', 20, 35);
-    doc.text('BILL TO:', 120, 35);
-    doc.setFont('helvetica', 'normal');
-    const billFrom = [
-      'AgriGuide',
-      '201, Corporate Heights, SG Highway, Ahmedabad, Gujarat',
-      'malayvirpariya2026@gmail.com',
-      '+91 81414 24177'
-    ];
-    const billTo = [
-      order.shippingAddress?.address || 'N/A',
-      order.shippingAddress?.city || 'N/A',
-      order.shippingAddress?.postalCode || 'N/A',
-      order.shippingAddress?.country || 'India',
-      order.shippingAddress?.phone || ''
-    ];
-    const startY = 42;
-    for (let i = 0; i < Math.max(billFrom.length, billTo.length); i++) {
-      doc.text(billFrom[i] || '', 20, startY + i * 6);
-      doc.text(billTo[i] || '', 120, startY + i * 6);
+    // Add logo (base64 or URL)
+    const logoUrl = `${window.location.origin}/logo.png`;
+    // jsPDF addImage requires base64 or DataURL, so we need to load the image and convert it
+    // We'll use a synchronous XHR for simplicity (since this is a user action)
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', logoUrl, false);
+    xhr.responseType = 'blob';
+    xhr.send();
+    if (xhr.status === 200) {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const base64data = reader.result;
+        doc.addImage(base64data, 'PNG', 15, 10, 30, 18);
+        finishPDF();
+      };
+      reader.readAsDataURL(xhr.response);
+    } else {
+      finishPDF();
     }
 
-    // Invoice details
-    doc.setFont('helvetica', 'bold');
-    doc.text('Invoice No:', 20, 70);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${order._id}`, 50, 70);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Date:', 120, 70);
-    doc.setFont('helvetica', 'normal');
-    doc.text(format(new Date(order.createdAt), 'PPP'), 140, 70);
-
-    // Items table
-    doc.autoTable({
-      startY: 80,
-      head: [['Description', 'Qty', 'Price', 'Total']],
-      body: order.items.map(item => [
-        item.product?.name || 'N/A',
-        item.quantity,
-        item.price,
-        (item.price * item.quantity)
-      ]),
-      theme: 'grid',
-      headStyles: { fillColor: [245, 245, 245], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 10 },
-      bodyStyles: { fontSize: 10 },
-      columnStyles: {
-        0: { cellWidth: 80 },
-        1: { cellWidth: 20, halign: 'center' },
-        2: { cellWidth: 30, halign: 'right' },
-        3: { cellWidth: 30, halign: 'right' }
-      }
-    });
-
-    let y = doc.autoTable.previous.finalY + 10;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Subtotal:', 140, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${order.productSubtotal}`, 180, y, 'right');
-    y += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Shipping:', 140, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${order.shipping}`, 180, y, 'right');
-    y += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.text('GST:', 140, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${order.gst}`, 180, y, 'right');
-    y += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Company Charge:', 140, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${order.companyCharge}`, 180, y, 'right');
-    y += 8;
-    if (order.discount > 0) {
+    function finishPDF() {
+      // Modern, simple header
       doc.setFont('helvetica', 'bold');
-      doc.text('Discount:', 140, y);
+      doc.setFontSize(22);
+      doc.text('AgriGuide', 50, 20);
+      doc.setFontSize(16);
+      doc.text('INVOICE', 160, 20);
+      doc.setDrawColor(200, 200, 200);
+      doc.line(20, 25, 190, 25);
+
+      // Billing info
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('BILL FROM:', 20, 35);
+      doc.text('BILL TO:', 120, 35);
       doc.setFont('helvetica', 'normal');
-      doc.text(`-₹${order.discount}`, 180, y, 'right');
+      const billFrom = [
+        'AgriGuide',
+        '201, Corporate Heights, SG Highway, Ahmedabad, Gujarat',
+        'malayvirpariya2026@gmail.com',
+        '+91 81414 24177'
+      ];
+      const billTo = [
+        order.shippingAddress?.address || 'N/A',
+        order.shippingAddress?.city || 'N/A',
+        order.shippingAddress?.postalCode || 'N/A',
+        order.shippingAddress?.country || 'India',
+        order.shippingAddress?.phone || ''
+      ];
+      const startY = 42;
+      for (let i = 0; i < Math.max(billFrom.length, billTo.length); i++) {
+        doc.text(billFrom[i] || '', 20, startY + i * 6);
+        doc.text(billTo[i] || '', 120, startY + i * 6);
+      }
+
+      // Invoice details
+      doc.setFont('helvetica', 'bold');
+      doc.text('Invoice No:', 20, 70);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${order._id}`, 50, 70);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Date:', 120, 70);
+      doc.setFont('helvetica', 'normal');
+      doc.text(format(new Date(order.createdAt), 'PPP'), 140, 70);
+
+      // Items table
+      doc.autoTable({
+        startY: 80,
+        head: [['Description', 'Qty', 'Price', 'Total']],
+        body: order.items.map(item => [
+          item.product?.name || 'N/A',
+          item.quantity,
+          item.price,
+          (item.price * item.quantity)
+        ]),
+        theme: 'grid',
+        headStyles: { fillColor: [245, 245, 245], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 10 },
+        bodyStyles: { fontSize: 10 },
+        columnStyles: {
+          0: { cellWidth: 80 },
+          1: { cellWidth: 20, halign: 'center' },
+          2: { cellWidth: 30, halign: 'right' },
+          3: { cellWidth: 30, halign: 'right' }
+        }
+      });
+
+      let y = doc.autoTable.previous.finalY + 10;
+      doc.setFont('helvetica', 'bold');
+      doc.text('Subtotal:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${order.productSubtotal}`, 180, y, 'right');
       y += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.text('Shipping:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${order.shipping}`, 180, y, 'right');
+      y += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.text('GST:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${order.gst}`, 180, y, 'right');
+      y += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.text('Company Charge:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${order.companyCharge}`, 180, y, 'right');
+      y += 8;
+      if (order.discount > 0) {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Discount:', 140, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`-₹${order.discount}`, 180, y, 'right');
+        y += 8;
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.text('Total:', 140, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`₹${order.totalAmount}`, 180, y, 'right');
+
+      // Modern, simple terms
+      y += 16;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text('Terms & Conditions', 20, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text([
+        '1. This invoice is for pre-paid orders only.',
+        '2. Orders cannot be cancelled or refunded once payment is made.',
+        '3. For support, contact malayvirpariya2026@gmail.com or +91 81414 24177.'
+      ], 20, y + 7);
+
+      // Signature and footer
+      let footerY = y + 32;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.text('MALAY VIRPARIYA', 140, footerY);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Founder & CEO', 140, footerY + 6);
+      doc.text('For AgriGuide Solutions Inc.', 140, footerY + 12);
+      doc.setFontSize(8);
+      doc.text('https://www.agriguide.com', 20, footerY + 24);
+      doc.text('Phone +91 81414 24177 | malayvirpariya@gmail.com', 20, footerY + 30);
+
+      doc.setFontSize(8);
+      doc.text('Thank you for shopping with AgriGuide!', 105, 290, 'center');
+
+      doc.save(`Invoice-${order._id}.pdf`);
     }
-    doc.setFont('helvetica', 'bold');
-    doc.text('Total:', 140, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`₹${order.totalAmount}`, 180, y, 'right');
-
-    // Modern, simple terms
-    y += 16;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text('Terms & Conditions', 20, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text([
-      '1. This invoice is for pre-paid orders only.',
-      '2. Orders cannot be cancelled or refunded once payment is made.',
-      '3. For support, contact malayvirpariya2026@gmail.com or +91 81414 24177.'
-    ], 20, y + 7);
-
-    // Signature and footer
-    let footerY = y + 32;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text('MALAY VIRPARIYA', 140, footerY);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Founder & CEO', 140, footerY + 6);
-    doc.text('For AgriGuide Solutions Inc.', 140, footerY + 12);
-    doc.setFontSize(8);
-    doc.text('https://www.agriguide.com', 20, footerY + 24);
-    doc.text('Phone +91 81414 24177 | malayvirpariya@gmail.com', 20, footerY + 30);
-
-    doc.setFontSize(8);
-    doc.text('Thank you for shopping with AgriGuide!', 105, 290, 'center');
-
-    doc.save(`Invoice-${order._id}.pdf`);
   }
 
   if (loading) {
