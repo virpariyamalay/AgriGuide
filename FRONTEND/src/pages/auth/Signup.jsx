@@ -26,7 +26,7 @@ const Signup = () => {
 
   // Monitor step changes
   useEffect(() => {
-    console.log('Step changed to:', step);
+
   }, [step]);
 
   const handleChange = (e) => {
@@ -38,7 +38,7 @@ const Signup = () => {
   };
 
   const handleSendOtp = async () => {
-    console.log('handleSendOtp called');
+
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
@@ -54,16 +54,14 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      console.log('Sending OTP request for:', formData.email);
+
 
       const response = await requestOtp(formData.email);
-      console.log('OTP response:', response);
+
 
       toast.success('OTP sent to your email!');
-      console.log('Setting step to 2 for OTP verification');
       setStep(2);
     } catch (error) {
-      console.error('Error in handleSendOtp:', error);
       toast.error(error.message || 'Failed to send OTP');
     } finally {
       setLoading(false);
@@ -73,14 +71,11 @@ const Signup = () => {
   const handleResendOtp = async () => {
     try {
       setLoading(true);
-      console.log('Resending OTP for:', formData.email);
 
       const response = await requestOtp(formData.email);
-      console.log('Resend OTP response:', response);
 
       toast.success('OTP resent to your email!');
     } catch (error) {
-      console.error('Error in handleResendOtp:', error);
       toast.error(error.message || 'Failed to resend OTP');
     } finally {
       setLoading(false);
