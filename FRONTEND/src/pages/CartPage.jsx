@@ -109,11 +109,36 @@ const CartPage = () => {
   };
 
   const handleProceedToConfirm = () => {
-    if (!deliveryDetails.fullName || !deliveryDetails.email || !deliveryDetails.phone ||
-      !deliveryDetails.address || !deliveryDetails.city || !deliveryDetails.pincode) {
-      toast.error('Please fill in all required fields');
+    // Validation
+    if (!deliveryDetails.fullName || deliveryDetails.fullName.trim().length < 2) {
+      toast.error('Please enter a valid full name');
       return;
     }
+    if (!deliveryDetails.email || !/^\S+@\S+\.\S+$/.test(deliveryDetails.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    if (!deliveryDetails.phone || !/^\d{10}$/.test(deliveryDetails.phone)) {
+      toast.error('Please enter a valid 10-digit phone number');
+      return;
+    }
+    if (deliveryDetails.alternatePhone && deliveryDetails.alternatePhone.length > 0 && !/^\d{10}$/.test(deliveryDetails.alternatePhone)) {
+      toast.error('Alternate phone must be a valid 10-digit number');
+      return;
+    }
+    if (!deliveryDetails.address || deliveryDetails.address.trim().length < 5) {
+      toast.error('Please enter a valid address');
+      return;
+    }
+    if (!deliveryDetails.city || deliveryDetails.city.trim().length < 2) {
+      toast.error('Please enter a valid city');
+      return;
+    }
+    if (!deliveryDetails.pincode || !/^\d{6}$/.test(deliveryDetails.pincode)) {
+      toast.error('Please enter a valid 6-digit pincode');
+      return;
+    }
+    // Optional: validate landmark and deliveryInstructions for length if needed
     setIsLoading(true);
     setTimeout(() => {
       setStep('confirm');

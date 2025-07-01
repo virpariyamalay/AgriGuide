@@ -68,19 +68,19 @@ const OrderCard = ({ order, generatePDF }) => {
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                             <span className="text-gray-600">Subtotal:</span>
-                            <span>₹{Number(order.productSubtotal).toFixed(2)}</span>
+                            <span>₹{order.productSubtotal}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-600">Shipping:</span>
-                            <span>₹{Number(order.shipping).toFixed(2)}</span>
+                            <span>₹{order.shipping}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-600">GST:</span>
-                            <span>₹{Number(order.gst).toFixed(2)}</span>
+                            <span>₹{order.gst}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-600">Company Charge:</span>
-                            <span>₹{Number(order.companyCharge).toFixed(2)}</span>
+                            <span>₹{order.companyCharge}</span>
                         </div>
                         {order.discount > 0 && (
                             <div className="flex justify-between text-green-600">
