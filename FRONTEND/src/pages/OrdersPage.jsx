@@ -31,6 +31,10 @@ const OrdersPage = () => {
     setOrders(userOrders)
   }, [userOrders])
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const generatePDF = (order) => {
     const doc = new jsPDF();
 

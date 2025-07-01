@@ -47,6 +47,10 @@ const ProfilePage = () => {
     // eslint-disable-next-line
   }, []); // Only run once on mount
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -135,18 +139,18 @@ const ProfilePage = () => {
                   <p className="text-green-100 mt-1">Manage your account information</p>
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
                 {!isEditing && (
                   <button
                     onClick={handleEdit}
-                    className="bg-white/20 hover:bg-white/30 text-white font-medium py-2 px-6 rounded-lg transition duration-200 backdrop-blur-sm"
+                    className="bg-white/20 hover:bg-white/30 text-white font-medium py-2 px-6 rounded-lg transition duration-200 backdrop-blur-sm w-full sm:w-auto"
                   >
                     Edit Profile
                   </button>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+                  className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200 w-full sm:w-auto"
                 >
                   Logout
                 </button>

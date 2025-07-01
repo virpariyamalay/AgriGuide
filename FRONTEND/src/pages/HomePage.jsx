@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import HeroSection from '../components/home/HeroSection';
 import StatsSection from '../components/home/StatsSection';
 import HowToStartSection from '../components/home/HowToStartSection';
@@ -10,6 +10,10 @@ import WeatherWidgetSection from '../components/home/WeatherWidgetSection';
 import CTASection from '../components/home/CTASection';
 
 const HomePage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       <HeroSection />
