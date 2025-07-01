@@ -205,8 +205,8 @@ const OrderSuccessPage = () => {
             Need help? Our customer support team is here for you
           </p>
           <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
-            <span>📧 support@agriguide.com</span>
-            <span>📞 +91 1800-123-4567</span>
+            <span>📧 malayvirpariya2026@gmail.com</span>
+            <span>📞 +91 81414 24177</span>
           </div>
         </motion.div>
       </div>

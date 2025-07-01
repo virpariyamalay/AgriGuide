@@ -12,7 +12,7 @@ const OrderCard = ({ order, generatePDF }) => {
             className="bg-white rounded-lg shadow-md overflow-hidden"
         >
             <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
                     <div>
                         <h3 className="text-xl font-semibold mb-1">
                             Order #{order._id}
@@ -24,7 +24,7 @@ const OrderCard = ({ order, generatePDF }) => {
                             Expected Delivery: {expectedDeliveryDate}
                         </p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status === 'delivered'
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium self-start sm:self-auto mt-2 sm:mt-0 ${order.status === 'delivered'
                         ? 'bg-green-100 text-green-800'
                         : order.status === 'shipped'
                             ? 'bg-blue-100 text-blue-800'
