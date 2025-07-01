@@ -37,7 +37,7 @@ function App() {
         <ScrollProgress />
         <CircularScrollProgress />
         {showBanner && (
-          <div className="w-full py-2.5 font-medium text-sm text-white bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 overflow-hidden relative">
+          <div className="w-full py-0 font-medium text-sm text-white bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 overflow-hidden relative">
             <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-4 text-center overflow-hidden">
               <div className="relative w-full">
                 <div className="flex whitespace-nowrap animate-marquee">
