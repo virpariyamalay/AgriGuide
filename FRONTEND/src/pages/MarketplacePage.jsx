@@ -27,6 +27,15 @@ const MarketplacePage = () => {
     { id: 'soils', name: 'Soils & Substrates' },
   ]
 
+  // Read search query from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam) {
+      setSearchQuery(decodeURIComponent(searchParam));
+    }
+  }, [location.search]);
+
   // Reset priceRange filter when products change to include all product prices
   useEffect(() => {
     if (products.length > 0) {

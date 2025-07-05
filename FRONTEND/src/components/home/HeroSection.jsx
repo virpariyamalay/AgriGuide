@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CropSearch from '../crops/CropSearch';
 
 const sliderImages = [
@@ -13,6 +13,7 @@ const sliderImages = [
 
 const HeroSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,6 +22,11 @@ const HeroSection = () => {
 
         return () => clearInterval(interval);
     }, []);
+
+    const handleSearchQuery = (query) => {
+        // Navigate to marketplace with search query
+        navigate(`/marketplace?search=${encodeURIComponent(query)}`);
+    };
 
     return (
         <section className="relative overflow-hidden">
@@ -71,7 +77,7 @@ const HeroSection = () => {
                             transition={{ duration: 0.8, delay: 0.4 }}
                             className="mb-8"
                         >
-                            <CropSearch setSearchQuery={() => { }} />
+                            <CropSearch setSearchQuery={handleSearchQuery} />
                         </motion.div>
 
                         {/* CTA Buttons */}

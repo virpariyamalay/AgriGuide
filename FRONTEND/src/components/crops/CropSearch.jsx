@@ -67,6 +67,11 @@ const CropSearch = ({ setSearchQuery }) => {
     setSuggestions([])
   }
 
+  const handlePopularSearch = (cropName) => {
+    // Navigate to marketplace with search query for popular searches
+    navigate(`/marketplace?search=${encodeURIComponent(cropName)}`)
+  }
+
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div
@@ -131,25 +136,25 @@ const CropSearch = ({ setSearchQuery }) => {
         <p className="text-sm text-white/90">
           Popular searches:
           <button
-            onClick={() => handleSuggestionClick('tomato')}
+            onClick={() => handlePopularSearch('Tomato')}
             className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Tomato
           </button>
           <button
-            onClick={() => handleSuggestionClick('cucumber')}
+            onClick={() => handlePopularSearch('Cucumber')}
             className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Cucumber
           </button>
           <button
-            onClick={() => handleSuggestionClick('carrot')}
+            onClick={() => handlePopularSearch('Carrot')}
             className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Carrot
           </button>
           <button
-            onClick={() => handleSuggestionClick('lettuce')}
+            onClick={() => handlePopularSearch('Lettuce')}
             className="text-white hover:text-green-300 font-medium mx-1 transition-colors duration-200"
           >
             Lettuce
