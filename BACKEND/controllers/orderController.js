@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Cart = require('../models/Cart');
 const transporter = require('../config/nodemailer');
 
 // Helper to generate modern HTML email for order confirmation
@@ -136,6 +137,9 @@ exports.placeOrder = async (req, res) => {
         html,
       });
     }
+
+    // Clear the user's cart after successful order placement
+    await Cart.findOneAndUpdate({ user: userId }, { items: [] });
 
     res.status(201).json({ message: 'Order placed successfully', order });
   } catch (error) {

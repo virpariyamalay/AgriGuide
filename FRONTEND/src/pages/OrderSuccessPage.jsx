@@ -2,10 +2,14 @@ import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { format, addDays } from 'date-fns';
 import { useEffect } from 'react';
+import { useCart } from '../contexts/CartContext';
 
 const OrderSuccessPage = () => {
+  const { clearCart } = useCart();
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    clearCart();
   }, []);
 
   const location = useLocation();
