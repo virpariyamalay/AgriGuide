@@ -9,12 +9,14 @@ const CropSearch = ({ setSearchQuery }) => {
   const [suggestions, setSuggestions] = useState([])
   const [isFocused, setIsFocused] = useState(false)
   const [crops, setCrops] = useState([]) // state to hold fetched crops
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
     // Fetch crops from backend API
     const fetchCrops = async () => {
       try {
+        setLoading(true)
         const response = await fetch(API_ENDPOINTS.CROPS.LIST)
         if (!response.ok) {
           throw new Error('Failed to fetch crops')
@@ -23,6 +25,8 @@ const CropSearch = ({ setSearchQuery }) => {
         setCrops(data)
       } catch (error) {
         console.error('Error fetching crops:', error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchCrops()

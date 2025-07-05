@@ -10,6 +10,8 @@ export const useCart = () => useContext(CartContext)
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([])
   const [isCartUpdated, setIsCartUpdated] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [cartLoading, setCartLoading] = useState(false)
   const { user } = useAuth()
 
   // Fetch cart from backend when user logs in
@@ -20,6 +22,7 @@ export const CartProvider = ({ children }) => {
         return
       }
       try {
+        setCartLoading(true)
         const res = await fetch(API_ENDPOINTS.CART.GET, {
           headers: { Authorization: `Bearer ${user.token}` },
           credentials: 'include',
@@ -29,6 +32,8 @@ export const CartProvider = ({ children }) => {
         setCartItems(data?.items || [])
       } catch (error) {
         setCartItems([])
+      } finally {
+        setCartLoading(false)
       }
     }
     fetchCart()
@@ -56,6 +61,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
+      setLoading(true)
       const res = await fetch(API_ENDPOINTS.CART.ADD, {
         method: 'POST',
         headers: {
@@ -72,7 +78,9 @@ export const CartProvider = ({ children }) => {
       setTimeout(() => setIsCartUpdated(false), 2000)
       toast.success(`Added ${quantity} x ${product.name} to cart!`)
     } catch (error) {
-      // handle error
+      toast.error('Failed to add to cart')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -100,6 +108,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
+      setLoading(true)
       const res = await fetch(API_ENDPOINTS.CART.ADD, {
         method: 'POST',
         headers: {
@@ -124,6 +133,8 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       toast.error('Failed to update quantity')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -131,6 +142,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (!user?.token) return
     try {
+      setLoading(true)
       const res = await fetch(API_ENDPOINTS.CART.REMOVE, {
         method: 'POST',
         headers: {
@@ -143,8 +155,11 @@ export const CartProvider = ({ children }) => {
       if (!res.ok) throw new Error('Failed to remove from cart')
       const data = await res.json()
       setCartItems(data.items)
+      toast.success('Item removed from cart')
     } catch (error) {
-      // handle error
+      toast.error('Failed to remove from cart')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -152,6 +167,7 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     if (!user?.token) return
     try {
+      setLoading(true)
       const res = await fetch(API_ENDPOINTS.CART.CLEAR, {
         method: 'POST',
         headers: {
@@ -163,7 +179,9 @@ export const CartProvider = ({ children }) => {
       const data = await res.json()
       setCartItems(data.items)
     } catch (error) {
-      // handle error
+      toast.error('Failed to clear cart')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -173,7 +191,9 @@ export const CartProvider = ({ children }) => {
     updateQuantity,
     removeFromCart,
     clearCart,
-    isCartUpdated
+    isCartUpdated,
+    loading,
+    cartLoading
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
