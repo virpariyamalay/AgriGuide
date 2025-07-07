@@ -107,34 +107,34 @@ const OrdersPage = () => {
     doc.setFont('helvetica', 'bold');
     doc.text('Subtotal:', 140, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${order.productSubtotal.toFixed(2)}`, 180, y, 'right');
+    doc.text(`${typeof order.productSubtotal === 'number' ? order.productSubtotal.toFixed(2) : '0.00'}`, 180, y, 'right');
     y += 8;
     doc.setFont('helvetica', 'bold');
     doc.text('Shipping:', 140, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${order.shipping.toFixed(2)}`, 180, y, 'right');
+    doc.text(`${typeof order.shipping === 'number' ? order.shipping.toFixed(2) : '0.00'}`, 180, y, 'right');
     y += 8;
     doc.setFont('helvetica', 'bold');
     doc.text('GST:', 140, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${order.gst.toFixed(2)}`, 180, y, 'right');
+    doc.text(`${typeof order.gst === 'number' ? order.gst.toFixed(2) : '0.00'}`, 180, y, 'right');
     y += 8;
     doc.setFont('helvetica', 'bold');
     doc.text('Company Charge:', 140, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${order.companyCharge.toFixed(2)}`, 180, y, 'right');
+    doc.text(`${typeof order.companyCharge === 'number' ? order.companyCharge.toFixed(2) : '0.00'}`, 180, y, 'right');
     y += 8;
-    if (order.discount > 0) {
+    if (typeof order.discount === 'number' && order.discount > 0) {
       doc.setFont('helvetica', 'bold');
       doc.text('Discount:', 140, y);
       doc.setFont('helvetica', 'normal');
-      doc.text(`-₹${order.discount.toFixed(2)}`, 180, y, 'right');
+      doc.text(`-₹${typeof order.discount === 'number' ? order.discount.toFixed(2) : '0.00'}`, 180, y, 'right');
       y += 8;
     }
     doc.setFont('helvetica', 'bold');
     doc.text('Total:', 140, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(`₹${order.totalAmount.toFixed(2)}`, 180, y, 'right');
+    doc.text(`₹${typeof order.totalAmount === 'number' ? order.totalAmount.toFixed(2) : '0.00'}`, 180, y, 'right');
 
     // Modern, simple terms
     y += 16;

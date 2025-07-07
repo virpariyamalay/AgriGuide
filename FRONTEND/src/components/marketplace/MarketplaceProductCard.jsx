@@ -79,7 +79,7 @@ const MarketplaceProductCard = ({ product, addToCart, cartItems, quantity, setQu
                     >+</button>
                 </div>
                 <div className="flex justify-between items-end mt-auto">
-                    <span className="font-bold text-gray-800 text-lg">${product.price.toFixed(2)}</span>
+                    <span className="font-bold text-gray-800 text-lg">${typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}</span>
                     <button
                         onClick={handleAddToCartWithQty}
                         className="flex items-center justify-center btn-primary px-3 py-1.5 rounded-lg text-sm font-medium"

@@ -130,7 +130,7 @@ const OrderSuccessPage = () => {
                         <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                       </div>
                     </div>
-                    <span className="font-semibold text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-semibold text-gray-900">₹{(typeof item.price === 'number' && typeof item.quantity === 'number' ? (item.price * item.quantity).toFixed(2) : '0.00')}</span>
                   </div>
                 ))}
               </div>

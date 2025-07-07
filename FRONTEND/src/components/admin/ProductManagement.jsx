@@ -98,7 +98,7 @@ const ProductManagement = ({
                                 )}
                             </div>
                             <div className="flex justify-between items-end mt-auto gap-2">
-                                <span className="font-bold text-gray-800 text-lg">₹{product.price.toFixed(2)}</span>
+                                <span className="font-bold text-gray-800 text-lg">₹{typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}</span>
                                 <button
                                     onClick={() => setEditingProduct(product)}
                                     className="flex items-center justify-center bg-blue-100 text-blue-600 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-200 transition"
