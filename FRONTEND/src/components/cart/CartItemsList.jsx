@@ -68,7 +68,7 @@ const CartItemsList = () => {
                                 <h3 className="text-sm font-medium text-gray-900 truncate">
                                     {item.product.name}
                                 </h3>
-                                <p className="text-sm text-gray-500">${typeof item.price === 'number' ? item.price.toFixed(2) : '0.00'} each</p>
+                                <p className="text-sm text-gray-500">${typeof item.product.price === 'number' ? item.product.price.toFixed(2) : '0.00'} each</p>
                                 <div className="flex items-center space-x-2 mt-2">
                                     <button
                                         onClick={() => handleQuantityChange(item.product._id, item.quantity - 1)}
@@ -98,7 +98,7 @@ const CartItemsList = () => {
                             </div>
                             <div className="flex flex-col items-end space-y-2">
                                 <div className="text-sm font-medium text-gray-900">
-                                    {typeof item.price === 'number' && typeof item.quantity === 'number' ? (item.price * item.quantity).toFixed(2) : '0.00'}
+                                    {typeof item.product.price === 'number' && typeof item.quantity === 'number' ? (item.product.price * item.quantity).toFixed(2) : '0.00'}
                                 </div>
                                 <button
                                     onClick={() => handleRemoveItem(item.product._id)}
