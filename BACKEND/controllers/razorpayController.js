@@ -13,7 +13,7 @@ exports.createOrder = async (req, res) => {
             return res.status(400).json({ error: 'Invalid or missing amount' });
         }
         const options = {
-            amount: amount * 100, // amount in paise
+            amount: Math.round(amount * 100), // ensure integer paise
             currency,
             receipt: `receipt_order_${Date.now()}`,
         };
