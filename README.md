@@ -57,55 +57,6 @@ project/
 
 ---
 
-## ⚡ Getting Started
-
-### 1. Clone the repository
-```bash
-git clone <your-repo-url>
-cd project
-```
-
-### 2. Setup Environment Variables
-- Create a `.env` file in both `BACKEND/` and `FRONTEND/` as needed.
-- Example for backend:
-  ```env
-  MONGO_URI=your_mongodb_uri
-  JWT_SECRET=your_jwt_secret
-  ADMIN_EMAIL=youradmin@example.com
-  ADMIN_PASSWORD=yourpassword
-  RAZORPAY_KEY_ID=your_razorpay_key_id
-  RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-  EMAIL_USER=your_email@example.com
-  EMAIL_PASS=your_email_password
-  ```
-
-### 3. Install Dependencies
-```bash
-cd BACKEND && npm install
-cd ../FRONTEND && npm install
-```
-
-### 4. Run the Application
-- **Backend:**
-  ```bash
-  cd BACKEND
-  npm start
-  ```
-- **Frontend:**
-  ```bash
-  cd FRONTEND
-  npm run dev
-  ```
-
-### 5. Create Admin User
-- Run the script to create an admin user:
-  ```bash
-  cd BACKEND
-  node createAdminUser.js
-  ```
-
----
-
 ## 🤝 Contributing
 
 1. Fork the repository
