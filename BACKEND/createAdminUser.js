@@ -10,8 +10,13 @@ const createAdminUser = async () => {
   try {
     await connectDB();
 
-    const adminEmail = 'admin@agriguide.com';
-    const adminPassword = 'admin123';
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.error('ADMIN_EMAIL or ADMIN_PASSWORD is not set in the environment variables.');
+      process.exit(1);
+    }
 
     const userExists = await User.findOne({ email: adminEmail });
     if (userExists) {
